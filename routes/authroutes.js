@@ -22,6 +22,10 @@ module.exports = (app) => {
   })
 
   app.get('/dashboard', (req, res, next) => {
+    if (!req.user) {
+      return res.status(401).send('You must be logged in.')
+    }
+
     res.send('Dashboard')
   })
 
