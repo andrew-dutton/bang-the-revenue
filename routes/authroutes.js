@@ -21,6 +21,12 @@ module.exports = (app) => {
     res.redirect('/')
   })
 
+  app.get('/dahsboard', (req, res, next) => {
+    if (!req.user) {
+      return req.status(401).send({ msg: 'You must login' })
+    }
+  })
+
   app.get('/api/current_user', (req, res) => {
     res.send(req.user)
   })
