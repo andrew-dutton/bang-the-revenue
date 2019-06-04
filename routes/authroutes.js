@@ -22,10 +22,7 @@ module.exports = (app) => {
   })
 
   app.get('/dashboard', (req, res, next) => {
-    if (!req.user) {
-      return req.status(401).send({ msg: 'You must login' })
-    }
-    res.redirect('/dashboard')
+    res.send('Dashboard')
   })
 
   app.get('/api/current_user', (req, res) => {
