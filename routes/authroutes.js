@@ -21,14 +21,6 @@ module.exports = (app) => {
     res.redirect('/')
   })
 
-  app.get('/dashboard', (req, res, next) => {
-    if (!req.user) {
-      return res.status(401).send('You must be logged in.')
-    }
-
-    res.sendFile('index.html', { root: path.join(__dirname, '../../client/build/') })
-  })
-
   app.get('/api/current_user', (req, res) => {
     res.send(req.user)
   })
