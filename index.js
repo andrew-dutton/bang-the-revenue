@@ -3,12 +3,17 @@ const mongoose = require('mongoose')
 const cookieSession = require('cookie-session')
 const passport = require('passport')
 const keys = require('./config/keys')
+const sslRedirect = require('heroku-ssl-redirect');
 require('./models/user')
 require('./services/passport')
+
+
 
 mongoose.connect(keys.mongoURI, { useNewUrlParser: true })
 
 const app = express()
+
+app.use(sslRedirect())
 
 app.use(
   cookieSession({
@@ -32,3 +37,4 @@ if (process.env.NODE_ENV === 'production') {
 
 const PORT = process.env.PORT || 5000
 app.listen(PORT)
+
