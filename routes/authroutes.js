@@ -26,7 +26,7 @@ module.exports = (app) => {
       return res.status(401).send('You must be logged in.')
     }
 
-    res.send('Dashboard')
+    res.sendFile('index.html', { root: path.join(__dirname, '../../client/build/') })
   })
 
   app.get('/api/current_user', (req, res) => {
