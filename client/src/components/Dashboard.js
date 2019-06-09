@@ -50,7 +50,7 @@ class Dashboard extends Component {
 
     return (
       <div className="ui statistic">
-        <div className="value">
+        <div className="value" style={{ color: "red" }}>
           {total}
         </div>
         <div className="label">
@@ -75,7 +75,7 @@ class Dashboard extends Component {
       const total = totals.reduce(sum)
       return (
         <div className="ui statistic">
-          <div className="value">
+          <div className="value" style={{ color: "blue" }}>
             {currencyFormat(total)}
           </div>
           <div className="label">
@@ -108,7 +108,7 @@ class Dashboard extends Component {
 
     return (
       <div className="ui statistic">
-        <div className="value">
+        <div className="value" style={{ color: "orange" }}>
           {currencyFormat(total)}
         </div>
         <div className="label">
@@ -138,7 +138,7 @@ class Dashboard extends Component {
 
     return (
       <div className="ui statistic">
-        <div className="value">
+        <div className="value" style={{ color: "green" }}>
           {currencyFormat(total)}
         </div>
         <div className="label">
@@ -151,7 +151,7 @@ class Dashboard extends Component {
   render() {
     return (
       <div className="App" style={{ textAlign: "center" }}>
-        <h3>Revenue for 2014/2015</h3>
+        <h2>Revenue for 2014/2015</h2>
         <br />
         <div>{this.numberOfInvoices()}</div>
         <br />
