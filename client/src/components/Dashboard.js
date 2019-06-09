@@ -8,7 +8,8 @@ import {
 
 class Dashboard extends Component {
   state = {
-    rawData: []
+    rawData: [],
+    name: ""
   }
 
   componentDidMount() {

@@ -15,7 +15,6 @@ class Header extends Component {
         return (
           <div>
             <ul>
-              <li>Signed in as {this.props.auth.displayName}</li>
               <li><a href="/api/logout">Logout</a></li>
             </ul>
           </div>
