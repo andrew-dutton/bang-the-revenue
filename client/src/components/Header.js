@@ -12,7 +12,14 @@ class Header extends Component {
           <li><a href="/auth/google">Login with Google</a></li>
         )
       default:
-        return <li><a href="/api/logout">Logout</a></li>
+        return (
+          <div>
+            <ul>
+              <li>Signed in as {this.props.auth.displayName}</li>
+              <li><a href="/api/logout">Logout</a></li>
+            </ul>
+          </div>
+        )
     }
   }
 
@@ -20,10 +27,7 @@ class Header extends Component {
     return (
       <nav>
         <div className="nav-wrapper">
-          <Link
-            to='/'
-            className="left brand-logo"
-          >
+          <Link to='/' className="left brand-logo">
             BTT Revenue
           </Link>
           <ul className="right">
