@@ -45,10 +45,19 @@ class Dashboard extends Component {
     const total = this.state.rawData.length
 
     if (total < 1) {
-      return "...Loading..."
+      return
     }
 
-    return total
+    return (
+      <div className="ui statistic">
+        <div className="value">
+          {total}
+        </div>
+        <div className="label">
+          Total Number of Invoices
+        </div>
+      </div>
+    )
   }
 
   totalValue = () => {
@@ -56,7 +65,7 @@ class Dashboard extends Component {
       const totals = []
       const sum = (a, b) => a + b;
       function currencyFormat(num) {
-        return '$' + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+        return '$' + num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
       }
 
       this.state.rawData.forEach((number) => {
@@ -64,18 +73,96 @@ class Dashboard extends Component {
       })
 
       const total = totals.reduce(sum)
-      return currencyFormat(total)
+      return (
+        <div className="ui statistic">
+          <div className="value">
+            {currencyFormat(total)}
+          </div>
+          <div className="label">
+            Total value of all invoices
+          </div>
+        </div>
+      )
     }
 
-    return <span>...Loading...</span>
+    return <span>........Loading..........</span>
+  }
+
+  stateBreakdown = () => {
+    const vic = []
+
+    this.state.rawData.forEach((invoice) => {
+      if (invoice.State === "VIC")
+        vic.push(invoice["Total (ex GST)"])
+    })
+
+    const sum = (a, b) => a + b;
+
+    if (vic.length < 1) {
+      return
+    }
+    const total = vic.reduce(sum)
+    function currencyFormat(num) {
+      return '$' + num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+    }
+
+    return (
+      <div className="ui statistic">
+        <div className="value">
+          {currencyFormat(total)}
+        </div>
+        <div className="label">
+          Total value of invoices from Victoria
+        </div>
+      </div>
+    )
+  }
+
+  reveneuBreakdown = () => {
+    const sub = []
+
+    this.state.rawData.forEach((invoice) => {
+      if (invoice["Revenue Type"] === "Subscription")
+        sub.push(invoice["Total (ex GST)"])
+    })
+
+    const sum = (a, b) => a + b;
+
+    if (sub.length < 1) {
+      return
+    }
+    const total = sub.reduce(sum)
+    function currencyFormat(num) {
+      return '$' + num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+    }
+
+    return (
+      <div className="ui statistic">
+        <div className="value">
+          {currencyFormat(total)}
+        </div>
+        <div className="label">
+          Total value of invoices with type of Subscription
+        </div>
+      </div>
+    )
   }
 
   render() {
     return (
-      <div className="App">
+      <div className="App" style={{ textAlign: "center" }}>
         <h3>Revenue for 2014/2015</h3>
-        <p>Total number of invoices: {this.numberOfInvoices()}</p>
-        <p>Total of invoices: {this.totalValue()}</p>
+        <br />
+        <div>{this.numberOfInvoices()}</div>
+        <br />
+        <br />
+        <div>{this.stateBreakdown()}</div>
+        <br />
+        <br />
+        <div>{this.reveneuBreakdown()}</div>
+        <br />
+        <br />
+        <div>{this.totalValue()}</div>
       </div>
     )
   }
