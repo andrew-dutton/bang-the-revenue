@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import { connect } from 'react-redux'
 import {
   Stitch,
   AnonymousCredential,
@@ -34,7 +35,7 @@ class Dashboard extends Component {
   getMongoData = () => {
     this.db
       .collection("invoice-lines")
-      .find({}, { limit: 1000 })
+      .find({})
       .asArray()
       .then(rawData => {
         this.setState({ rawData })
@@ -149,23 +150,43 @@ class Dashboard extends Component {
   }
 
   render() {
-    return (
-      <div className="App" style={{ textAlign: "center" }}>
-        <h2>Revenue for 2014/2015</h2>
-        <br />
-        <div>{this.numberOfInvoices()}</div>
-        <br />
-        <br />
-        <div>{this.stateBreakdown()}</div>
-        <br />
-        <br />
-        <div>{this.reveneuBreakdown()}</div>
-        <br />
-        <br />
-        <div>{this.totalValue()}</div>
-      </div>
-    )
+    if (this.props.auth) {
+      return (
+        <div className="App" style={{ textAlign: "center" }}>
+          <h2>Revenue for 2014/2015</h2>
+          <br />
+          <div>{this.numberOfInvoices()}</div>
+          <br />
+          <br />
+          <div>{this.stateBreakdown()}</div>
+          <br />
+          <br />
+          <div>{this.reveneuBreakdown()}</div>
+          <br />
+          <br />
+          <div>{this.totalValue()}</div>
+        </div>
+      )
+    } else {
+      return (
+        <div className="App" style={{ textAlign: "center" }}>
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <h5>You need to be signed in to view this page</h5>
+        </div>
+      )
+    }
   }
 }
 
-export default Dashboard
+function mapStateToProps({ auth }) {
+  return { auth }
+}
+
+export default connect(mapStateToProps)(Dashboard)
