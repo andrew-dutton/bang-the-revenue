@@ -10,7 +10,14 @@ import {
 class Dashboard extends Component {
   state = {
     rawData: [],
-    name: ""
+    name: "",
+    authorised: [
+      'andrew@dutton.pro',
+      'andrew@bangthetable.com',
+      'johannes.kresling@bangthetable.com',
+      'matt@bangthetable.com',
+      'crispin@bangthetable.com'
+    ]
   }
 
   componentDidMount() {
@@ -150,7 +157,11 @@ class Dashboard extends Component {
   }
 
   render() {
-    if (this.props.auth) {
+    if (!this.props.auth) {
+      return <div></div>
+    }
+    if (this.state.authorised.includes(this.props.auth.email)) {
+      console.log(this.props.auth.email)
       return (
         <div className="App" style={{ textAlign: "center" }}>
           <h2>Revenue for 2014/2015</h2>
@@ -178,7 +189,7 @@ class Dashboard extends Component {
           <br />
           <br />
           <br />
-          <h5>You need to be signed in to view this page</h5>
+          <h5>You are not authorised to view this page</h5>
         </div>
       )
     }
