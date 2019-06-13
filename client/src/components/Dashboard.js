@@ -5,7 +5,7 @@ import {
   AnonymousCredential,
   RemoteMongoClient
 } from "mongodb-stitch-browser-sdk"
-
+import Chart from './ClientChart'
 
 class Dashboard extends Component {
   state = {
@@ -17,7 +17,41 @@ class Dashboard extends Component {
       'johannes.kresling@bangthetable.com',
       'matt@bangthetable.com',
       'crispin@bangthetable.com'
-    ]
+    ],
+    chartData: {},
+    data: [21, 31, 35, 48, 57, 61, 73, 79, 93, 103, 110, 115]
+  }
+
+  componentWillMount() {
+    this.getChartData();
+  }
+
+  getChartData() {
+    this.setState({
+      chartData: {
+        labels: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        datasets: [
+          {
+            label: 'EHQ Subscritions',
+            data: this.state.data,
+            backgroundColor: [
+              'rgba(54, 162, 235, 0.6)',
+              'rgba(54, 162, 235, 0.6)',
+              'rgba(54, 162, 235, 0.6)',
+              'rgba(54, 162, 235, 0.6)',
+              'rgba(54, 162, 235, 0.6)',
+              'rgba(54, 162, 235, 0.6)',
+              'rgba(54, 162, 235, 0.6)',
+              'rgba(54, 162, 235, 0.6)',
+              'rgba(54, 162, 235, 0.6)',
+              'rgba(54, 162, 235, 0.6)',
+              'rgba(54, 162, 235, 0.6)',
+              'rgba(54, 162, 235, 0.6)'
+            ]
+          }
+        ]
+      }
+    });
   }
 
   componentDidMount() {
@@ -50,16 +84,24 @@ class Dashboard extends Component {
   }
 
   numberOfInvoices = () => {
-    const total = this.state.rawData.length
+    const totalInvoices = []
 
-    if (total < 1) {
-      return
+    this.state.rawData.forEach((invoice) => {
+      totalInvoices.push(invoice["Invoice Number"])
+    })
+
+    const onlyUnique = (value, index, self) => {
+      return self.indexOf(value) === index;
     }
+
+    let uniqInvoices = totalInvoices.filter(onlyUnique)
+
+    if (totalInvoices.length === 0) return <div></div>
 
     return (
       <div className="ui statistic">
         <div className="value" style={{ color: "red" }}>
-          {total}
+          {uniqInvoices.length}
         </div>
         <div className="label">
           Total Number of Invoices
@@ -155,46 +197,60 @@ class Dashboard extends Component {
   }
 
   totalClients = () => {
-    const clients = []
+    const months = [
+      new Date('2014-07-30'),
+      new Date('2014-08-30'),
+      new Date('2014-09-29'),
+      new Date('2014-10-30'),
+      new Date('2014-11-29'),
+      new Date('2014-12-30'),
+      new Date('2015-01-30'),
+      new Date('2015-02-27'),
+      new Date('2015-03-30'),
+      new Date('2015-04-29'),
+      new Date('2015-05-30'),
+      new Date('2015-06-29')
+    ]
 
-    const today = new Date('2015-05-31')
+    const clientTotals = []
 
-    this.state.rawData.forEach((invoice) => {
-      let start = new Date(invoice["Contract Start"])
-      let end = new Date(invoice["Contract End"])
+    months.forEach((month) => {
+      let counter = []
+      this.state.rawData.forEach((invoice) => {
+        let start = new Date(invoice["Contract Start"])
+        let end = new Date(invoice["Contract End"])
 
-      if (start <= today && end >= today) {
-        clients.push(invoice["Client"])
+
+        if (start <= month && end >= month) {
+          counter.push(invoice["Client"])
+        }
+      })
+
+      const onlyUnique = (value, index, self) => {
+        return self.indexOf(value) === index;
       }
+
+      let uniqClients = counter.filter(onlyUnique)
+
+      clientTotals.push(uniqClients.length)
     })
 
-    const onlyUnique = (value, index, self) => {
-      return self.indexOf(value) === index;
-    }
+    // console.log(clientTotals)
 
-    let uniqClients = clients.filter(onlyUnique)
-
-    if (uniqClients.length === 0) {
-      return <div></div>
-    }
+    // need to be able to update state with new chart values.
 
     return (
       <div>
-        <div className="ui statistic">
-          <div className="value" style={{ color: "purple" }}>
-            {uniqClients.length}
-          </div>
-          <div className="label">
-            Total number of active clients as of 30 June 2015
-          </div>
-        </div>
+
       </div>
     )
   }
 
   render() {
     if (!this.props.auth) {
-      return <div></div>
+      return <div>
+
+      </div>
     }
 
     if (this.state.authorised.includes(this.props.auth.email)) {
@@ -215,6 +271,9 @@ class Dashboard extends Component {
           <br />
           <br />
           <div>{this.totalClients()}</div>
+          <div>
+            <Chart chartData={this.state.chartData} legendPosition="bottom" />
+          </div>
         </div>
       )
     } else {
@@ -240,7 +299,3 @@ function mapStateToProps({ auth }) {
 }
 
 export default connect(mapStateToProps)(Dashboard)
-
-
-// 2014-06-30T14:00:00.000Z
-// 2015-06-29T14:00:00.000Z
