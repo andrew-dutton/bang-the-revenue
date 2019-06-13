@@ -92,8 +92,6 @@ class Dashboard extends Component {
         </div>
       )
     }
-
-    return <span>........Loading..........</span>
   }
 
   stateBreakdown = () => {
@@ -156,12 +154,50 @@ class Dashboard extends Component {
     )
   }
 
+  totalClients = () => {
+    const clients = []
+
+    const today = new Date('2015-05-31')
+
+    this.state.rawData.forEach((invoice) => {
+      let start = new Date(invoice["Contract Start"])
+      let end = new Date(invoice["Contract End"])
+
+      if (start <= today && end >= today) {
+        clients.push(invoice["Client"])
+      }
+    })
+
+    const onlyUnique = (value, index, self) => {
+      return self.indexOf(value) === index;
+    }
+
+    let uniqClients = clients.filter(onlyUnique)
+
+    if (uniqClients.length === 0) {
+      return <div></div>
+    }
+
+    return (
+      <div>
+        <div className="ui statistic">
+          <div className="value" style={{ color: "purple" }}>
+            {uniqClients.length}
+          </div>
+          <div className="label">
+            Total number of active clients as of 30 June 2015
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   render() {
     if (!this.props.auth) {
       return <div></div>
     }
+
     if (this.state.authorised.includes(this.props.auth.email)) {
-      console.log(this.props.auth.email)
       return (
         <div className="App" style={{ textAlign: "center" }}>
           <h2>Revenue for 2014/2015</h2>
@@ -176,6 +212,9 @@ class Dashboard extends Component {
           <br />
           <br />
           <div>{this.totalValue()}</div>
+          <br />
+          <br />
+          <div>{this.totalClients()}</div>
         </div>
       )
     } else {
@@ -201,3 +240,7 @@ function mapStateToProps({ auth }) {
 }
 
 export default connect(mapStateToProps)(Dashboard)
+
+
+// 2014-06-30T14:00:00.000Z
+// 2015-06-29T14:00:00.000Z
