@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Bar } from 'react-chartjs-2';
+import { Line } from 'react-chartjs-2';
 
 class Chart extends Component {
   constructor(props) {
@@ -18,12 +18,12 @@ class Chart extends Component {
   render() {
     return (
       <div className="chart">
-        <Bar
+        <Line
           data={this.state.chartData}
           options={{
             title: {
               display: this.props.displayTitle,
-              text: 'Numer of Active Licences at Close of Each Month',
+              text: 'Number of Active Licences at Close of Each Month',
               fontSize: 20
             },
             legend: {

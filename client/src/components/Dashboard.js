@@ -196,7 +196,7 @@ class Dashboard extends Component {
     )
   }
 
-  totalClients = () => {
+  totalClients() {
     const months = [
       new Date('2014-07-30'),
       new Date('2014-08-30'),
@@ -235,64 +235,69 @@ class Dashboard extends Component {
       clientTotals.push(uniqClients.length)
     })
 
-    // console.log(clientTotals)
+    //console.log(clientTotals)
+
 
     // need to be able to update state with new chart values.
 
-    return (
-      <div>
+    return null
+  }
 
+
+  renderDashboard() {
+    return (
+      <div className="App" style={{ textAlign: "center" }}>
+        <h2>Revenue for 2014/2015</h2>
+        <br />
+        <div>{this.numberOfInvoices()}</div>
+        <br />
+        <br />
+        <div>{this.stateBreakdown()}</div>
+        <br />
+        <br />
+        <div>{this.reveneuBreakdown()}</div>
+        <br />
+        <br />
+        <div>{this.totalValue()}</div>
+        <br />
+        <br />
+        <div>{this.totalClients()}</div>
+        <div>
+          <Chart chartData={this.state.chartData} legendPosition="bottom" />
+        </div>
+      </div>
+    )
+  }
+
+  renderNoAuth() {
+    return (
+      <div className="App" style={{ textAlign: "center" }}>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <h5>You are not authorised to view this page</h5>
       </div>
     )
   }
 
   render() {
     if (!this.props.auth) {
-      return <div>
-
-      </div>
+      return null
     }
 
     if (this.state.authorised.includes(this.props.auth.email)) {
-      return (
-        <div className="App" style={{ textAlign: "center" }}>
-          <h2>Revenue for 2014/2015</h2>
-          <br />
-          <div>{this.numberOfInvoices()}</div>
-          <br />
-          <br />
-          <div>{this.stateBreakdown()}</div>
-          <br />
-          <br />
-          <div>{this.reveneuBreakdown()}</div>
-          <br />
-          <br />
-          <div>{this.totalValue()}</div>
-          <br />
-          <br />
-          <div>{this.totalClients()}</div>
-          <div>
-            <Chart chartData={this.state.chartData} legendPosition="bottom" />
-          </div>
-        </div>
-      )
-    } else {
-      return (
-        <div className="App" style={{ textAlign: "center" }}>
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
-          <h5>You are not authorised to view this page</h5>
-        </div>
-      )
+      return <div>{this.renderDashboard()}</div>
     }
+
+    return <div>{this.renderNoAuth()}</div>
   }
 }
+
 
 function mapStateToProps({ auth }) {
   return { auth }
