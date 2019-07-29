@@ -1,22 +1,29 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Menu } from 'semantic-ui-react'
+
 
 class Header extends Component {
+  state = {
+    activeItem: 'home'
+  }
+
+  handleItemClick = (e, { name }) => this.setState({ activeItem: name })
+
   renderContent() {
     switch (this.props.auth) {
       case null:
         return
       case false:
         return (
-          <li><a href="/auth/google">Login with Google</a></li>
+          <div>
+            <a href="/auth/google" style={{ color: 'white' }}>Login with Google</a>
+          </div>
         )
       default:
         return (
           <div>
-            <ul>
-              <li><a href="/api/logout">Logout</a></li>
-            </ul>
+            <a href="/api/logout" style={{ color: 'white' }}>Logout</a>
           </div>
         )
     }
@@ -25,13 +32,20 @@ class Header extends Component {
   render() {
     return (
       <nav>
-        <div className="nav-wrapper">
-          <Link to='/' className="left brand-logo">
-            BTT Revenue
-          </Link>
-          <ul className="right">
-            {this.renderContent()}
-          </ul>
+        <div>
+          <Menu inverted>
+            <Menu.Item to="/dashboard" name="home" active={this.state.activeItem === 'home'} onClick={this.handleItemClick}>
+              BTT Revenue
+            </Menu.Item>
+            <Menu.Item to="/dashboard" name="dashboard" active={this.state.activeItem === 'dashboard'} onClick={this.handleItemClick}>
+              Dashboard
+            </Menu.Item>
+            <Menu.Item name="log" position="right">
+              <ul>
+                {this.renderContent()}
+              </ul>
+            </Menu.Item>
+          </Menu>
         </div>
       </nav>
     )

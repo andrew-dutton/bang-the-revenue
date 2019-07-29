@@ -1,3 +1,4 @@
+import { Container } from 'semantic-ui-react'
 import React, { Component } from 'react'
 import { BrowserRouter, Route } from 'react-router-dom'
 import { connect } from 'react-redux'
@@ -17,11 +18,11 @@ class App extends Component {
     return (
       <div>
         <BrowserRouter>
-          <div className="container">
+          <Container fluid>
             <Header />
             <Route exact path="/" component={Landing} />
             <Route exact path="/dashboard" component={Dashboard} />
-          </div>
+          </Container>
         </BrowserRouter>
       </div>
     )
