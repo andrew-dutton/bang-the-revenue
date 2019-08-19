@@ -35,7 +35,7 @@ class Header extends Component {
         <div>
           <Menu inverted>
             <Menu.Item to="/dashboard" name="home" active={this.state.activeItem === 'home'} onClick={this.handleItemClick}>
-              BTT Revenue
+              Bang The Table
             </Menu.Item>
             <Menu.Item to="/dashboard" name="dashboard" active={this.state.activeItem === 'dashboard'} onClick={this.handleItemClick}>
               Dashboard
