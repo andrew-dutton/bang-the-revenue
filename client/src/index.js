@@ -7,8 +7,6 @@ import reduxThunk from 'redux-thunk'
 import App from './components/App'
 import reducers from './reducers'
 
-const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-
 const store = createStore(reducers, {}, applyMiddleware(reduxThunk))
 
 ReactDOM.render(

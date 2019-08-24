@@ -7,6 +7,8 @@ import RecurringRevenueGraph from './dashboard/RecurringRevenueGraph'
 // import RevenueBreakdown from "./dashboard/RevenueBreakdown"
 import ActiveLicencesGraph from './dashboard/ActiveLicencesGraph'
 import RenderNoAuth from './Auth/RenderNoAuth'
+import Churn from './dashboard/Churn'
+
 import { Grid } from 'semantic-ui-react'
 
 class Dashboard extends Component {
@@ -20,7 +22,8 @@ class Dashboard extends Component {
       'matt@bangthetable.com',
       'crispin@bangthetable.com',
       'anna@bangthetable.com'
-    ]
+    ],
+    compact: true
   }
 
   componentDidMount() {
@@ -53,9 +56,11 @@ class Dashboard extends Component {
   }
 
   renderDashboard() {
+
     return (
       <div className="App" style={{ textAlign: "center" }}>
         <h1>Dashboard</h1>
+
         <Grid stackable divided="vertically">
           <Grid.Row columns={2}>
             <Grid.Column largeScreen={8} computer={16} tablet={16}>
@@ -68,6 +73,10 @@ class Dashboard extends Component {
             </Grid.Column>
           </Grid.Row>
         </Grid>
+
+        <div>
+          <Churn rawData={this.state.rawData} />
+        </div>
         <div>
           {/* <RevenueBreakdown rawData={this.state.rawData} />
           <TotalValue rawData={this.state.rawData} />

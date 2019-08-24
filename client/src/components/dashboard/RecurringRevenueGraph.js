@@ -11,72 +11,60 @@ class RecurringRevenueChart extends Component {
       canData: [],
       usaData: [],
       ukData: [],
-      nzData: []
+      nzData: [],
+      months: []
     }
 
     this.revenueTotals = this.revenueTotals.bind(this)
     this.revenueTotalsAUD = this.revenueTotalsAUD.bind(this)
+    this.revenueTotalsNON = this.revenueTotalsNON.bind(this)
   }
 
   handleChange = (e, { value }) => this.setState({ value })
 
+  getNumberOfMonthsSinceJuly2015 = () => {
+    let today = new Date()
+    let thisMonth = today.getMonth()
+    let thisYear = today.getFullYear()
+    let monthsOfYears = (thisYear - (2015 + 1)) * 12
+    return monthsOfYears + thisMonth + 7
+
+  }
+
+  createMonthsArray = () => {
+    const numberOfMonths = this.getNumberOfMonthsSinceJuly2015()
+
+    this.setState(prevState => ({
+      months: []
+    }))
+
+    let year = 2015
+    let yearStep = 12
+
+    for (let step = 0; step < numberOfMonths; step++) {
+      let month = 7
+      month += step
+
+      if ((month % 12) === 0) {
+        month = 12
+      } else {
+        month = month % 12
+      }
+
+      if (step >= 6) {
+        yearStep++
+        year = Math.floor(yearStep / 12) + 2015
+        if (yearStep % 12 === 0) {
+          year -= 1
+        }
+      }
+
+      this.state.months.push(new Date(year, month, 0))
+    }
+  }
+
   revenueTotals() {
-    const oneDay = 86400000
-    const months = [
-      new Date('2015-07-31') - oneDay,
-      new Date('2015-08-31') - oneDay,
-      new Date('2015-09-30') - oneDay,
-      new Date('2015-10-31') - oneDay,
-      new Date('2015-11-30') - oneDay,
-      new Date('2015-12-31') - oneDay,
-      new Date('2016-01-31') - oneDay,
-      new Date('2016-02-29') - oneDay,
-      new Date('2016-03-31') - oneDay,
-      new Date('2016-04-30') - oneDay,
-      new Date('2016-05-31') - oneDay,
-      new Date('2016-06-30') - oneDay,
-
-      new Date('2016-07-31') - oneDay,
-      new Date('2016-08-31') - oneDay,
-      new Date('2016-09-30') - oneDay,
-      new Date('2016-10-31') - oneDay,
-      new Date('2016-11-30') - oneDay,
-      new Date('2016-12-31') - oneDay,
-      new Date('2017-01-31') - oneDay,
-      new Date('2017-02-28') - oneDay,
-      new Date('2017-03-31') - oneDay,
-      new Date('2017-04-30') - oneDay,
-      new Date('2017-05-31') - oneDay,
-      new Date('2017-06-30') - oneDay,
-
-      new Date('2017-07-31') - oneDay,
-      new Date('2017-08-31') - oneDay,
-      new Date('2017-09-30') - oneDay,
-      new Date('2017-10-31') - oneDay,
-      new Date('2017-11-30') - oneDay,
-      new Date('2017-12-31') - oneDay,
-      new Date('2018-01-31') - oneDay,
-      new Date('2018-02-28') - oneDay,
-      new Date('2018-03-31') - oneDay,
-      new Date('2018-04-30') - oneDay,
-      new Date('2018-05-31') - oneDay,
-      new Date('2018-06-30') - oneDay,
-
-      new Date('2018-07-31') - oneDay,
-      new Date('2018-08-31') - oneDay,
-      new Date('2018-09-30') - oneDay,
-      new Date('2018-10-31') - oneDay,
-      new Date('2018-11-30') - oneDay,
-      new Date('2018-12-31') - oneDay,
-      new Date('2019-01-31') - oneDay,
-      new Date('2019-02-28') - oneDay,
-      new Date('2019-03-31') - oneDay,
-      new Date('2019-04-30') - oneDay,
-      new Date('2019-05-31') - oneDay,
-      new Date('2019-06-30') - oneDay,
-
-      new Date('2019-07-31') - oneDay
-    ]
+    this.createMonthsArray()
 
     const ausTotal = []
     const canTotal = []
@@ -84,10 +72,9 @@ class RecurringRevenueChart extends Component {
     const ukTotal = []
     const nzTotal = []
 
-    months.forEach((month) => {
+    this.state.months.forEach((thisMonthEnd) => {
       let ausCounter = []
       let canCounter = []
-      let canDetail = []
       let usaCounter = []
       let ukCounter = []
       let nzCounter = []
@@ -95,38 +82,95 @@ class RecurringRevenueChart extends Component {
       this.props.rawData.forEach((invoice) => {
         let startString = invoice["start"]
         let startDateParts = startString.split("/")
-        let start = new Date(startDateParts[2], startDateParts[1] - 1, +startDateParts[0])
+        let startContract = new Date(startDateParts[2], startDateParts[1] - 1, +startDateParts[0])
+
         let endString = invoice["end"]
         let endDateParts = endString.split("/")
-        let end = new Date(endDateParts[2], endDateParts[1] - 1, +endDateParts[0])
+        let endContract = new Date(endDateParts[2], endDateParts[1] - 1, +endDateParts[0])
 
-        if (start <= month && end >= month && (invoice["territory"] === "AUS")) {
-          ausCounter.push(invoice["valuepermonth"])
+        let actualStartMonth = startContract.getMonth()
+        let actualStartYear = startContract.getFullYear()
+
+        let actualEndMonth = endContract.getMonth()
+        let actualEndYear = endContract.getFullYear()
+
+        if (startContract <= thisMonthEnd && endContract >= thisMonthEnd && (invoice["territory"] === "AUS")) {
+          if (invoice["spreadmonths"] > invoice["months"]) {
+            if (actualStartMonth === thisMonthEnd.getMonth() && actualStartYear === thisMonthEnd.getFullYear()) {
+              ausCounter.push((invoice["valuepermonth"] / 30) * (30 - (startContract.getDay())))
+            } else if (actualEndMonth <= thisMonthEnd.getMonth() && actualEndYear === thisMonthEnd.getFullYear()) {
+              ausCounter.push((invoice["valuepermonth"] / 30) * (endContract.getDay()))
+            } else {
+              ausCounter.push(invoice["valuepermonth"])
+            }
+          } else {
+            ausCounter.push(invoice["valuepermonth"])
+          }
         }
 
-        if (start <= month && end >= month && (invoice["territory"] === "CAN")) {
-          canCounter.push(invoice["valuepermonth"])
-          canDetail.push(invoice["client"])
-
+        if (startContract <= thisMonthEnd && endContract >= thisMonthEnd && (invoice["territory"] === "CAN")) {
+          if (invoice["spreadmonths"] > invoice["months"]) {
+            if (actualStartMonth === thisMonthEnd.getMonth() && actualStartYear === thisMonthEnd.getFullYear()) {
+              canCounter.push((invoice["valuepermonth"] / 30) * (30 - (startContract.getDay())))
+            } else if (actualEndMonth <= thisMonthEnd.getMonth() && actualEndYear === thisMonthEnd.getFullYear()) {
+              canCounter.push((invoice["valuepermonth"] / 30) * (endContract.getDay()))
+            } else {
+              canCounter.push(invoice["valuepermonth"])
+            }
+          } else {
+            canCounter.push(invoice["valuepermonth"])
+          }
         }
 
-        if (start <= month && end >= month && (invoice["territory"] === "USA")) {
-          usaCounter.push(invoice["valuepermonth"])
+        if (startContract <= thisMonthEnd && endContract >= thisMonthEnd && (invoice["territory"] === "USA")) {
+          if (invoice["spreadmonths"] > invoice["months"]) {
+            if (actualStartMonth === thisMonthEnd.getMonth() && actualStartYear === thisMonthEnd.getFullYear()) {
+              usaCounter.push((invoice["valuepermonth"] / 30) * (30 - (startContract.getDay())))
+            } else if (actualEndMonth <= thisMonthEnd.getMonth() && actualEndYear === thisMonthEnd.getFullYear()) {
+              usaCounter.push((invoice["valuepermonth"] / 30) * (endContract.getDay()))
+            } else {
+              usaCounter.push(invoice["valuepermonth"])
+            }
+          } else {
+            usaCounter.push(invoice["valuepermonth"])
+          }
         }
 
-        if (start <= month && end >= month && (invoice["territory"] === "UK")) {
-          ukCounter.push(invoice["valuepermonth"])
+        if (startContract <= thisMonthEnd && endContract >= thisMonthEnd && (invoice["territory"] === "UK")) {
+          if (invoice["spreadmonths"] > invoice["months"]) {
+            if (actualStartMonth === thisMonthEnd.getMonth() && actualStartYear === thisMonthEnd.getFullYear()) {
+              ukCounter.push((invoice["valuepermonth"] / 30) * (30 - (startContract.getDay())))
+            } else if (actualEndMonth <= thisMonthEnd.getMonth() && actualEndYear === thisMonthEnd.getFullYear()) {
+              ukCounter.push((invoice["valuepermonth"] / 30) * (endContract.getDay()))
+            } else {
+              ukCounter.push(invoice["valuepermonth"])
+            }
+          } else {
+            ukCounter.push(invoice["valuepermonth"])
+          }
         }
 
-        if (start <= month && end >= month && (invoice["territory"] === "NZ")) {
-          nzCounter.push(invoice["valuepermonth"])
+        if (startContract <= thisMonthEnd && endContract >= thisMonthEnd && (invoice["territory"] === "NZ")) {
+          if (invoice["spreadmonths"] > invoice["months"]) {
+            if (actualStartMonth === thisMonthEnd.getMonth() && actualStartYear === thisMonthEnd.getFullYear()) {
+              nzCounter.push((invoice["valuepermonth"] / 30) * (30 - (startContract.getDay())))
+            } else if (actualEndMonth <= thisMonthEnd.getMonth() && actualEndYear === thisMonthEnd.getFullYear()) {
+              nzCounter.push((invoice["valuepermonth"] / 30) * (endContract.getDay()))
+            } else {
+              nzCounter.push(invoice["valuepermonth"])
+            }
+          } else {
+            nzCounter.push(invoice["valuepermonth"])
+          }
         }
       })
-      ausTotal.push(ausCounter.reduce((a, b) => a + b, 0))
-      canTotal.push(canCounter.reduce((a, b) => a + b, 0))
-      usaTotal.push(usaCounter.reduce((a, b) => a + b, 0))
-      ukTotal.push(ukCounter.reduce((a, b) => a + b, 0))
-      nzTotal.push(nzCounter.reduce((a, b) => a + b, 0))
+
+      ausTotal.push(Math.round(ausCounter.reduce((a, b) => a + b, 0)))
+      canTotal.push(Math.round(canCounter.reduce((a, b) => a + b, 0)))
+      usaTotal.push(Math.round(usaCounter.reduce((a, b) => a + b, 0)))
+      ukTotal.push(Math.round(ukCounter.reduce((a, b) => a + b, 0)))
+      nzTotal.push(Math.round(nzCounter.reduce((a, b) => a + b, 0)))
+
     })
 
     this.setState(prevState => ({
@@ -152,63 +196,8 @@ class RecurringRevenueChart extends Component {
     return null
   }
 
-  revenueTotalsAUD() {
-    const oneDay = 86400000
-    const months = [
-      new Date('2015-07-31') - oneDay,
-      new Date('2015-08-31') - oneDay,
-      new Date('2015-09-30') - oneDay,
-      new Date('2015-10-31') - oneDay,
-      new Date('2015-11-30') - oneDay,
-      new Date('2015-12-31') - oneDay,
-      new Date('2016-01-31') - oneDay,
-      new Date('2016-02-29') - oneDay,
-      new Date('2016-03-31') - oneDay,
-      new Date('2016-04-30') - oneDay,
-      new Date('2016-05-31') - oneDay,
-      new Date('2016-06-30') - oneDay,
-
-      new Date('2016-07-31') - oneDay,
-      new Date('2016-08-31') - oneDay,
-      new Date('2016-09-30') - oneDay,
-      new Date('2016-10-31') - oneDay,
-      new Date('2016-11-30') - oneDay,
-      new Date('2016-12-31') - oneDay,
-      new Date('2017-01-31') - oneDay,
-      new Date('2017-02-28') - oneDay,
-      new Date('2017-03-31') - oneDay,
-      new Date('2017-04-30') - oneDay,
-      new Date('2017-05-31') - oneDay,
-      new Date('2017-06-30') - oneDay,
-
-      new Date('2017-07-31') - oneDay,
-      new Date('2017-08-31') - oneDay,
-      new Date('2017-09-30') - oneDay,
-      new Date('2017-10-31') - oneDay,
-      new Date('2017-11-30') - oneDay,
-      new Date('2017-12-31') - oneDay,
-      new Date('2018-01-31') - oneDay,
-      new Date('2018-02-28') - oneDay,
-      new Date('2018-03-31') - oneDay,
-      new Date('2018-04-30') - oneDay,
-      new Date('2018-05-31') - oneDay,
-      new Date('2018-06-30') - oneDay,
-
-      new Date('2018-07-31') - oneDay,
-      new Date('2018-08-31') - oneDay,
-      new Date('2018-09-30') - oneDay,
-      new Date('2018-10-31') - oneDay,
-      new Date('2018-11-30') - oneDay,
-      new Date('2018-12-31') - oneDay,
-      new Date('2019-01-31') - oneDay,
-      new Date('2019-02-28') - oneDay,
-      new Date('2019-03-31') - oneDay,
-      new Date('2019-04-30') - oneDay,
-      new Date('2019-05-31') - oneDay,
-      new Date('2019-06-30') - oneDay,
-
-      new Date('2019-07-31') - oneDay
-    ]
+  revenueTotalsNON() {
+    this.createMonthsArray()
 
     const ausTotal = []
     const canTotal = []
@@ -216,10 +205,83 @@ class RecurringRevenueChart extends Component {
     const ukTotal = []
     const nzTotal = []
 
-    months.forEach((month) => {
+    this.state.months.forEach((month) => {
       let ausCounter = []
       let canCounter = []
-      let canDetail = []
+      let usaCounter = []
+      let ukCounter = []
+      let nzCounter = []
+
+      this.props.rawData.forEach((invoice) => {
+        let invDateString = invoice["date"]
+        let invDateParts = invDateString.split("/")
+        let invDate = new Date(invDateParts[2], invDateParts[1] - 1, +invDateParts[0])
+        let monthStart = new Date(month.getFullYear(), month.getMonth(), 1)
+
+        if (invoice["start"] === "" && (invDate >= monthStart && invDate <= month) && invoice["territory"] === "AUS") {
+          ausCounter.push(invoice["total"])
+        }
+
+        if (invoice["start"] === "" && (invDate >= monthStart && invDate <= month) && invoice["territory"] === "CAN") {
+          canCounter.push(invoice["total"])
+        }
+
+        if (invoice["start"] === "" && (invDate >= monthStart && invDate <= month) && invoice["territory"] === "USA") {
+          usaCounter.push(invoice["total"])
+        }
+
+        if (invoice["start"] === "" && (invDate >= monthStart && invDate <= month) && invoice["territory"] === "UK") {
+          ukCounter.push(invoice["total"])
+        }
+
+        if (invoice["start"] === "" && (invDate >= monthStart && invDate <= month) && invoice["territory"] === "NZ") {
+          nzCounter.push(invoice["total"])
+        }
+      })
+
+      ausTotal.push(Math.round(ausCounter.reduce((a, b) => a + b, 0)))
+      canTotal.push(Math.round(canCounter.reduce((a, b) => a + b, 0)))
+      usaTotal.push(Math.round(usaCounter.reduce((a, b) => a + b, 0)))
+      ukTotal.push(Math.round(ukCounter.reduce((a, b) => a + b, 0)))
+      nzTotal.push(Math.round(nzCounter.reduce((a, b) => a + b, 0)))
+    })
+
+    this.setState(prevState => ({
+      ausData: [...ausTotal]
+    }))
+
+    this.setState(prevState => ({
+      canData: [...canTotal]
+    }))
+
+
+    this.setState(prevState => ({
+      usaData: [...usaTotal]
+    }))
+
+    this.setState(prevState => ({
+      ukData: [...ukTotal]
+    }))
+
+    this.setState(prevState => ({
+      nzData: [...nzTotal]
+    }))
+
+    return null
+  }
+
+  revenueTotalsAUD() {
+    this.createMonthsArray()
+
+    const ausTotal = []
+    const canTotal = []
+    const usaTotal = []
+    const ukTotal = []
+    const nzTotal = []
+
+    this.state.months.forEach((month) => {
+      let ausCounter = []
+      let canCounter = []
       let usaCounter = []
       let ukCounter = []
       let nzCounter = []
@@ -238,8 +300,6 @@ class RecurringRevenueChart extends Component {
 
         if (start <= month && end >= month && (invoice["territory"] === "CAN")) {
           canCounter.push(invoice["valuepermonth"])
-          canDetail.push(invoice["client"])
-
         }
 
         if (start <= month && end >= month && (invoice["territory"] === "USA")) {
@@ -254,18 +314,13 @@ class RecurringRevenueChart extends Component {
           nzCounter.push(invoice["valuepermonth"])
         }
       })
-      ausTotal.push(ausCounter.reduce((a, b) => a + b, 0))
-      canTotal.push(canCounter.reduce((a, b) => a + b, 0) / .9)
-      usaTotal.push(usaCounter.reduce((a, b) => a + b, 0) / .6)
-      ukTotal.push(ukCounter.reduce((a, b) => a + b, 0) / .45)
-      nzTotal.push(nzCounter.reduce((a, b) => a + b, 0) / 1.05)
-    })
-    // console.log(ausTotal)
-    // console.log(canTotal)
-    // console.log(usaTotal)
-    // console.log(ukTotal)
-    // console.log(nzTotal)
 
+      ausTotal.push(Math.round(ausCounter.reduce((a, b) => a + b, 0)))
+      canTotal.push(Math.round(canCounter.reduce((a, b) => a + b, 0) / .9))
+      usaTotal.push(Math.round(usaCounter.reduce((a, b) => a + b, 0) / .6))
+      ukTotal.push(Math.round(ukCounter.reduce((a, b) => a + b, 0) / .45))
+      nzTotal.push(Math.round(nzCounter.reduce((a, b) => a + b, 0) / 1.05))
+    })
 
     this.setState(prevState => ({
       ausData: [...ausTotal]
@@ -444,6 +499,14 @@ class RecurringRevenueChart extends Component {
                 value='AUD'
                 checked={this.state.value === 'AUD'}
                 onChange={this.revenueTotalsAUD}
+                onClick={this.handleChange}
+              />
+              <Radio
+                label='NON RECURRING REVENUE ONLY'
+                name='radioGroup'
+                value='NON'
+                checked={this.state.value === 'NON'}
+                onChange={this.revenueTotalsNON}
                 onClick={this.handleChange}
               />
             </Form.Field>

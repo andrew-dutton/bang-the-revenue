@@ -11,69 +11,51 @@ class ActiveLicencesGraph extends Component {
       canData: [],
       usaData: [],
       ukData: [],
-      nzData: []
+      nzData: [],
+      months: []
     }
 
     this.totalClients = this.totalClients.bind(this)
   }
 
+  getNumberOfMonthsSinceJuly2015 = () => {
+    let today = new Date()
+    let thisMonth = today.getMonth()
+    let thisYear = today.getFullYear()
+    let monthsOfYears = (thisYear - (2015 + 1)) * 12
+    return monthsOfYears + thisMonth + 7
+  }
+
+  createMonthsArray = () => {
+    const numberOfMonths = this.getNumberOfMonthsSinceJuly2015()
+
+    let year = 2015
+    let yearStep = 12
+
+    for (let step = 0; step < numberOfMonths; step++) {
+      let month = 7
+      month += step
+
+      if ((month % 12) === 0) {
+        month = 12
+      } else {
+        month = month % 12
+      }
+
+      if (step >= 6) {
+        yearStep++
+        year = Math.floor(yearStep / 12) + 2015
+        if (yearStep % 12 === 0) {
+          year -= 1
+        }
+      }
+
+      this.state.months.push(new Date(year, month, 0))
+    }
+  }
+
   totalClients() {
-    const oneDay = 86400000
-    const months = [
-      new Date('2015-07-31') - oneDay,
-      new Date('2015-08-31') - oneDay,
-      new Date('2015-09-30') - oneDay,
-      new Date('2015-10-31') - oneDay,
-      new Date('2015-11-30') - oneDay,
-      new Date('2015-12-31') - oneDay,
-      new Date('2016-01-31') - oneDay,
-      new Date('2016-02-29') - oneDay,
-      new Date('2016-03-31') - oneDay,
-      new Date('2016-04-30') - oneDay,
-      new Date('2016-05-31') - oneDay,
-      new Date('2016-06-30') - oneDay,
-
-      new Date('2016-07-31') - oneDay,
-      new Date('2016-08-31') - oneDay,
-      new Date('2016-09-30') - oneDay,
-      new Date('2016-10-31') - oneDay,
-      new Date('2016-11-30') - oneDay,
-      new Date('2016-12-31') - oneDay,
-      new Date('2017-01-31') - oneDay,
-      new Date('2017-02-28') - oneDay,
-      new Date('2017-03-31') - oneDay,
-      new Date('2017-04-30') - oneDay,
-      new Date('2017-05-31') - oneDay,
-      new Date('2017-06-30') - oneDay,
-
-      new Date('2017-07-31') - oneDay,
-      new Date('2017-08-31') - oneDay,
-      new Date('2017-09-30') - oneDay,
-      new Date('2017-10-31') - oneDay,
-      new Date('2017-11-30') - oneDay,
-      new Date('2017-12-31') - oneDay,
-      new Date('2018-01-31') - oneDay,
-      new Date('2018-02-28') - oneDay,
-      new Date('2018-03-31') - oneDay,
-      new Date('2018-04-30') - oneDay,
-      new Date('2018-05-31') - oneDay,
-      new Date('2018-06-30') - oneDay,
-
-      new Date('2018-07-31') - oneDay,
-      new Date('2018-08-31') - oneDay,
-      new Date('2018-09-30') - oneDay,
-      new Date('2018-10-31') - oneDay,
-      new Date('2018-11-30') - oneDay,
-      new Date('2018-12-31') - oneDay,
-      new Date('2019-01-31') - oneDay,
-      new Date('2019-02-28') - oneDay,
-      new Date('2019-03-31') - oneDay,
-      new Date('2019-04-30') - oneDay,
-      new Date('2019-05-31') - oneDay,
-      new Date('2019-06-30') - oneDay,
-
-      new Date('2019-07-31') - oneDay
-    ]
+    this.createMonthsArray()
 
     const ausTotal = []
     const canTotal = []
@@ -81,12 +63,18 @@ class ActiveLicencesGraph extends Component {
     const ukTotal = []
     const nzTotal = []
 
-    months.forEach((month) => {
+    this.state.months.forEach((month) => {
       let ausCounter = []
       let canCounter = []
       let usaCounter = []
       let ukCounter = []
       let nzCounter = []
+
+      let ausType = []
+      let canType = []
+      let usaType = []
+      let ukType = []
+      let nzType = []
 
       this.props.rawData.forEach((invoice) => {
         let startString = invoice["start"]
@@ -98,22 +86,27 @@ class ActiveLicencesGraph extends Component {
 
         if (start <= month && end >= month && (invoice["territory"] === "AUS")) {
           ausCounter.push(invoice["client"])
+          ausType.push(invoice["product"])
         }
 
         if (start <= month && end >= month && (invoice["territory"] === "CAN")) {
           canCounter.push(invoice["client"])
+          canType.push(invoice["product"])
         }
 
         if (start <= month && end >= month && (invoice["territory"] === "USA")) {
           usaCounter.push(invoice["client"])
+          usaType.push(invoice["product"])
         }
 
         if (start <= month && end >= month && (invoice["territory"] === "UK")) {
           ukCounter.push(invoice["client"])
+          ukType.push(invoice["product"])
         }
 
         if (start <= month && end >= month && (invoice["territory"] === "NZ")) {
           nzCounter.push(invoice["client"])
+          nzType.push(invoice["product"])
         }
       })
 
@@ -306,5 +299,3 @@ class ActiveLicencesGraph extends Component {
 }
 
 export default ActiveLicencesGraph
-
-
