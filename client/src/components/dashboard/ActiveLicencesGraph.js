@@ -12,10 +12,58 @@ class ActiveLicencesGraph extends Component {
       usaData: [],
       ukData: [],
       nzData: [],
-      months: []
+      months: [],
+      annualOn: false,
+      projectOn: false,
+      staticOn: false,
+      budgetOn: false,
+      annual: "",
+      project: "",
+      static: "",
+      budget: ""
     }
 
     this.totalClients = this.totalClients.bind(this)
+    this.handleClickAnnual = this.handleClickAnnual.bind(this)
+    this.handleClickProject = this.handleClickProject.bind(this)
+    this.handleClickStatic = this.handleClickStatic.bind(this)
+    this.handleClickBudget = this.handleClickBudget.bind(this)
+  }
+
+  handleClickAnnual = () => {
+    if (this.state.annualOn) {
+      this.setState((prevState) => ({ annual: "" }))
+    } else {
+      this.setState((prevState) => ({ annual: "Annual" }))
+    }
+    this.setState((prevState) => ({ annualActive: !prevState.annualActive, annualOn: !prevState.annualOn }))
+  }
+
+  handleClickProject = () => {
+    if (this.state.projectOn) {
+      this.setState((prevState) => ({ project: "" }))
+    } else {
+      this.setState((prevState) => ({ project: "Project" }))
+    }
+    this.setState((prevState) => ({ projectActive: !prevState.projectActive, projectOn: !prevState.projectOn }))
+  }
+
+  handleClickStatic = () => {
+    if (this.state.staticOn) {
+      this.setState((prevState) => ({ static: "" }))
+    } else {
+      this.setState((prevState) => ({ static: "Static" }))
+    }
+    this.setState((prevState) => ({ staticActive: !prevState.staticActive, staticOn: !prevState.staticOn }))
+  }
+
+  handleClickBudget = () => {
+    if (this.state.budgetOn) {
+      this.setState((prevState) => ({ budget: "" }))
+    } else {
+      this.setState((prevState) => ({ budget: "Budget Allocator" }))
+    }
+    this.setState((prevState) => ({ budgetActive: !prevState.budgetActive, budgetOn: !prevState.budgetOn }))
   }
 
   getNumberOfMonthsSinceJuly2015 = () => {
@@ -84,27 +132,52 @@ class ActiveLicencesGraph extends Component {
         let endDateParts = endString.split("/")
         let end = new Date(endDateParts[2], endDateParts[1] - 1, +endDateParts[0])
 
-        if (start <= month && end >= month && (invoice["territory"] === "AUS")) {
+        if (start <= month && end >= month && (invoice["territory"] === "AUS") && (
+          invoice["product"] === this.state.annual ||
+          invoice["product"] === this.state.project ||
+          invoice["product"] === this.state.static ||
+          invoice["product"] === this.state.budget
+        )) {
           ausCounter.push(invoice["client"])
           ausType.push(invoice["product"])
         }
 
-        if (start <= month && end >= month && (invoice["territory"] === "CAN")) {
+        if (start <= month && end >= month && (invoice["territory"] === "CAN") && (
+          invoice["product"] === this.state.annual ||
+          invoice["product"] === this.state.project ||
+          invoice["product"] === this.state.static ||
+          invoice["product"] === this.state.budget
+        )) {
           canCounter.push(invoice["client"])
           canType.push(invoice["product"])
         }
 
-        if (start <= month && end >= month && (invoice["territory"] === "USA")) {
+        if (start <= month && end >= month && (invoice["territory"] === "USA") && (
+          invoice["product"] === this.state.annual ||
+          invoice["product"] === this.state.project ||
+          invoice["product"] === this.state.static ||
+          invoice["product"] === this.state.budget
+        )) {
           usaCounter.push(invoice["client"])
           usaType.push(invoice["product"])
         }
 
-        if (start <= month && end >= month && (invoice["territory"] === "UK")) {
+        if (start <= month && end >= month && (invoice["territory"] === "UK") && (
+          invoice["product"] === this.state.annual ||
+          invoice["product"] === this.state.project ||
+          invoice["product"] === this.state.static ||
+          invoice["product"] === this.state.budget
+        )) {
           ukCounter.push(invoice["client"])
           ukType.push(invoice["product"])
         }
 
-        if (start <= month && end >= month && (invoice["territory"] === "NZ")) {
+        if (start <= month && end >= month && (invoice["territory"] === "NZ") && (
+          invoice["product"] === this.state.annual ||
+          invoice["product"] === this.state.project ||
+          invoice["product"] === this.state.static ||
+          invoice["product"] === this.state.budget
+        )) {
           nzCounter.push(invoice["client"])
           nzType.push(invoice["product"])
         }
@@ -151,13 +224,14 @@ class ActiveLicencesGraph extends Component {
   }
 
   render() {
+    const { annualActive, projectActive, staticActive, budgetActive } = this.state
     const data = {
       labels: [
         'Jul-15', 'Aug-15', 'Sep-15', 'Oct-15', 'Nov-15', 'Dec-15', 'Jan-16', 'Feb-16', 'Mar-16', 'Apr-16', 'May-16', 'Jun-16',
         'Jul-16', 'Aug-16', 'Sep-16', 'Oct-16', 'Nov-16', 'Dec-16', 'Jan-17', 'Feb-17', 'Mar-17', 'Apr-17', 'May-17', 'Jun-17',
         'Jul-17', 'Aug-17', 'Sep-17', 'Oct-17', 'Nov-17', 'Dec-17', 'Jan-18', 'Feb-18', 'Mar-18', 'Apr-18', 'May-18', 'Jun-18',
         'Jul-18', 'Aug-18', 'Sep-18', 'Oct-18', 'Nov-18', 'Dec-18', 'Jan-19', 'Feb-19', 'Mar-19', 'Apr-19', 'May-19', 'Jun-19',
-        'Jul-19'
+        'Jul-19', 'Aug-19'
       ],
       datasets: [
         {
@@ -177,7 +251,7 @@ class ActiveLicencesGraph extends Component {
           pointHoverBackgroundColor: 'rgba(75,192,192,1)',
           pointHoverBorderColor: 'rgba(220,220,220,1)',
           pointHoverBorderWidth: 2,
-          pointRadius: 1,
+          pointRadius: 5,
           pointHitRadius: 10,
           data: this.state.ausData
         },
@@ -198,7 +272,7 @@ class ActiveLicencesGraph extends Component {
           pointHoverBackgroundColor: 'rgba(75,192,192,1)',
           pointHoverBorderColor: 'rgba(220,220,220,1)',
           pointHoverBorderWidth: 2,
-          pointRadius: 1,
+          pointRadius: 5,
           pointHitRadius: 10,
           data: this.state.canData,
           trendlineLinear: {
@@ -224,7 +298,7 @@ class ActiveLicencesGraph extends Component {
           pointHoverBackgroundColor: 'rgba(75,192,192,1)',
           pointHoverBorderColor: 'rgba(220,220,220,1)',
           pointHoverBorderWidth: 2,
-          pointRadius: 1,
+          pointRadius: 5,
           pointHitRadius: 10,
           data: this.state.usaData
         },
@@ -245,7 +319,7 @@ class ActiveLicencesGraph extends Component {
           pointHoverBackgroundColor: 'rgba(75,192,192,1)',
           pointHoverBorderColor: 'rgba(220,220,220,1)',
           pointHoverBorderWidth: 2,
-          pointRadius: 1,
+          pointRadius: 5,
           pointHitRadius: 10,
           data: this.state.ukData
         },
@@ -266,7 +340,7 @@ class ActiveLicencesGraph extends Component {
           pointHoverBackgroundColor: 'rgba(75,192,192,1)',
           pointHoverBorderColor: 'rgba(220,220,220,1)',
           pointHoverBorderWidth: 2,
-          pointRadius: 1,
+          pointRadius: 5,
           pointHitRadius: 10,
           data: this.state.nzData
         }
@@ -290,7 +364,19 @@ class ActiveLicencesGraph extends Component {
         </div>
         <div>
           <Button primary onClick={this.totalClients}>
-            Active licences
+            Active Licences
+          </Button>
+          <Button toggle active={annualActive} onClick={this.handleClickAnnual}>
+            Annual
+          </Button>
+          <Button toggle active={projectActive} onClick={this.handleClickProject}>
+            Project
+          </Button>
+          <Button toggle active={staticActive} onClick={this.handleClickStatic}>
+            Static
+          </Button>
+          <Button toggle active={budgetActive} onClick={this.handleClickBudget}>
+            Budget
           </Button>
         </div>
       </div>

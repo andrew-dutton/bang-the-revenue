@@ -11,7 +11,8 @@ class Churn extends Component {
       lost: [],
       new: [],
       months: [],
-      monthsText: []
+      monthsText: [],
+      churnTer: "AUS"
     }
 
     this.totalClients = this.totalClients.bind(this)
@@ -115,7 +116,7 @@ class Churn extends Component {
         let end = new Date(endDateParts[2], endDateParts[1] - 1, +endDateParts[0])
 
         if (start <= month && end >= month
-          && (invoice["territory"] === "AUS")
+          && (invoice["territory"] === this.state.churnTer)
         ) {
           ausCounter.push(invoice["client"])
         }
@@ -137,10 +138,6 @@ class Churn extends Component {
     return null
   }
 
-
-
-
-
   totalClientsDetail() {
     this.createMonthsArray()
     const ausTotal = []
@@ -157,7 +154,7 @@ class Churn extends Component {
         let end = new Date(endDateParts[2], endDateParts[1] - 1, +endDateParts[0])
 
         if (start <= month && end >= month
-          && (invoice["territory"] === "AUS")
+          && (invoice["territory"] === this.state.churnTer)
         ) {
           ausCounter.push(invoice)
         }
@@ -224,15 +221,15 @@ class Churn extends Component {
 
     return (
       <div>
-        {/* {this.state.new.map((item, index) => (
+        {this.state.new.map((item, index) => (
           <Card>
-            <h2 key={index}>{this.state.monthsText[index]},{item.length}</h2>
+            <h2 key={index}>{this.state.monthsText[index + 1]},{item.length}</h2>
             <h4>{item.length} new client(s)</h4>
             {item.map((client, index) => (
               <p key={index}>{client}</p>
             ))}
           </Card>
-        ))} */}
+        ))}
       </div>
     )
   }
@@ -244,15 +241,15 @@ class Churn extends Component {
 
     return (
       <div>
-        {/* {this.state.lost.map((item, index) => (
+        {this.state.lost.map((item, index) => (
           <Card>
-            <h2 key={index}>{this.state.monthsText[index]},{item.length},{this.state.aus[index].length}</h2>
+            <h2 key={index}>{this.state.monthsText[index + 1]},{item.length},{this.state.aus[index].length}</h2>
             <h4>{item.length} client(s) lost</h4>
             {item.map((client, index) => (
               <p key={index}>{client}</p>
             ))}
           </Card>
-        ))} */}
+        ))}
       </div>
     )
   }
