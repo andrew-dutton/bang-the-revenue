@@ -28,15 +28,15 @@ class Dashboard extends Component {
     graphsOptions: [{
       key: "Active Licences",
       text: "Active Licences",
-      graph: "Active Licences"
+      value: "Active Licences"
     }, {
       key: "Recurring Revenue",
       text: "Recurring Revenue",
-      graph: "Recurring Revenue"
+      value: "Recurring Revenue"
     }, {
       key: "Churn",
       text: "Churn",
-      graph: "Churn"
+      value: "Churn"
     }],
     activeClientsChart: false,
     recurringRevenueChart: false,
@@ -75,74 +75,44 @@ class Dashboard extends Component {
   handleSelection = (event, data) => {
     console.log('trig')
     event.persist()
+    console.log(event.target.value)
     this.setState((prevState) => ({ selected: event.target.textContent }))
-    console.log(event.target.textContent)
+    console.log(event.target.value)
   }
 
   renderDashboard() {
+    let toDisplay;
     const { value } = this.state
-
     if (this.state.selected === "Select Chart") {
-      return (
-        <div>
-          <h1>Dashboard</h1>
-          <Dropdown placeholder={this.state.selected} selection onChange={this.handleSelection} options={this.state.graphsOptions} value={value} />
-          <h1>Please select a chart from above</h1>
-        </div>
-      )
+
     }
 
     if (this.state.selected === "Active Licences") {
-      return (
-        <div>
-          <h1>Dashboard</h1>
-          <Dropdown placeholder={this.state.selected} selection onChange={this.handleSelection} options={this.state.graphsOptions} value={value} />
-          <h2>Active Licences</h2>
-          <ActiveLicencesGraph rawData={this.state.rawData} />
-        </div>
-      )
+      toDisplay = <ActiveLicencesGraph rawData={this.state.rawData} />
     }
 
     if (this.state.selected === "Recurring Revenue") {
-      return (
-        <div>
-          <h1>Dashboard</h1>
-          <Dropdown placeholder={this.state.selected} selection onChange={this.handleSelection} options={this.state.graphsOptions} value={value} />
-          <h1>Monthly Recurring Revenue</h1>
-          <RecurringRevenueGraph rawData={this.state.rawData} charts={this.state} />
-        </div>
-      )
+      toDisplay = <RecurringRevenueGraph rawData={this.state.rawData} charts={this.state} />
     }
 
     if (this.state.selected === "Churn") {
-      return (
-        <div>
-          <h1>Dashboard</h1>
-          <Dropdown placeholder={this.state.selected} selection onChange={this.handleSelection} options={this.state.graphsOptions} value={value} />
-          <Churn rawData={this.state.rawData} />
-        </div>
-      )
+      toDisplay = <Churn rawData={this.state.rawData} />
     }
 
     if (this.state.selected === "Invoice Search") {
-      return (
-        <div>
-          <InvoiceSearch rawData={this.state.rawData} />
-        </div>
-      )
+      toDisplay = <InvoiceSearch rawData={this.state.rawData} />
     }
 
     if (this.state.selected === "Revenue Breakdown") {
-      return (
+      toDisplay = (
         <div>
           <h1>Dashboard</h1>
-          <Dropdown placeholder={this.state.selected} selection onChange={this.handleSelection} options={this.state.graphsOptions} value={value} />
 
           <h3>Check console..</h3>
           <div>
             {/* <RevenueBreakdown rawData={this.state.rawData} />
-          <TotalValue rawData={this.state.rawData} />
-          <NumberOfInvoices rawData={this.state.rawData} /> */}
+            <TotalValue rawData={this.state.rawData} />
+            <NumberOfInvoices rawData={this.state.rawData} /> */}
             {/* <RecRevChart rawData={this.state.rawData} /> */}
           </div>
 
@@ -150,22 +120,29 @@ class Dashboard extends Component {
 
 
           {/* <Grid stackable divided="vertically">
-          <Grid.Row columns={2}>
-            <Grid.Column largeScreen={8} computer={16} tablet={16}>
-              <h2>Active Licences</h2>
-              <ActiveLicencesGraph rawData={this.state.rawData} />
-            </Grid.Column>
-            <Grid.Column largeScreen={8} computer={16} tablet={16}>
-              <h1>Monthly Recurring Revenue</h1>
-              <RecurringRevenueGraph rawData={this.state.rawData} charts={this.state} />
-            </Grid.Column>
-          </Grid.Row>
-        </Grid> */}
+            <Grid.Row columns={2}>
+              <Grid.Column largeScreen={8} computer={16} tablet={16}>
+                <h2>Active Licences</h2>
+                <ActiveLicencesGraph rawData={this.state.rawData} />
+              </Grid.Column>
+              <Grid.Column largeScreen={8} computer={16} tablet={16}>
+                <h1>Monthly Recurring Revenue</h1>
+                <RecurringRevenueGraph rawData={this.state.rawData} charts={this.state} />
+              </Grid.Column>
+            </Grid.Row>
+          </Grid> */}
         </div>
       )
     }
 
 
+    return (
+      <div>
+        <h1>Dashboard</h1>
+        <Dropdown placeholder="Select Chart" selection onChange={this.handleSelection} options={this.state.graphsOptions} value={value} />
+        {toDisplay}
+      </div>
+    )
   }
 
   render() {
@@ -174,7 +151,6 @@ class Dashboard extends Component {
     }
 
     if (this.state.authorised.includes(this.props.auth.email)) {
-      console.log(this.state.selected)
       return <div>{this.renderDashboard()}</div>
     }
 

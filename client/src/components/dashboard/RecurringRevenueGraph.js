@@ -346,6 +346,9 @@ class RecurringRevenueChart extends Component {
   }
 
   render() {
+    const headingStyle = {
+      textAlign: 'center'
+    }
     const data = {
       labels: [
         'Jul-15', 'Aug-15', 'Sep-15', 'Oct-15', 'Nov-15', 'Dec-15', 'Jan-16', 'Feb-16', 'Mar-16', 'Apr-16', 'May-16', 'Jun-16',
@@ -466,6 +469,7 @@ class RecurringRevenueChart extends Component {
     return (
       <div>
         <div>
+          <h1 style={headingStyle}>Recurring Revenue</h1>
           <Line
             data={data}
             options={{
