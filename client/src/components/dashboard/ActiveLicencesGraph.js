@@ -26,7 +26,9 @@ class ActiveLicencesGraph extends Component {
       currentCan: 0,
       currentUsa: 0,
       currentUk: 0,
-      currentNz: 0
+      currentNz: 0,
+      loadButtonActive: false,
+      currentTotal: "Reload Chart"
     }
 
     this.totalClients = this.totalClients.bind(this)
@@ -42,7 +44,7 @@ class ActiveLicencesGraph extends Component {
     } else {
       this.setState((prevState) => ({ annual: "Annual" }))
     }
-    this.setState((prevState) => ({ annualActive: !prevState.annualActive, annualOn: !prevState.annualOn }))
+    this.setState((prevState) => ({ annualActive: !prevState.annualActive, annualOn: !prevState.annualOn, loadButtonActive: true, currentTotal: "Reload" }))
   }
 
   handleClickProject = () => {
@@ -51,7 +53,7 @@ class ActiveLicencesGraph extends Component {
     } else {
       this.setState((prevState) => ({ project: "Project" }))
     }
-    this.setState((prevState) => ({ projectActive: !prevState.projectActive, projectOn: !prevState.projectOn }))
+    this.setState((prevState) => ({ projectActive: !prevState.projectActive, projectOn: !prevState.projectOn, loadButtonActive: true, currentTotal: "Reload" }))
   }
 
   handleClickStatic = () => {
@@ -60,7 +62,7 @@ class ActiveLicencesGraph extends Component {
     } else {
       this.setState((prevState) => ({ static: "Static" }))
     }
-    this.setState((prevState) => ({ staticActive: !prevState.staticActive, staticOn: !prevState.staticOn }))
+    this.setState((prevState) => ({ staticActive: !prevState.staticActive, staticOn: !prevState.staticOn, loadButtonActive: true, currentTotal: "Reload" }))
   }
 
   handleClickBudget = () => {
@@ -69,7 +71,7 @@ class ActiveLicencesGraph extends Component {
     } else {
       this.setState((prevState) => ({ budget: "Budget Allocator" }))
     }
-    this.setState((prevState) => ({ budgetActive: !prevState.budgetActive, budgetOn: !prevState.budgetOn }))
+    this.setState((prevState) => ({ budgetActive: !prevState.budgetActive, budgetOn: !prevState.budgetOn, loadButtonActive: true, currentTotal: "Reload" }))
   }
 
   getNumberOfMonthsSinceJuly2015 = () => {
@@ -199,6 +201,7 @@ class ActiveLicencesGraph extends Component {
       let uniqUkClients = ukCounter.filter(onlyUnique)
       let uniqNzClients = nzCounter.filter(onlyUnique)
 
+
       ausTotal.push(uniqAusClients.length)
       canTotal.push(uniqCanClients.length)
       usaTotal.push(uniqUsaClients.length)
@@ -208,30 +211,42 @@ class ActiveLicencesGraph extends Component {
 
     this.setState(prevState => ({
       ausData: [...ausTotal],
-      currentAus: ausTotal[ausTotal.length - 2]
+      currentAus: ausTotal[ausTotal.length - 2],
     }))
 
     this.setState(prevState => ({
       canData: [...canTotal],
-      currentCan: canTotal[canTotal.length - 2]
+      currentCan: canTotal[canTotal.length - 2],
     }))
 
     this.setState(prevState => ({
       usaData: [...usaTotal],
-      currentUsa: usaTotal[usaTotal.length - 2]
+      currentUsa: usaTotal[usaTotal.length - 2],
     }))
 
     this.setState(prevState => ({
       ukData: [...ukTotal],
-      currentUk: ukTotal[ukTotal.length - 2]
+      currentUk: ukTotal[ukTotal.length - 2],
     }))
 
     this.setState(prevState => ({
       nzData: [...nzTotal],
-      currentNz: nzTotal[nzTotal.length - 2]
+      currentNz: nzTotal[nzTotal.length - 2],
+    }))
+
+    this.setState((prevState) => ({
+      loadButtonActive: false
     }))
 
     return null
+  }
+
+  displayTotal = () => {
+    if (this.state.loadButtonActive === false) {
+      return (this.state.currentAus + this.state.currentCan + this.state.currentUsa + this.state.currentUk + this.state.currentNz)
+    } else {
+      return ("...")
+    }
   }
 
   render() {
@@ -245,7 +260,7 @@ class ActiveLicencesGraph extends Component {
         'Jul-16', 'Aug-16', 'Sep-16', 'Oct-16', 'Nov-16', 'Dec-16', 'Jan-17', 'Feb-17', 'Mar-17', 'Apr-17', 'May-17', 'Jun-17',
         'Jul-17', 'Aug-17', 'Sep-17', 'Oct-17', 'Nov-17', 'Dec-17', 'Jan-18', 'Feb-18', 'Mar-18', 'Apr-18', 'May-18', 'Jun-18',
         'Jul-18', 'Aug-18', 'Sep-18', 'Oct-18', 'Nov-18', 'Dec-18', 'Jan-19', 'Feb-19', 'Mar-19', 'Apr-19', 'May-19', 'Jun-19',
-        'Jul-19', 'Aug-19'
+        'Jul-19', 'Aug-19', 'Sep-19'
       ],
       datasets: [
         {
@@ -267,7 +282,13 @@ class ActiveLicencesGraph extends Component {
           pointHoverBorderWidth: 2,
           pointRadius: 3,
           pointHitRadius: 10,
-          data: this.state.ausData
+          data: this.state.ausData,
+          options: {
+            callbacks: {
+              label: "Test"
+            }
+
+          }
         },
         {
           label: 'Canada',
@@ -361,17 +382,50 @@ class ActiveLicencesGraph extends Component {
       ]
     }
 
+
     return (
       <div>
         <div>
           <div>
             <h1 style={headingStyle}>Active Licences</h1>
-            <p><strong>Current Total: {this.state.currentAus + this.state.currentCan + this.state.currentUsa + this.state.currentUk + this.state.currentNz}</strong></p>
-            <p>Australia: {this.state.currentAus}</p>
+            <h3><strong>Global Total: {this.displayTotal()}</strong></h3>
+            {/* <p>Australia: {this.state.currentAus}</p>
             <p>Canada: {this.state.currentCan}</p>
             <p>USA: {this.state.currentUsa}</p>
             <p>UK: {this.state.currentUk}</p>
-            <p>NZ: {this.state.currentNz}</p>
+            <p>NZ: {this.state.currentNz}</p> */}
+          </div>
+          <div>
+            <div style={headingStyle}>
+              <br />
+              <br />
+            </div>
+            <div>
+              <Checkbox toggle active={annualActive} onClick={this.handleClickAnnual} />
+              Annual
+            </div>
+            <div>
+              <Checkbox toggle active={projectActive} onClick={this.handleClickProject} />
+              Project
+            </div>
+            <div>
+              <Checkbox toggle active={staticActive} onClick={this.handleClickStatic} />
+              Static
+            </div>
+            <div>
+              <Checkbox toggle active={budgetActive} onClick={this.handleClickBudget} />
+              Budget
+            </div>
+            <div style={headingStyle}>
+
+              <br />
+              <br />
+            </div>
+            <div>
+              <Button primary disabled={!this.state.loadButtonActive} onClick={this.totalClients}>
+                Load Chart
+              </Button>
+            </div>
           </div>
           <Line
             data={data}
@@ -385,33 +439,7 @@ class ActiveLicencesGraph extends Component {
               }
             }} />
         </div>
-        <div>
-          <div>
-            <div style={headingStyle}>
-              <Button primary onClick={this.totalClients}>
-                Active Licences
-            </Button>
-              <br />
-              <br />
-            </div>
-            <div>
-              <Checkbox toggle active={annualActive} onClick={this.handleClickAnnual} />
-              Annual
-          </div>
-            <div>
-              <Checkbox toggle active={projectActive} onClick={this.handleClickProject} />
-              Project
-          </div>
-            <div>
-              <Checkbox toggle active={staticActive} onClick={this.handleClickStatic} />
-              Static
-          </div>
-            <div>
-              <Checkbox toggle active={budgetActive} onClick={this.handleClickBudget} />
-              Budget
-          </div>
-          </div>
-        </div>
+
       </div>
     )
   }

@@ -349,6 +349,11 @@ class RecurringRevenueChart extends Component {
     const headingStyle = {
       textAlign: 'center'
     }
+
+    const radioStyle = {
+      textAlign: 'left'
+    }
+
     const data = {
       labels: [
         'Jul-15', 'Aug-15', 'Sep-15', 'Oct-15', 'Nov-15', 'Dec-15', 'Jan-16', 'Feb-16', 'Mar-16', 'Apr-16', 'May-16', 'Jun-16',
@@ -375,7 +380,7 @@ class RecurringRevenueChart extends Component {
           pointHoverBackgroundColor: 'rgba(75,192,192,1)',
           pointHoverBorderColor: 'rgba(220,220,220,1)',
           pointHoverBorderWidth: 2,
-          pointRadius: 5,
+          pointRadius: 3,
           pointHitRadius: 10,
           data: this.state.ausData
         },
@@ -396,7 +401,7 @@ class RecurringRevenueChart extends Component {
           pointHoverBackgroundColor: 'rgba(75,192,192,1)',
           pointHoverBorderColor: 'rgba(220,220,220,1)',
           pointHoverBorderWidth: 2,
-          pointRadius: 5,
+          pointRadius: 3,
           pointHitRadius: 10,
           data: this.state.canData
         },
@@ -417,7 +422,7 @@ class RecurringRevenueChart extends Component {
           pointHoverBackgroundColor: 'rgba(75,192,192,1)',
           pointHoverBorderColor: 'rgba(220,220,220,1)',
           pointHoverBorderWidth: 2,
-          pointRadius: 5,
+          pointRadius: 3,
           pointHitRadius: 10,
           data: this.state.usaData
         },
@@ -438,7 +443,7 @@ class RecurringRevenueChart extends Component {
           pointHoverBackgroundColor: 'rgba(75,192,192,1)',
           pointHoverBorderColor: 'rgba(220,220,220,1)',
           pointHoverBorderWidth: 2,
-          pointRadius: 5,
+          pointRadius: 3,
           pointHitRadius: 10,
           data: this.state.ukData
         },
@@ -459,7 +464,7 @@ class RecurringRevenueChart extends Component {
           pointHoverBackgroundColor: 'rgba(75,192,192,1)',
           pointHoverBorderColor: 'rgba(220,220,220,1)',
           pointHoverBorderWidth: 2,
-          pointRadius: 5,
+          pointRadius: 3,
           pointHitRadius: 10,
           data: this.state.nzData
         }
@@ -470,6 +475,43 @@ class RecurringRevenueChart extends Component {
       <div>
         <div>
           <h1 style={headingStyle}>Recurring Revenue</h1>
+          <div>
+            <Form style={radioStyle}>
+              {/* <Form.Field>
+              Currency: <b>{this.state.value}</b>
+            </Form.Field> */}
+              <Form.Field >
+                <Radio
+                  style={{ "paddingRight": "20px" }}
+                  label='Recurring Revenue in Local Currency'
+                  name='radioGroup'
+                  value='Local'
+                  checked={this.state.value === 'Local'}
+                  onChange={this.revenueTotals}
+                  onClick={this.handleChange}
+                />
+                {/* <Radio
+                label='AUD'
+                name='radioGroup'
+                value='AUD'
+                checked={this.state.value === 'AUD'}
+                onChange={this.revenueTotalsAUD}
+                onClick={this.handleChange}
+              /> */}
+
+              </Form.Field>
+              <Form.Field>
+                <Radio
+                  label='Non Recurring Revenue in Local Currency'
+                  name='radioGroup'
+                  value='NON'
+                  checked={this.state.value === 'NON'}
+                  onChange={this.revenueTotalsNON}
+                  onClick={this.handleChange}
+                />
+              </Form.Field>
+            </Form>
+          </div>
           <Line
             data={data}
             options={{
@@ -482,40 +524,7 @@ class RecurringRevenueChart extends Component {
               }
             }} />
         </div>
-        <div>
-          <Form>
-            <Form.Field>
-              Currency: <b>{this.state.value}</b>
-            </Form.Field>
-            <Form.Field >
-              <Radio
-                style={{ "paddingRight": "20px" }}
-                label='Local'
-                name='radioGroup'
-                value='Local'
-                checked={this.state.value === 'Local'}
-                onChange={this.revenueTotals}
-                onClick={this.handleChange}
-              />
-              <Radio
-                label='AUD'
-                name='radioGroup'
-                value='AUD'
-                checked={this.state.value === 'AUD'}
-                onChange={this.revenueTotalsAUD}
-                onClick={this.handleChange}
-              />
-              <Radio
-                label='NON RECURRING REVENUE ONLY'
-                name='radioGroup'
-                value='NON'
-                checked={this.state.value === 'NON'}
-                onChange={this.revenueTotalsNON}
-                onClick={this.handleChange}
-              />
-            </Form.Field>
-          </Form>
-        </div>
+
       </div>
     )
   }

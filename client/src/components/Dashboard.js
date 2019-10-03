@@ -10,7 +10,7 @@ import RenderNoAuth from './Auth/RenderNoAuth'
 import Churn from './dashboard/Churn'
 import InvoiceSearch from './dashboard/InvoiceSearch'
 
-import { Dropdown } from 'semantic-ui-react'
+import { Dropdown, Grid } from 'semantic-ui-react'
 
 class Dashboard extends Component {
   state = {
@@ -18,11 +18,12 @@ class Dashboard extends Component {
     name: "",
     authorised: [
       'andrew@bangthetable.com',
-      'andrew@dutton.pro',
       'johannes.kresling@bangthetable.com',
       'matt@bangthetable.com',
       'crispin@bangthetable.com',
-      'anna@bangthetable.com'
+      'anna@bangthetable.com',
+      'nathan@bangthetable.com',
+      'nathan.connors@bangthetable.com'
     ],
     compact: true,
     graphsOptions: [{
@@ -33,11 +34,12 @@ class Dashboard extends Component {
       key: "Recurring Revenue",
       text: "Recurring Revenue",
       value: "Recurring Revenue"
-    }, {
-      key: "Churn",
-      text: "Churn",
-      value: "Churn"
     }],
+    // {
+    //   key: "Churn",
+    //   text: "Churn",
+    //   value: "Churn"
+    // }],
     activeClientsChart: false,
     recurringRevenueChart: false,
     selected: "Select Chart"
@@ -73,11 +75,8 @@ class Dashboard extends Component {
   }
 
   handleSelection = (event, data) => {
-    console.log('trig')
     event.persist()
-    console.log(event.target.value)
     this.setState((prevState) => ({ selected: event.target.textContent }))
-    console.log(event.target.value)
   }
 
   renderDashboard() {
@@ -103,45 +102,47 @@ class Dashboard extends Component {
       toDisplay = <InvoiceSearch rawData={this.state.rawData} />
     }
 
-    if (this.state.selected === "Revenue Breakdown") {
-      toDisplay = (
-        <div>
-          <h1>Dashboard</h1>
+    // if (this.state.selected === "Revenue Breakdown") {
+    //   toDisplay = (
+    //     <div>
+    //       <h1>Dashboard</h1>
 
-          <h3>Check console..</h3>
-          <div>
-            {/* <RevenueBreakdown rawData={this.state.rawData} />
-            <TotalValue rawData={this.state.rawData} />
-            <NumberOfInvoices rawData={this.state.rawData} /> */}
-            {/* <RecRevChart rawData={this.state.rawData} /> */}
-          </div>
-
-
+    //       <h3>Check console..</h3>
+    //       <div>
+    //         {/* <RevenueBreakdown rawData={this.state.rawData} />
+    //         <TotalValue rawData={this.state.rawData} />
+    //         <NumberOfInvoices rawData={this.state.rawData} /> */}
+    //         {/* <RecRevChart rawData={this.state.rawData} /> */}
+    //       </div>
 
 
-          {/* <Grid stackable divided="vertically">
-            <Grid.Row columns={2}>
-              <Grid.Column largeScreen={8} computer={16} tablet={16}>
-                <h2>Active Licences</h2>
-                <ActiveLicencesGraph rawData={this.state.rawData} />
-              </Grid.Column>
-              <Grid.Column largeScreen={8} computer={16} tablet={16}>
-                <h1>Monthly Recurring Revenue</h1>
-                <RecurringRevenueGraph rawData={this.state.rawData} charts={this.state} />
-              </Grid.Column>
-            </Grid.Row>
-          </Grid> */}
-        </div>
-      )
-    }
+
+
+    //       <Grid stackable divided="vertically">
+    //         <Grid.Row columns={2}>
+    //           <Grid.Column>
+    //             <h2>Active Licences</h2>
+    //             <ActiveLicencesGraph rawData={this.state.rawData} />
+    //           </Grid.Column>
+    //           <Grid.Column>
+    //             <h1>Monthly Recurring Revenue</h1>
+    //             <RecurringRevenueGraph rawData={this.state.rawData} charts={this.state} />
+    //           </Grid.Column>
+    //         </Grid.Row>
+    //       </Grid>
+    //     </div>
+    //   )
+    // }
 
 
     return (
       <div>
+
         <h1>Dashboard</h1>
         <Dropdown placeholder="Select Chart" selection onChange={this.handleSelection} options={this.state.graphsOptions} value={value} />
         {toDisplay}
-      </div>
+
+      </div >
     )
   }
 
@@ -150,11 +151,26 @@ class Dashboard extends Component {
       return null
     }
 
-    if (this.state.authorised.includes(this.props.auth.email)) {
-      return <div>{this.renderDashboard()}</div>
-    }
+    return (
+      <div>
+        {this.renderDashboard()}
+      </div>
+    )
 
-    return <div><RenderNoAuth /></div>
+    // if (this.state.authorised.includes(this.props.auth.email)) {
+    //   if (this.props.auth.email) {
+    //     { console.log(this.props.auth) }
+    //   }
+    //   return <div>{this.renderDashboard()}</div>
+    // }
+    // if (this.props.auth.email) {
+    //   { console.log(this.props.auth) }
+    // }
+    // if (this.props.auth.email) {
+    //   { console.log(this.props.auth) }
+    // }
+    // return <div><RenderNoAuth /></div>
+
   }
 }
 

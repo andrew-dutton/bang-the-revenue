@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Card } from 'semantic-ui-react'
+import { Button, Card, Dropdown, Form, Radio } from 'semantic-ui-react'
 
 class Churn extends Component {
   constructor(props) {
@@ -12,13 +12,36 @@ class Churn extends Component {
       new: [],
       months: [],
       monthsText: [],
-      churnTer: "AUS"
+      churnOrNew: "new",
+      churnTer: "",
+      terOptions: [{
+        key: "Australia",
+        text: "AUS",
+        value: "AUS"
+      }, {
+        key: "Canada",
+        text: "CAN",
+        value: "CAN"
+      }, {
+        key: "United States",
+        text: "USA",
+        value: "USA"
+      }, {
+        key: "UK",
+        text: "UK",
+        value: "UK"
+      }, {
+        key: "New Zealand",
+        text: "NZ",
+        value: "NZ"
+      }]
     }
 
     this.totalClients = this.totalClients.bind(this)
     this.totalClientsDetail = this.totalClientsDetail.bind(this)
     this.getLostValue = this.getLostValue.bind(this)
     this.getExpansion = this.getExpansion.bind(this)
+    this.handleSelection = this.handleSelection.bind(this)
   }
 
   getNumberOfMonthsSinceJuly2015 = () => {
@@ -133,7 +156,7 @@ class Churn extends Component {
 
     this.setState(prevState => ({
       aus: [...ausTotal]
-    }))
+    }), this.totalClientsDetail)
 
     return null
   }
@@ -163,11 +186,22 @@ class Churn extends Component {
       ausTotal.push(ausCounter)
     })
 
-    this.setState(prevState => ({
-      detail: [...ausTotal]
-    }))
+    if (this.state.churnOrNew === "churn") {
+      this.setState(prevState => ({
+        detail: [...ausTotal]
+      }), this.getLostClients)
+
+      return null
+    }
+
+    if (this.state.churnOrNew === "new") {
+      this.setState(prevState => ({
+        detail: [...ausTotal]
+      }), this.getNewClients)
+    }
 
     return null
+
   }
 
   getLostValue = () => {
@@ -204,6 +238,7 @@ class Churn extends Component {
           console.log(this.state.detail[i + 1][pos]["valuepermonth"])
           expanseValue.push(this.state.detail[i + 1][pos]["valuepermonth"])
         })
+
         expanseValueArray.push(+expanseValue.reduce((a, b) => a + b, 0).toFixed(2))
       }
     }
@@ -234,6 +269,11 @@ class Churn extends Component {
     )
   }
 
+  handleSelection = (event, data) => {
+    event.persist()
+    this.setState((prevState) => ({ churnTer: event.target.textContent }))
+  }
+
   renderLostClients = () => {
     if (this.state.lost.length === 0) {
       return null
@@ -254,21 +294,60 @@ class Churn extends Component {
     )
   }
 
+  handleChange = (e, { value }) => this.setState({ radioValue: value, churnOrNew: value })
+
   render() {
+
+    const headingStyle = {
+      textAlign: 'center'
+    }
+
+    const radioStyle = {
+      textAlign: 'left'
+    }
+    const { radioValue } = this.state
+    const { value } = this.state
     return (
       <div>
         <h1>Churn</h1>
+        <div>
+          <Form style={radioStyle}>
+            <Form.Field >
+              <Radio
+                style={{ "paddingRight": "20px" }}
+                label='Churn'
+                name='radioGroup'
+                value='churn'
+                checked={this.state.radioValue === 'churn'}
+                onChange={this.revenueTotals}
+                onClick={this.handleChange}
+              />
+            </Form.Field>
+            <Form.Field>
+              <Radio
+                label='New Clients'
+                name='newClients'
+                value='new'
+                checked={this.state.radioValue === 'new'}
+                onChange={this.revenueTotalsNON}
+                onClick={this.handleChange}
+              />
+            </Form.Field>
+          </Form>
+        </div>
+        <Dropdown
+          placeholder="Select Territory"
+          selection
+          onChange={this.handleSelection}
+          options={this.state.terOptions}
+          value={value}
+        />
+
         <Button primary onClick={this.totalClients}>
-          Load All Clients
+          Load Data
         </Button>
-        <Button primary onClick={this.totalClientsDetail}>
-          Load All Clients with Detail
-        </Button>
-        <br />
-        <Button secondary onClick={this.getLostClients}>
-          Get Lost Clients
-        </Button>
-        <Button secondary onClick={this.getNewClients}>
+
+        {/* <Button secondary onClick={this.getNewClients}>
           Get New Clients
         </Button>
         <Button secondary onClick={this.getLostValue}>
@@ -276,7 +355,7 @@ class Churn extends Component {
         </Button>
         <Button secondary onClick={this.getExpansion}>
           Get Expanded Value
-        </Button>
+        </Button> */}
         {/* {console.log(this.state.aus)} */}
         {/* {console.log(this.state.lost)} */}
         {/* {console.log(this.state.detail)} */}
