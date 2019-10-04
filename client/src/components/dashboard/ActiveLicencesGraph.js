@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Line } from 'react-chartjs-2'
-import { Button, Checkbox } from 'semantic-ui-react'
+import { Grid, Segment, Button, Checkbox } from 'semantic-ui-react'
 import { HotTable } from '@handsontable/react';
 
 class ActiveLicencesGraph extends Component {
@@ -474,54 +474,75 @@ class ActiveLicencesGraph extends Component {
             <p>UK: {this.state.currentUk}</p>
             <p>NZ: {this.state.currentNz}</p> */}
           </div>
-          <div>
-            <Line
-              data={data}
-              options={{
-                scales: {
-                  yAxes: [{
-                    ticks: {
-                      min: 0
+          <Grid columns='equal'>
+            <Grid.Column>
+
+              <br />
+              <div>
+                Annual
+                <br />
+                <br />
+                <Checkbox toggle active={annualActive} onClick={this.handleClickAnnual} />
+              </div>
+
+              <br />
+              <div>
+                Project
+                <br />
+                <br />
+                <Checkbox toggle active={projectActive} onClick={this.handleClickProject} />
+              </div>
+
+              <br />
+              <div>
+                Static
+                <br />
+                <br />
+                <Checkbox toggle active={staticActive} onClick={this.handleClickStatic} />
+              </div>
+              <br />
+
+              <div>
+                Budget
+                <br />
+                <br />
+                <Checkbox toggle active={budgetActive} onClick={this.handleClickBudget} />
+              </div>
+              <br />
+              <br />
+              <div style={headingStyle}>
+
+                <br />
+                <br />
+              </div>
+              {/* <div>
+  <Button primary disabled={!this.state.loadButtonActive} onClick={this.totalClients}>
+    Load Chart
+  </Button>
+</div> */}
+            </Grid.Column>
+            <Grid.Column width={15}>
+              <Segment>
+                <Line
+                  data={data}
+                  options={{
+                    scales: {
+                      yAxes: [{
+                        ticks: {
+                          min: 0
+                        }
+                      }]
                     }
-                  }]
-                }
-              }} />
-          </div>
-          <div>
-
-            <h3 style={{ textAlign: "right" }}><strong>Global Total: {this.displayTotal()}</strong></h3>
-            <div>
-              <Checkbox toggle active={annualActive} onClick={this.handleClickAnnual} />
-              Annual
-            </div>
-            <div>
-              <Checkbox toggle active={projectActive} onClick={this.handleClickProject} />
-              Project
-            </div>
-            <div>
-              <Checkbox toggle active={staticActive} onClick={this.handleClickStatic} />
-              Static
-            </div>
-            <div>
-              <Checkbox toggle active={budgetActive} onClick={this.handleClickBudget} />
-              Budget
-            </div>
-            <div style={headingStyle}>
-
-              <br />
-              <br />
-            </div>
-            {/* <div>
-              <Button primary disabled={!this.state.loadButtonActive} onClick={this.totalClients}>
-                Load Chart
-              </Button>
-            </div> */}
-
-          </div>
+                  }} />
+              </Segment>
+            </Grid.Column>
+          </Grid>
 
         </div>
         <div>
+          <br />
           <h1>Licence Details</h1>
+          <h3 style={{ textAlign: "center" }}><strong>Global Total: {this.displayTotal()}</strong></h3>
           <div id="hot-app">
             <HotTable
               className={"htCenter"}
