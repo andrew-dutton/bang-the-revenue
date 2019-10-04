@@ -53,7 +53,7 @@ class ActiveLicencesGraph extends Component {
     } else {
       this.setState((prevState) => ({ annual: "Annual" }))
     }
-    this.setState((prevState) => ({ annualActive: !prevState.annualActive, annualOn: !prevState.annualOn, loadButtonActive: true, currentTotal: "Reload" }))
+    this.setState((prevState) => ({ annualActive: !prevState.annualActive, annualOn: !prevState.annualOn, loadButtonActive: true, currentTotal: "Reload" }), this.totalClients)
   }
 
   handleClickProject = () => {
@@ -62,7 +62,7 @@ class ActiveLicencesGraph extends Component {
     } else {
       this.setState((prevState) => ({ project: "Project" }))
     }
-    this.setState((prevState) => ({ projectActive: !prevState.projectActive, projectOn: !prevState.projectOn, loadButtonActive: true, currentTotal: "Reload" }))
+    this.setState((prevState) => ({ projectActive: !prevState.projectActive, projectOn: !prevState.projectOn, loadButtonActive: true, currentTotal: "Reload" }), this.totalClients)
   }
 
   handleClickStatic = () => {
@@ -71,7 +71,7 @@ class ActiveLicencesGraph extends Component {
     } else {
       this.setState((prevState) => ({ static: "Static" }))
     }
-    this.setState((prevState) => ({ staticActive: !prevState.staticActive, staticOn: !prevState.staticOn, loadButtonActive: true, currentTotal: "Reload" }))
+    this.setState((prevState) => ({ staticActive: !prevState.staticActive, staticOn: !prevState.staticOn, loadButtonActive: true, currentTotal: "Reload" }), this.totalClients)
   }
 
   handleClickBudget = () => {
@@ -80,7 +80,7 @@ class ActiveLicencesGraph extends Component {
     } else {
       this.setState((prevState) => ({ budget: "Budget Allocator" }))
     }
-    this.setState((prevState) => ({ budgetActive: !prevState.budgetActive, budgetOn: !prevState.budgetOn, loadButtonActive: true, currentTotal: "Reload" }))
+    this.setState((prevState) => ({ budgetActive: !prevState.budgetActive, budgetOn: !prevState.budgetOn, loadButtonActive: true, currentTotal: "Reload" }), this.totalClients)
   }
 
   getNumberOfMonthsSinceJuly2015 = () => {
@@ -468,7 +468,6 @@ class ActiveLicencesGraph extends Component {
         <div>
           <div>
             <h1 style={headingStyle}>Active Licences</h1>
-            <h3><strong>Global Total: {this.displayTotal()}</strong></h3>
             {/* <p>Australia: {this.state.currentAus}</p>
             <p>Canada: {this.state.currentCan}</p>
             <p>USA: {this.state.currentUsa}</p>
@@ -476,10 +475,21 @@ class ActiveLicencesGraph extends Component {
             <p>NZ: {this.state.currentNz}</p> */}
           </div>
           <div>
-            <div style={headingStyle}>
-              <br />
-              <br />
-            </div>
+            <Line
+              data={data}
+              options={{
+                scales: {
+                  yAxes: [{
+                    ticks: {
+                      min: 0
+                    }
+                  }]
+                }
+              }} />
+          </div>
+          <div>
+
+            <h3 style={{ textAlign: "right" }}><strong>Global Total: {this.displayTotal()}</strong></h3>
             <div>
               <Checkbox toggle active={annualActive} onClick={this.handleClickAnnual} />
               Annual
@@ -501,25 +511,14 @@ class ActiveLicencesGraph extends Component {
               <br />
               <br />
             </div>
-            <div>
+            {/* <div>
               <Button primary disabled={!this.state.loadButtonActive} onClick={this.totalClients}>
                 Load Chart
               </Button>
-            </div>
+            </div> */}
+
           </div>
-          <div>
-            <Line
-              data={data}
-              options={{
-                scales: {
-                  yAxes: [{
-                    ticks: {
-                      min: 0
-                    }
-                  }]
-                }
-              }} />
-          </div>
+
         </div>
         <div>
           <h1>Licence Details</h1>
