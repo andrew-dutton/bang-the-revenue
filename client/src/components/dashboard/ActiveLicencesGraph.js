@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Line } from 'react-chartjs-2'
 import { Button, Checkbox } from 'semantic-ui-react'
+import { HotTable } from '@handsontable/react';
 
 class ActiveLicencesGraph extends Component {
   constructor(props) {
@@ -33,7 +34,10 @@ class ActiveLicencesGraph extends Component {
       currentUk: 0,
       currentNz: 0,
       loadButtonActive: false,
-      currentTotal: "Reload Chart"
+      currentTotal: "Reload Chart",
+      table: {
+        colHeaders: ["Client", "Territory", "Invoice Number", "Invoice Date", "Licence Type", "Start Date", "End Date", "Invoice Value"]
+      }
     }
 
     this.totalClients = this.totalClients.bind(this)
@@ -133,7 +137,7 @@ class ActiveLicencesGraph extends Component {
 
 
     this.state.months.forEach((month) => {
-      const ausDet = []
+      const allDet = []
       const canDet = []
       const usaDet = []
       const ukDet = []
@@ -167,11 +171,11 @@ class ActiveLicencesGraph extends Component {
         )) {
           ausCounter.push(invoice["client"])
           ausType.push(invoice["product"])
-          ausDet.push([
+          allDet.push([
+            invoice["client"],
+            invoice["territory"],
             invoice["invoice"],
             invoice["date"],
-            invoice["client"],
-            invoice["desc"],
             invoice["product"],
             invoice["start"],
             invoice["end"],
@@ -187,6 +191,16 @@ class ActiveLicencesGraph extends Component {
         )) {
           canCounter.push(invoice["client"])
           canType.push(invoice["product"])
+          allDet.push([
+            invoice["client"],
+            invoice["territory"],
+            invoice["invoice"],
+            invoice["date"],
+            invoice["product"],
+            invoice["start"],
+            invoice["end"],
+            invoice["total"]
+          ])
         }
 
         if (start <= month && end >= month && (invoice["territory"] === "USA") && (
@@ -197,6 +211,16 @@ class ActiveLicencesGraph extends Component {
         )) {
           usaCounter.push(invoice["client"])
           usaType.push(invoice["product"])
+          allDet.push([
+            invoice["client"],
+            invoice["territory"],
+            invoice["invoice"],
+            invoice["date"],
+            invoice["product"],
+            invoice["start"],
+            invoice["end"],
+            invoice["total"]
+          ])
         }
 
         if (start <= month && end >= month && (invoice["territory"] === "UK") && (
@@ -207,6 +231,16 @@ class ActiveLicencesGraph extends Component {
         )) {
           ukCounter.push(invoice["client"])
           ukType.push(invoice["product"])
+          allDet.push([
+            invoice["client"],
+            invoice["territory"],
+            invoice["invoice"],
+            invoice["date"],
+            invoice["product"],
+            invoice["start"],
+            invoice["end"],
+            invoice["total"]
+          ])
         }
 
         if (start <= month && end >= month && (invoice["territory"] === "NZ") && (
@@ -217,6 +251,16 @@ class ActiveLicencesGraph extends Component {
         )) {
           nzCounter.push(invoice["client"])
           nzType.push(invoice["product"])
+          allDet.push([
+            invoice["client"],
+            invoice["territory"],
+            invoice["invoice"],
+            invoice["date"],
+            invoice["product"],
+            invoice["start"],
+            invoice["end"],
+            invoice["total"]
+          ])
         }
       })
 
@@ -236,7 +280,7 @@ class ActiveLicencesGraph extends Component {
       ukTotal.push(uniqUkClients.length)
       nzTotal.push(uniqNzClients.length)
 
-      ausDetLogged.push(ausDet)
+      ausDetLogged.push(allDet)
 
     })
 
@@ -478,8 +522,31 @@ class ActiveLicencesGraph extends Component {
           </div>
         </div>
         <div>
-          <h1>Table</h1>
-          <p></p>
+          <h1>Licence Details</h1>
+          <div id="hot-app">
+            <HotTable
+              className={"htCenter"}
+              cells={function (row, col) {
+                var cellPrp = {};
+                if (col === 0) {
+                  if (col % 2 === 0) {
+                    cellPrp.className = 'htLeft'
+                  } else if (col === 1) {
+                    cellPrp.className = 'htCenter'
+                  }
+                } else {
+                  cellPrp.className = 'htCenter htMiddle'
+                }
+                return cellPrp
+              }
+              }
+              height={260}
+              columnSorting={true}
+              rowHeaders={true}
+              colHeaders={this.state.table.colHeaders}
+              data={this.state.ausDetail[this.state.ausDetail.length - 2]} />
+          </div>
+
         </div>
       </div>
     )

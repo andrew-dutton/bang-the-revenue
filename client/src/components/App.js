@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import * as actions from '../actions'
 import Landing from './Landing'
 import './App.css'
+import 'handsontable/dist/handsontable.full.css'
 
 
 
