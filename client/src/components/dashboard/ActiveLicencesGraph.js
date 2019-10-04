@@ -12,6 +12,11 @@ class ActiveLicencesGraph extends Component {
       usaData: [],
       ukData: [],
       nzData: [],
+      ausDetail: [],
+      canDetail: [],
+      usaDetail: [],
+      ukDetail: [],
+      nzDetai: [],
       months: [],
       annualOn: false,
       projectOn: false,
@@ -85,6 +90,7 @@ class ActiveLicencesGraph extends Component {
   createMonthsArray = () => {
     const numberOfMonths = this.getNumberOfMonthsSinceJuly2015()
 
+
     let year = 2015
     let yearStep = 12
 
@@ -108,9 +114,12 @@ class ActiveLicencesGraph extends Component {
 
       this.state.months.push(new Date(year, month, 0))
     }
+
   }
 
   totalClients() {
+    this.setState(prevState => ({ months: [] }))
+
     this.createMonthsArray()
 
     const ausTotal = []
@@ -119,18 +128,28 @@ class ActiveLicencesGraph extends Component {
     const ukTotal = []
     const nzTotal = []
 
-    this.state.months.forEach((month) => {
-      let ausCounter = []
-      let canCounter = []
-      let usaCounter = []
-      let ukCounter = []
-      let nzCounter = []
+    let ausDetLogged = []
 
-      let ausType = []
-      let canType = []
-      let usaType = []
-      let ukType = []
-      let nzType = []
+
+
+    this.state.months.forEach((month) => {
+      const ausDet = []
+      const canDet = []
+      const usaDet = []
+      const ukDet = []
+      const nzDet = []
+
+      const ausCounter = []
+      const canCounter = []
+      const usaCounter = []
+      const ukCounter = []
+      const nzCounter = []
+
+      const ausType = []
+      const canType = []
+      const usaType = []
+      const ukType = []
+      const nzType = []
 
       this.props.rawData.forEach((invoice) => {
         let startString = invoice["start"]
@@ -148,6 +167,16 @@ class ActiveLicencesGraph extends Component {
         )) {
           ausCounter.push(invoice["client"])
           ausType.push(invoice["product"])
+          ausDet.push([
+            invoice["invoice"],
+            invoice["date"],
+            invoice["client"],
+            invoice["desc"],
+            invoice["product"],
+            invoice["start"],
+            invoice["end"],
+            invoice["total"]
+          ])
         }
 
         if (start <= month && end >= month && (invoice["territory"] === "CAN") && (
@@ -201,16 +230,18 @@ class ActiveLicencesGraph extends Component {
       let uniqUkClients = ukCounter.filter(onlyUnique)
       let uniqNzClients = nzCounter.filter(onlyUnique)
 
-
       ausTotal.push(uniqAusClients.length)
       canTotal.push(uniqCanClients.length)
       usaTotal.push(uniqUsaClients.length)
       ukTotal.push(uniqUkClients.length)
       nzTotal.push(uniqNzClients.length)
+
+      ausDetLogged.push(ausDet)
+
     })
 
     this.setState(prevState => ({
-      ausData: [...ausTotal],
+      ausData: ausTotal,
       currentAus: ausTotal[ausTotal.length - 2],
     }))
 
@@ -238,6 +269,10 @@ class ActiveLicencesGraph extends Component {
       loadButtonActive: false
     }))
 
+    this.setState(prevState => ({
+      ausDetail: ausDetLogged
+    }))
+
     return null
   }
 
@@ -250,6 +285,7 @@ class ActiveLicencesGraph extends Component {
   }
 
   render() {
+    console.log(this.state.ausDetail[this.state.ausDetail.length - 2])
     const headingStyle = {
       textAlign: 'center'
     }
@@ -427,19 +463,24 @@ class ActiveLicencesGraph extends Component {
               </Button>
             </div>
           </div>
-          <Line
-            data={data}
-            options={{
-              scales: {
-                yAxes: [{
-                  ticks: {
-                    min: 0
-                  }
-                }]
-              }
-            }} />
+          <div>
+            <Line
+              data={data}
+              options={{
+                scales: {
+                  yAxes: [{
+                    ticks: {
+                      min: 0
+                    }
+                  }]
+                }
+              }} />
+          </div>
         </div>
-
+        <div>
+          <h1>Table</h1>
+          <p></p>
+        </div>
       </div>
     )
   }
