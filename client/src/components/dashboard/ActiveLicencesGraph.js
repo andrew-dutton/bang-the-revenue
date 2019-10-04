@@ -561,6 +561,8 @@ class ActiveLicencesGraph extends Component {
               }
               }
               height={260}
+              filters={true}
+              dropdownMenu={true}
               columnSorting={true}
               rowHeaders={true}
               colHeaders={this.state.table.colHeaders}
