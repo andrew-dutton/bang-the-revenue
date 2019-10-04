@@ -1,4 +1,4 @@
-import { Container } from 'semantic-ui-react'
+import { Container, Responsive } from 'semantic-ui-react'
 import React, { Component } from 'react'
 import { BrowserRouter, Route } from 'react-router-dom'
 import { connect } from 'react-redux'
