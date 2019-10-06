@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Line } from 'react-chartjs-2'
 import { Grid, Segment, Button, Checkbox } from 'semantic-ui-react'
 import { HotTable } from '@handsontable/react';
+import { Picker } from 'react-month-picker'
 
 class ActiveLicencesGraph extends Component {
   constructor(props) {
@@ -464,10 +465,8 @@ class ActiveLicencesGraph extends Component {
       ]
     }
 
-
     return (
       <div style={{ paddingTop: 20 }}>
-
         <div>
           <div>
 
@@ -514,7 +513,6 @@ class ActiveLicencesGraph extends Component {
                 <br />
                 <br />
                 <div style={headingStyle}>
-
                   <br />
                   <br />
                 </div>
@@ -541,16 +539,11 @@ class ActiveLicencesGraph extends Component {
               </Segment>
             </Grid.Column>
           </Grid>
-
         </div>
-
-
-
         <div>
           <Grid columns='equal' style={{ width: 1109 }}>
             <Grid.Column>
               <Segment>
-                <br />
                 <h3><strong>Total: {this.displayTotal()}</strong></h3>
                 <div id="hot-app">
                   <HotTable
