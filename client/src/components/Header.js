@@ -33,7 +33,7 @@ class Header extends Component {
     return (
       <nav>
         <div>
-          <Menu inverted>
+          <Menu inverted style={{ width: 1079 }}>
             <Menu.Item to="/dashboard" name="home" active={this.state.activeItem === 'home'} onClick={this.handleItemClick}>
               Bang The Table
             </Menu.Item>

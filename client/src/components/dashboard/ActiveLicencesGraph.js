@@ -36,7 +36,7 @@ class ActiveLicencesGraph extends Component {
       loadButtonActive: false,
       currentTotal: "Reload Chart",
       table: {
-        colHeaders: ["Client", "Territory", "Invoice Number", "Invoice Date", "Licence Type", "Start Date", "End Date", "Invoice Value"]
+        colHeaders: ["Client", "Location", "Invoice", "Date", "Licence", "Start", "End", "Value"]
       }
     }
 
@@ -331,7 +331,9 @@ class ActiveLicencesGraph extends Component {
   render() {
     console.log(this.state.ausDetail[this.state.ausDetail.length - 2])
     const headingStyle = {
-      textAlign: 'center'
+      textAlign: 'center',
+      width: 1300
+
     }
     const { annualActive, projectActive, staticActive, budgetActive } = this.state
     const data = {
@@ -464,65 +466,67 @@ class ActiveLicencesGraph extends Component {
 
 
     return (
-      <div>
+      <div style={{ paddingTop: 20 }}>
+
         <div>
           <div>
-            <h1 style={headingStyle}>Active Licences</h1>
+
             {/* <p>Australia: {this.state.currentAus}</p>
             <p>Canada: {this.state.currentCan}</p>
             <p>USA: {this.state.currentUsa}</p>
             <p>UK: {this.state.currentUk}</p>
             <p>NZ: {this.state.currentNz}</p> */}
           </div>
-          <Grid columns='equal'>
+          <Grid columns='equal' style={{ width: 1300 }}>
             <Grid.Column>
-
-              <br />
-              <div>
-                Annual
+              <Segment style={{ width: 70, height: 513 }}>
                 <br />
+                <div>
+                  Annual
                 <br />
-                <Checkbox toggle active={annualActive} onClick={this.handleClickAnnual} />
-              </div>
-
-              <br />
-              <div>
-                Project
-                <br />
-                <br />
-                <Checkbox toggle active={projectActive} onClick={this.handleClickProject} />
-              </div>
-
-              <br />
-              <div>
-                Static
-                <br />
-                <br />
-                <Checkbox toggle active={staticActive} onClick={this.handleClickStatic} />
-              </div>
-              <br />
-
-              <div>
-                Budget
-                <br />
-                <br />
-                <Checkbox toggle active={budgetActive} onClick={this.handleClickBudget} />
-              </div>
-              <br />
-              <br />
-              <div style={headingStyle}>
+                  <br />
+                  <Checkbox toggle active={annualActive} onClick={this.handleClickAnnual} />
+                </div>
 
                 <br />
+                <div>
+                  Project
                 <br />
-              </div>
-              {/* <div>
+                  <br />
+                  <Checkbox toggle active={projectActive} onClick={this.handleClickProject} />
+                </div>
+
+                <br />
+                <div>
+                  Static
+                <br />
+                  <br />
+                  <Checkbox toggle active={staticActive} onClick={this.handleClickStatic} />
+                </div>
+                <br />
+
+                <div>
+                  Budget
+                <br />
+                  <br />
+                  <Checkbox toggle active={budgetActive} onClick={this.handleClickBudget} />
+                </div>
+                <br />
+                <br />
+                <div style={headingStyle}>
+
+                  <br />
+                  <br />
+                </div>
+                {/* <div>
   <Button primary disabled={!this.state.loadButtonActive} onClick={this.totalClients}>
     Load Chart
   </Button>
 </div> */}
+              </Segment>
             </Grid.Column>
             <Grid.Column width={15}>
-              <Segment>
+              <Segment style={{ width: 1000 }}>
                 <Line
                   data={data}
                   options={{
@@ -541,11 +545,11 @@ class ActiveLicencesGraph extends Component {
         </div>
         <div>
           <br />
-          <h1>Licence Details</h1>
-          <h3 style={{ textAlign: "center" }}><strong>Global Total: {this.displayTotal()}</strong></h3>
+          <h3><strong>Total: {this.displayTotal()}</strong></h3>
           <div id="hot-app">
             <HotTable
               className={"htCenter"}
+              style={{ fontSize: 10 }}
               cells={function (row, col) {
                 var cellPrp = {};
                 if (col === 0) {
@@ -564,6 +568,7 @@ class ActiveLicencesGraph extends Component {
               filters={true}
               dropdownMenu={true}
               columnSorting={true}
+              colWidths={[335, 100, 100, 100, 100, 100, 100, 100]}
               rowHeaders={true}
               colHeaders={this.state.table.colHeaders}
               data={this.state.ausDetail[this.state.ausDetail.length - 2]} />

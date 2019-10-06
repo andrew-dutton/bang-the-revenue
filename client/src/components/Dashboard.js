@@ -138,7 +138,7 @@ class Dashboard extends Component {
     return (
       <div>
 
-        <h1>Dashboard</h1>
+        <h1 style={{ paddingTop: 20 }}>Dashboard</h1>
         <Dropdown placeholder="Select Chart" selection onChange={this.handleSelection} options={this.state.graphsOptions} value={value} />
         {toDisplay}
 
