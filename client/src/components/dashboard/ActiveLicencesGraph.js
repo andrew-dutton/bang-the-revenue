@@ -543,37 +543,45 @@ class ActiveLicencesGraph extends Component {
           </Grid>
 
         </div>
-        <div>
-          <br />
-          <h3><strong>Total: {this.displayTotal()}</strong></h3>
-          <div id="hot-app">
-            <HotTable
-              className={"htCenter"}
-              style={{ fontSize: 10 }}
-              cells={function (row, col) {
-                var cellPrp = {};
-                if (col === 0) {
-                  if (col % 2 === 0) {
-                    cellPrp.className = 'htLeft'
-                  } else if (col === 1) {
-                    cellPrp.className = 'htCenter'
-                  }
-                } else {
-                  cellPrp.className = 'htCenter htMiddle'
-                }
-                return cellPrp
-              }
-              }
-              height={260}
-              filters={true}
-              dropdownMenu={true}
-              columnSorting={true}
-              colWidths={[335, 100, 100, 100, 100, 100, 100, 100]}
-              rowHeaders={true}
-              colHeaders={this.state.table.colHeaders}
-              data={this.state.ausDetail[this.state.ausDetail.length - 2]} />
-          </div>
 
+
+
+        <div>
+          <Grid columns='equal' style={{ width: 1109 }}>
+            <Grid.Column>
+              <Segment>
+                <br />
+                <h3><strong>Total: {this.displayTotal()}</strong></h3>
+                <div id="hot-app">
+                  <HotTable
+                    className={"htCenter"}
+                    style={{ fontSize: 10 }}
+                    cells={function (row, col) {
+                      var cellPrp = {};
+                      if (col === 0) {
+                        if (col % 2 === 0) {
+                          cellPrp.className = 'htLeft'
+                        } else if (col === 1) {
+                          cellPrp.className = 'htCenter'
+                        }
+                      } else {
+                        cellPrp.className = 'htCenter htMiddle'
+                      }
+                      return cellPrp
+                    }
+                    }
+                    height={260}
+                    filters={true}
+                    dropdownMenu={true}
+                    columnSorting={true}
+                    colWidths={[280, 100, 100, 100, 100, 100, 100, 100]}
+                    rowHeaders={true}
+                    colHeaders={this.state.table.colHeaders}
+                    data={this.state.ausDetail[this.state.ausDetail.length - 2]} />
+                </div>
+              </Segment>
+            </Grid.Column>
+          </Grid>
         </div>
       </div>
     )
