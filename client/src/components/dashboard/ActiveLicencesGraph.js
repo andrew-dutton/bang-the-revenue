@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Line } from 'react-chartjs-2'
 import { Grid, Segment, Button, Checkbox } from 'semantic-ui-react'
 import { HotTable } from '@handsontable/react';
-import { Picker } from 'react-month-picker'
 
 class ActiveLicencesGraph extends Component {
   constructor(props) {
@@ -327,6 +326,49 @@ class ActiveLicencesGraph extends Component {
     } else {
       return ("...")
     }
+
+  }
+
+  displayDetails = () => {
+    if ((this.state.currentAus + this.state.currentCan + this.state.currentUsa + this.state.currentUk + this.state.currentNz) > 0) {
+      return (
+        <Grid columns='equal' style={{ width: 1109 }}>
+          <Grid.Column>
+            <Segment>
+              <h3><strong>Total: {this.displayTotal()}</strong></h3>
+              <div id="hot-app">
+                <HotTable
+                  licenseKey="non-commercial-and-evaluation"
+                  className={"htCenter"}
+                  style={{ fontSize: 10 }}
+                  cells={function (row, col) {
+                    var cellPrp = {};
+                    if (col === 0) {
+                      if (col % 2 === 0) {
+                        cellPrp.className = 'htLeft'
+                      } else if (col === 1) {
+                        cellPrp.className = 'htCenter'
+                      }
+                    } else {
+                      cellPrp.className = 'htCenter htMiddle'
+                    }
+                    return cellPrp
+                  }
+                  }
+                  height={260}
+                  filters={true}
+                  dropdownMenu={true}
+                  columnSorting={true}
+                  colWidths={[280, 100, 100, 100, 100, 100, 100, 100]}
+                  rowHeaders={true}
+                  colHeaders={this.state.table.colHeaders}
+                  data={this.state.ausDetail[this.state.ausDetail.length - 2]} />
+              </div>
+            </Segment>
+          </Grid.Column>
+        </Grid>
+      )
+    }
   }
 
   render() {
@@ -541,40 +583,7 @@ class ActiveLicencesGraph extends Component {
           </Grid>
         </div>
         <div>
-          <Grid columns='equal' style={{ width: 1109 }}>
-            <Grid.Column>
-              <Segment>
-                <h3><strong>Total: {this.displayTotal()}</strong></h3>
-                <div id="hot-app">
-                  <HotTable
-                    className={"htCenter"}
-                    style={{ fontSize: 10 }}
-                    cells={function (row, col) {
-                      var cellPrp = {};
-                      if (col === 0) {
-                        if (col % 2 === 0) {
-                          cellPrp.className = 'htLeft'
-                        } else if (col === 1) {
-                          cellPrp.className = 'htCenter'
-                        }
-                      } else {
-                        cellPrp.className = 'htCenter htMiddle'
-                      }
-                      return cellPrp
-                    }
-                    }
-                    height={260}
-                    filters={true}
-                    dropdownMenu={true}
-                    columnSorting={true}
-                    colWidths={[280, 100, 100, 100, 100, 100, 100, 100]}
-                    rowHeaders={true}
-                    colHeaders={this.state.table.colHeaders}
-                    data={this.state.ausDetail[this.state.ausDetail.length - 2]} />
-                </div>
-              </Segment>
-            </Grid.Column>
-          </Grid>
+          {this.displayDetails()}
         </div>
       </div>
     )
