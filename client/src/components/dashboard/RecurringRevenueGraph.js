@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Line } from 'react-chartjs-2'
-import { Form, Radio } from 'semantic-ui-react'
+import { Segment, Grid, Form, Radio } from 'semantic-ui-react'
 
 class RecurringRevenueChart extends Component {
   constructor(props) {
@@ -360,7 +360,7 @@ class RecurringRevenueChart extends Component {
         'Jul-16', 'Aug-16', 'Sep-16', 'Oct-16', 'Nov-16', 'Dec-16', 'Jan-17', 'Feb-17', 'Mar-17', 'Apr-17', 'May-17', 'Jun-17',
         'Jul-17', 'Aug-17', 'Sep-17', 'Oct-17', 'Nov-17', 'Dec-17', 'Jan-18', 'Feb-18', 'Mar-18', 'Apr-18', 'May-18', 'Jun-18',
         'Jul-18', 'Aug-18', 'Sep-18', 'Oct-18', 'Nov-18', 'Dec-18', 'Jan-19', 'Feb-19', 'Mar-19', 'Apr-19', 'May-19', 'Jun-19',
-        'Jul-19'
+        'Jul-19', 'Aug-19', 'Sept-19'
       ],
       datasets: [
         {
@@ -472,25 +472,27 @@ class RecurringRevenueChart extends Component {
     }
 
     return (
-      <div>
-        <div>
-          <h1 style={headingStyle}>Recurring Revenue</h1>
-          <div>
-            <Form style={radioStyle}>
-              {/* <Form.Field>
+      <div style={{ paddingTop: 20 }}>
+        <Grid columns='equal' style={{ width: 1300 }}>
+          <Grid.Column>
+            <Segment style={{ width: 1079 }} >
+
+
+              <Form style={radioStyle}>
+                {/* <Form.Field>
               Currency: <b>{this.state.value}</b>
             </Form.Field> */}
-              <Form.Field >
-                <Radio
-                  style={{ "paddingRight": "20px" }}
-                  label='Recurring Revenue in Local Currency'
-                  name='radioGroup'
-                  value='Local'
-                  checked={this.state.value === 'Local'}
-                  onChange={this.revenueTotals}
-                  onClick={this.handleChange}
-                />
-                {/* <Radio
+                <Form.Field >
+                  <Radio
+                    style={{ "paddingRight": "20px" }}
+                    label='Recurring Revenue in Local Currency'
+                    name='radioGroup'
+                    value='Local'
+                    checked={this.state.value === 'Local'}
+                    onChange={this.revenueTotals}
+                    onClick={this.handleChange}
+                  />
+                  {/* <Radio
                 label='AUD'
                 name='radioGroup'
                 value='AUD'
@@ -499,32 +501,36 @@ class RecurringRevenueChart extends Component {
                 onClick={this.handleChange}
               /> */}
 
-              </Form.Field>
-              <Form.Field>
-                <Radio
-                  label='Non Recurring Revenue in Local Currency'
-                  name='radioGroup'
-                  value='NON'
-                  checked={this.state.value === 'NON'}
-                  onChange={this.revenueTotalsNON}
-                  onClick={this.handleChange}
-                />
-              </Form.Field>
-            </Form>
-          </div>
-          <Line
-            data={data}
-            options={{
-              scales: {
-                yAxes: [{
-                  ticks: {
-                    min: 0
+                </Form.Field>
+                <Form.Field>
+                  <Radio
+                    label='Non Recurring Revenue in Local Currency'
+                    name='radioGroup'
+                    value='NON'
+                    checked={this.state.value === 'NON'}
+                    onChange={this.revenueTotalsNON}
+                    onClick={this.handleChange}
+                  />
+                </Form.Field>
+              </Form>
+            </Segment>
+            <Segment style={{ width: 1079 }} >
+              <Line
+                data={data}
+                options={{
+                  scales: {
+                    yAxes: [{
+                      ticks: {
+                        min: 0
+                      }
+                    }]
                   }
-                }]
-              }
-            }} />
-        </div>
+                }} />
+            </Segment>
 
+
+          </Grid.Column>
+        </Grid>
       </div>
     )
   }

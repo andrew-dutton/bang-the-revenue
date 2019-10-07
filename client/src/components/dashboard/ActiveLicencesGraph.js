@@ -356,6 +356,7 @@ class ActiveLicencesGraph extends Component {
                   }
                   }
                   height={260}
+                  readOnly={true}
                   filters={true}
                   dropdownMenu={true}
                   columnSorting={true}
