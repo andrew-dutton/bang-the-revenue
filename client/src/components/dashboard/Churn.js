@@ -1,17 +1,29 @@
 import React, { Component } from 'react'
-import { Button, Card, Dropdown, Form, Radio } from 'semantic-ui-react'
+import { Segment, Button, Card, Dropdown, Form, Radio } from 'semantic-ui-react'
+import Chart from 'react-google-charts'
 
 class Churn extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      aus: [],
+      clients: [],
       detail: [],
       lost: [],
       new: [],
       months: [],
+      lostTest: [],
+      newTest: [],
+      totalTest: [],
+      totalText: [],
+      forChurnForumla: [],
       monthsText: [],
+      territories: ["AUS", "CAN", "USA", "UK", "NZ"],
+      chartData: [
+        ['TERRITORY', 'AUS'],
+        [1, 1]
+      ],
+      totalLost: [],
       churnOrNew: "new",
       churnTer: "",
       terOptions: [{
@@ -44,13 +56,176 @@ class Churn extends Component {
     this.handleSelection = this.handleSelection.bind(this)
   }
 
-  getNumberOfMonthsSinceJuly2015 = () => {
-    let today = new Date()
-    let thisMonth = today.getMonth()
-    let thisYear = today.getFullYear()
-    let monthsOfYears = (thisYear - (2015 + 1)) * 12
-    return monthsOfYears + thisMonth + 7
+  totalClients() {
+    this.createMonthsArray()
+    const total = []
+
+    this.state.months.forEach((month) => {
+      let counter = []
+
+      this.props.rawData.forEach((invoice) => {
+        let startString = invoice["start"]
+        let startDateParts = startString.split("/")
+        let start = new Date(startDateParts[2], startDateParts[1] - 1, +startDateParts[0])
+        let endString = invoice["end"]
+        let endDateParts = endString.split("/")
+        let end = new Date(endDateParts[2], endDateParts[1] - 1, +endDateParts[0])
+
+        if (start <= month && end >= month
+          && (invoice["territory"] === this.state.churnTer)
+        ) {
+          counter.push(invoice["client"])
+        }
+      })
+
+      const onlyUnique = (value, index, self) => {
+        return self.indexOf(value) === index;
+      }
+
+      let uniqAusClients = counter.filter(onlyUnique)
+
+      total.push(uniqAusClients)
+    })
+
+    this.setState(prevState => ({
+      clients: [...total]
+    }), this.totalClientsDetail)
+
+    return null
   }
+
+
+  totalClientsDetail() {
+    this.setState((prevState) => ({ months: [] }))
+    this.createMonthsArray()
+    const total = []
+
+    this.state.months.forEach((month) => {
+      let counter = []
+
+      this.props.rawData.forEach((invoice) => {
+        let startString = invoice["start"]
+        let startDateParts = startString.split("/")
+        let start = new Date(startDateParts[2], startDateParts[1] - 1, +startDateParts[0])
+        let endString = invoice["end"]
+        let endDateParts = endString.split("/")
+        let end = new Date(endDateParts[2], endDateParts[1] - 1, +endDateParts[0])
+
+        if (start <= month && end >= month
+          && (invoice["territory"] === this.state.churnTer)
+        ) {
+          counter.push(invoice)
+        }
+      })
+
+      total.push(counter)
+    })
+
+    if (this.state.churnOrNew === "churn") {
+      this.setState(prevState => ({
+        detail: [...total]
+      }), this.getLostClients)
+
+      return null
+    }
+
+    if (this.state.churnOrNew === "new") {
+      this.setState(prevState => ({
+        detail: [...total]
+      }), this.getNewClients)
+    }
+
+    return null
+
+  }
+
+  getLostClients = () => {
+    this.createMonthsArray()
+    let lostClients = []
+    let lostClientsArray = []
+
+    for (let i = 0; i < this.state.months.length - 1; i++) {
+      lostClients = []
+      this.state.clients[i].forEach((client) => this.state.clients[i + 1].includes(client) ? null : lostClients.push(client))
+      lostClientsArray.push(lostClients)
+
+
+    }
+    let holdingArray = []
+    for (let k = 0; k < lostClientsArray.length - 1; k++) {
+      holdingArray.push([k + 1, lostClientsArray[k].length])
+    }
+
+    this.setState(previous => ({
+      lost: [...lostClientsArray]
+    }), this.getNewClients)
+  }
+
+  getNewClients = () => {
+    this.createMonthsArray()
+    let newClients = []
+    let newClientsArray = []
+
+    for (let i = 0; i < this.state.months.length - 1; i++) {
+      newClients = []
+      this.state.clients[i + 1].forEach((client) => {
+        if (!this.state.clients[i].includes(client)) {
+          newClients.push(client)
+        }
+      })
+      newClientsArray.push(newClients)
+    }
+
+    let holdingArray = []
+    for (let i = 0; i < newClientsArray.length - 1; i++) {
+      holdingArray.push([i + 1, newClientsArray[i].length])
+    }
+
+    this.setState(previous => ({
+      new: [...newClientsArray],
+      newTest: [...holdingArray]
+    }), this.getPrevTotal)
+
+
+  }
+
+  getPrevTotal = () => {
+    let holdingArray = []
+    this.state.clients.forEach((month) => {
+      holdingArray.push(month.length)
+    })
+
+    this.setState((prevState) => ({
+      totalTest: [...holdingArray]
+    }), this.createChurnDataArray)
+
+  }
+
+  createChurnDataArray = () => {
+    let churnDataArray = []
+
+    for (let i = 0; i < this.state.lost.length; i++) {
+      churnDataArray.push([this.state.lost[i].length, this.state.new[i].length, this.state.totalTest[i]])
+    }
+
+    this.setState((prevState => ({
+      forChurnForumla: churnDataArray
+    })), this.calculateChurn)
+  }
+
+  calculateChurn = () => {
+    let lost = this.state.forChurnForumla[0][0]
+    let news = this.state.forChurnForumla[0][1]
+    let prevTotal = this.state.forChurnForumla[0][2]
+
+    let churn = (lost / (news + prevTotal) * 100)
+
+    console.log(churn)
+
+
+  }
+
+
 
   createMonthsArray = () => {
     this.setState(previous => ({
@@ -84,125 +259,14 @@ class Churn extends Component {
     }
   }
 
-  getLostClients = () => {
-    this.createMonthsArray()
-    let lostClients = []
-    let lostClientsArray = []
-
-    for (let i = 0; i < this.state.months.length - 1; i++) {
-      lostClients = []
-      this.state.aus[i].forEach((client) => this.state.aus[i + 1].includes(client) ? null : lostClients.push(client))
-      lostClientsArray.push(lostClients)
-    }
-
-    this.setState(previous => ({
-      lost: [...lostClientsArray]
-    }))
+  getNumberOfMonthsSinceJuly2015 = () => {
+    let today = new Date()
+    let thisMonth = today.getMonth()
+    let thisYear = today.getFullYear()
+    let monthsOfYears = (thisYear - (2015 + 1)) * 12
+    return monthsOfYears + thisMonth + 7
   }
 
-  getNewClients = () => {
-    this.createMonthsArray()
-    let newClients = []
-    let newClientsArray = []
-
-    for (let i = 0; i < this.state.months.length - 1; i++) {
-      newClients = []
-      this.state.aus[i + 1].forEach((client) => {
-        if (!this.state.aus[i].includes(client)) {
-          newClients.push(client)
-        }
-      })
-      newClientsArray.push(newClients)
-    }
-
-    this.setState(previous => ({
-      new: [...newClientsArray]
-    }))
-  }
-
-
-
-
-  totalClients() {
-    this.createMonthsArray()
-    const ausTotal = []
-
-    this.state.months.forEach((month) => {
-      let ausCounter = []
-
-      this.props.rawData.forEach((invoice) => {
-        let startString = invoice["start"]
-        let startDateParts = startString.split("/")
-        let start = new Date(startDateParts[2], startDateParts[1] - 1, +startDateParts[0])
-        let endString = invoice["end"]
-        let endDateParts = endString.split("/")
-        let end = new Date(endDateParts[2], endDateParts[1] - 1, +endDateParts[0])
-
-        if (start <= month && end >= month
-          && (invoice["territory"] === this.state.churnTer)
-        ) {
-          ausCounter.push(invoice["client"])
-        }
-      })
-
-      const onlyUnique = (value, index, self) => {
-        return self.indexOf(value) === index;
-      }
-
-      let uniqAusClients = ausCounter.filter(onlyUnique)
-
-      ausTotal.push(uniqAusClients)
-    })
-
-    this.setState(prevState => ({
-      aus: [...ausTotal]
-    }), this.totalClientsDetail)
-
-    return null
-  }
-
-  totalClientsDetail() {
-    this.createMonthsArray()
-    const ausTotal = []
-
-    this.state.months.forEach((month) => {
-      let ausCounter = []
-
-      this.props.rawData.forEach((invoice) => {
-        let startString = invoice["start"]
-        let startDateParts = startString.split("/")
-        let start = new Date(startDateParts[2], startDateParts[1] - 1, +startDateParts[0])
-        let endString = invoice["end"]
-        let endDateParts = endString.split("/")
-        let end = new Date(endDateParts[2], endDateParts[1] - 1, +endDateParts[0])
-
-        if (start <= month && end >= month
-          && (invoice["territory"] === this.state.churnTer)
-        ) {
-          ausCounter.push(invoice)
-        }
-      })
-
-      ausTotal.push(ausCounter)
-    })
-
-    if (this.state.churnOrNew === "churn") {
-      this.setState(prevState => ({
-        detail: [...ausTotal]
-      }), this.getLostClients)
-
-      return null
-    }
-
-    if (this.state.churnOrNew === "new") {
-      this.setState(prevState => ({
-        detail: [...ausTotal]
-      }), this.getNewClients)
-    }
-
-    return null
-
-  }
 
   getLostValue = () => {
     this.createMonthsArray()
@@ -243,7 +307,7 @@ class Churn extends Component {
       }
     }
 
-    console.log(expanseValueArray)
+
   }
 
 
@@ -283,7 +347,7 @@ class Churn extends Component {
       <div>
         {this.state.lost.map((item, index) => (
           <Card>
-            <h2 key={index}>{this.state.monthsText[index + 1]},{item.length},{this.state.aus[index].length}</h2>
+            <h2 key={index}>{this.state.monthsText[index + 1]},{item.length},{this.state.clients[index].length}</h2>
             <h4>{item.length} client(s) lost</h4>
             {item.map((client, index) => (
               <p key={index}>{client}</p>
@@ -308,9 +372,20 @@ class Churn extends Component {
     const { radioValue } = this.state
     const { value } = this.state
     return (
-      <div>
-        <h1>Churn</h1>
-        <div>
+      <div style={{ paddingTop: 20 }}>
+        <Segment style={{ width: 1079 }} >
+          <div style={{ paddingTop: 20 }}>
+            <Dropdown
+              placeholder="Select Territory"
+              selection
+              onChange={this.handleSelection}
+              options={this.state.terOptions}
+              value={value}
+            />
+            <Button primary onClick={this.totalClients}>
+              Load Data
+            </Button>
+          </div>
           <Form style={radioStyle}>
             <Form.Field >
               <Radio
@@ -334,18 +409,59 @@ class Churn extends Component {
               />
             </Form.Field>
           </Form>
-        </div>
-        <Dropdown
-          placeholder="Select Territory"
-          selection
-          onChange={this.handleSelection}
-          options={this.state.terOptions}
-          value={value}
-        />
+        </Segment>
 
-        <Button primary onClick={this.totalClients}>
-          Load Data
-        </Button>
+        <Segment style={{ width: 1079, height: 800 }}>
+          <div>
+            <Chart
+              width={'1000px'}
+              height={'700px'}
+              chartType="ScatterChart"
+              loader={<div>Loading Chart</div>}
+              data={this.state.chartData}
+              options={{
+                'legend': { 'position': 'top' },
+                'chartArea': { 'width': '80%', 'height': '80%' },
+                subtitle: 'in millions of dollars (USD)',
+                crosshair: { trigger: 'both', orientation: 'both' },
+                animation: {
+                  startup: true,
+                  easing: 'linear',
+                  duration: 750,
+                },
+                trendlines: {
+                  0: {
+                    type: 'polynomial',
+                    degree: 3,
+                    labelInLegend: 'Trend'
+                  },
+                  1: {
+                    type: 'polynomial',
+                    degree: 3,
+                    labelInLegend: 'Trend'
+                  },
+                  2: {
+                    type: 'polynomial',
+                    degree: 3,
+                    labelInLegend: 'Trend'
+                  },
+                  3: {
+                    type: 'polynomial',
+                    degree: 3,
+                    labelInLegend: 'Trend'
+                  },
+                }
+              }}
+            />
+          </div>
+          <div></div>
+          <div>
+
+          </div>
+
+        </Segment>
+
+
 
         {/* <Button secondary onClick={this.getNewClients}>
           Get New Clients
@@ -360,8 +476,10 @@ class Churn extends Component {
         {/* {console.log(this.state.lost)} */}
         {/* {console.log(this.state.detail)} */}
         {this.renderLostClients()}
+
         {this.renderNewClients()}
       </div>
+
     )
   }
 }

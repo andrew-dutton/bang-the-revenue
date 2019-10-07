@@ -410,6 +410,11 @@ class ActiveLicencesGraph extends Component {
           pointHitRadius: 10,
           data: this.state.ausData,
           options: {
+            trendlines: {
+              type: 'polynomial',
+              degree: 3
+
+            },
             callbacks: {
               label: "Test"
             }

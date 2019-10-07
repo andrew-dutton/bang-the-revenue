@@ -492,15 +492,16 @@ class RecurringRevenueChart extends Component {
                     onChange={this.revenueTotals}
                     onClick={this.handleChange}
                   />
-                  {/* <Radio
-                label='AUD'
-                name='radioGroup'
-                value='AUD'
-                checked={this.state.value === 'AUD'}
-                onChange={this.revenueTotalsAUD}
-                onClick={this.handleChange}
-              /> */}
-
+                </Form.Field>
+                <Form.Field>
+                  <Radio
+                    label='Recurring Revenue in AUD'
+                    name='radioGroup'
+                    value='AUD'
+                    checked={this.state.value === 'AUD'}
+                    onChange={this.revenueTotalsAUD}
+                    onClick={this.handleChange}
+                  />
                 </Form.Field>
                 <Form.Field>
                   <Radio
@@ -527,8 +528,6 @@ class RecurringRevenueChart extends Component {
                   }
                 }} />
             </Segment>
-
-
           </Grid.Column>
         </Grid>
       </div>

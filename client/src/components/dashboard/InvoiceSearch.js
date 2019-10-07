@@ -62,6 +62,10 @@ class InvoiceSearch extends Component {
 
   }
 
+  handleClickView = () => {
+    this.setState((prevState) => ({ viewCompact: !prevState.viewCompact }))
+  }
+
   render() {
 
     return (
@@ -81,7 +85,7 @@ class InvoiceSearch extends Component {
         <Grid columns='equal' style={{ width: 1109 }}>
           <Grid.Column>
             <Segment>
-              <div style={{ paddingBottom: 15 }}>
+              <div style={{ paddingBottom: 100 }}>
                 <Button primary onClick={this.createData} >
                   Get Data
                </Button>

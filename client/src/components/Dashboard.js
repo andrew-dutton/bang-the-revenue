@@ -34,12 +34,17 @@ class Dashboard extends Component {
       key: "Recurring Revenue",
       text: "Recurring Revenue",
       value: "Recurring Revenue"
+    },
+    {
+      key: "Churn",
+      text: "Churn",
+      value: "Churn"
+    },
+    {
+      key: "Invoice Search",
+      text: "Invoice Search",
+      value: "Invoice Search"
     }],
-    // {
-    //   key: "Churn",
-    //   text: "Churn",
-    //   value: "Churn"
-    // }],
     activeClientsChart: false,
     recurringRevenueChart: false,
     selected: "Select Chart"
