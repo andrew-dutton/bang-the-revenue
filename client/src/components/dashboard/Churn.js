@@ -18,33 +18,35 @@ class Churn extends Component {
       totalText: [],
       forChurnForumla: [],
       monthsText: [],
-      territories: ["AUS", "CAN", "USA", "UK", "NZ"],
       chartData: [
         ['TERRITORY', 'AUS'],
         [1, 1]
       ],
       totalLost: [],
-      churnOrNew: "new",
       churnTer: "",
       terOptions: [{
-        key: "Australia",
-        text: "AUS",
+        key: "Global",
+        text: "Global",
+        value: "Global"
+      }, {
+        key: "AUS",
+        text: "Australia",
         value: "AUS"
       }, {
-        key: "Canada",
-        text: "CAN",
+        key: "CAN",
+        text: "Canada",
         value: "CAN"
       }, {
-        key: "United States",
-        text: "USA",
+        key: "USA",
+        text: "United States",
         value: "USA"
       }, {
         key: "UK",
-        text: "UK",
+        text: "United Kingdom",
         value: "UK"
       }, {
-        key: "New Zealand",
-        text: "NZ",
+        key: "NZ",
+        text: "New Zealand",
         value: "NZ"
       }]
     }
@@ -55,6 +57,95 @@ class Churn extends Component {
     this.getExpansion = this.getExpansion.bind(this)
     this.handleSelection = this.handleSelection.bind(this)
   }
+
+  updateChurnTer = () => {
+    if (this.state.churnTer === "Australia") {
+      this.setState((prevState) => ({ churnTer: "AUS" }), this.totalClients)
+    }
+    if (this.state.churnTer === "Canada") {
+      this.setState((prevState) => ({ churnTer: "CAN" }), this.totalClients)
+    }
+    if (this.state.churnTer === "United States") {
+      this.setState((prevState) => ({ churnTer: "USA" }), this.totalClients)
+    }
+    if (this.state.churnTer === "United Kingdom") {
+      this.setState((prevState) => ({ churnTer: "UK" }), this.totalClients)
+    }
+    if (this.state.churnTer === "New Zealand") {
+      this.setState((prevState) => ({ churnTer: "NZ" }), this.totalClients)
+    }
+    if (this.state.churnTer === "Global") {
+      this.setState((prevState) => ({ churnTer: "Global" }), this.totalGlobalClients)
+    }
+  }
+
+  totalGlobalClients = () => {
+    this.createMonthsArray()
+    const total = []
+
+    this.state.months.forEach((month) => {
+      let counter = []
+
+      this.props.rawData.forEach((invoice) => {
+        let startString = invoice["start"]
+        let startDateParts = startString.split("/")
+        let start = new Date(startDateParts[2], startDateParts[1] - 1, +startDateParts[0])
+        let endString = invoice["end"]
+        let endDateParts = endString.split("/")
+        let end = new Date(endDateParts[2], endDateParts[1] - 1, +endDateParts[0])
+
+        if (start <= month && end >= month) {
+          counter.push(invoice["client"])
+        }
+      })
+
+      const onlyUnique = (value, index, self) => {
+        return self.indexOf(value) === index;
+      }
+
+      let uniqClients = counter.filter(onlyUnique)
+
+      total.push(uniqClients)
+    })
+
+    this.setState(prevState => ({
+      clients: [...total]
+    }), this.totalGlobalClientsDetail)
+
+    return null
+  }
+
+  totalGlobalClientsDetail = () => {
+    this.setState((prevState) => ({ months: [] }))
+    this.createMonthsArray()
+    const total = []
+
+    this.state.months.forEach((month) => {
+      let counter = []
+
+      this.props.rawData.forEach((invoice) => {
+        let startString = invoice["start"]
+        let startDateParts = startString.split("/")
+        let start = new Date(startDateParts[2], startDateParts[1] - 1, +startDateParts[0])
+        let endString = invoice["end"]
+        let endDateParts = endString.split("/")
+        let end = new Date(endDateParts[2], endDateParts[1] - 1, +endDateParts[0])
+
+        if (start <= month && end >= month) {
+          counter.push(invoice)
+        }
+      })
+
+      total.push(counter)
+    })
+
+    this.setState(prevState => ({
+      detail: [...total]
+    }), this.getLostClients)
+
+    return null
+  }
+
 
   totalClients() {
     this.createMonthsArray()
@@ -71,9 +162,7 @@ class Churn extends Component {
         let endDateParts = endString.split("/")
         let end = new Date(endDateParts[2], endDateParts[1] - 1, +endDateParts[0])
 
-        if (start <= month && end >= month
-          && (invoice["territory"] === this.state.churnTer)
-        ) {
+        if (start <= month && end >= month && (invoice["territory"] === this.state.churnTer)) {
           counter.push(invoice["client"])
         }
       })
@@ -82,9 +171,9 @@ class Churn extends Component {
         return self.indexOf(value) === index;
       }
 
-      let uniqAusClients = counter.filter(onlyUnique)
+      let uniqClients = counter.filter(onlyUnique)
 
-      total.push(uniqAusClients)
+      total.push(uniqClients)
     })
 
     this.setState(prevState => ({
@@ -121,25 +210,16 @@ class Churn extends Component {
       total.push(counter)
     })
 
-    if (this.state.churnOrNew === "churn") {
-      this.setState(prevState => ({
-        detail: [...total]
-      }), this.getLostClients)
-
-      return null
-    }
-
-    if (this.state.churnOrNew === "new") {
-      this.setState(prevState => ({
-        detail: [...total]
-      }), this.getNewClients)
-    }
+    this.setState(prevState => ({
+      detail: [...total]
+    }), this.getLostClients)
 
     return null
 
   }
 
   getLostClients = () => {
+
     this.createMonthsArray()
     let lostClients = []
     let lostClientsArray = []
@@ -218,14 +298,24 @@ class Churn extends Component {
     let news = this.state.forChurnForumla[0][1]
     let prevTotal = this.state.forChurnForumla[0][2]
 
-    let churn = (lost / (news + prevTotal) * 100)
+    let churn = this.state.forChurnForumla
+    let churnArray = [['TERRITORY', this.state.churnTer]]
 
-    console.log(churn)
+    if (this.state.churnTer === "USA" || this.state.churnTer === "NZ" || this.state.churnTer === "UK") {
+      for (let k = 9; k < churn.length - 1; k++) {
+        churnArray.push([new Date(2015, k + 7, 0), ((churn[k][0] / (churn[k][1] + churn[k][2])) * 100)])
+      }
+    } else {
+      for (let k = 0; k < churn.length - 1; k++) {
+        churnArray.push([new Date(2015, k + 7, 0), ((churn[k][0] / (churn[k][1] + churn[k][2])) * 100)])
+      }
+    }
 
-
+    this.setState((prevState) => ({
+      chartData: churnArray
+    }))
+    console.log(churnArray)
   }
-
-
 
   createMonthsArray = () => {
     this.setState(previous => ({
@@ -306,12 +396,7 @@ class Churn extends Component {
         expanseValueArray.push(+expanseValue.reduce((a, b) => a + b, 0).toFixed(2))
       }
     }
-
-
   }
-
-
-
 
   renderNewClients = () => {
     if (this.state.new.length === 0) {
@@ -335,7 +420,7 @@ class Churn extends Component {
 
   handleSelection = (event, data) => {
     event.persist()
-    this.setState((prevState) => ({ churnTer: event.target.textContent }))
+    this.setState((prevState) => ({ churnTer: event.target.textContent }), this.updateChurnTer)
   }
 
   renderLostClients = () => {
@@ -358,59 +443,9 @@ class Churn extends Component {
     )
   }
 
-  handleChange = (e, { value }) => this.setState({ radioValue: value, churnOrNew: value })
-
-  render() {
-
-    const headingStyle = {
-      textAlign: 'center'
-    }
-
-    const radioStyle = {
-      textAlign: 'left'
-    }
-    const { radioValue } = this.state
-    const { value } = this.state
-    return (
-      <div style={{ paddingTop: 20 }}>
-        <Segment style={{ width: 1079 }} >
-          <div style={{ paddingTop: 20 }}>
-            <Dropdown
-              placeholder="Select Territory"
-              selection
-              onChange={this.handleSelection}
-              options={this.state.terOptions}
-              value={value}
-            />
-            <Button primary onClick={this.totalClients}>
-              Load Data
-            </Button>
-          </div>
-          <Form style={radioStyle}>
-            <Form.Field >
-              <Radio
-                style={{ "paddingRight": "20px" }}
-                label='Churn'
-                name='radioGroup'
-                value='churn'
-                checked={this.state.radioValue === 'churn'}
-                onChange={this.revenueTotals}
-                onClick={this.handleChange}
-              />
-            </Form.Field>
-            <Form.Field>
-              <Radio
-                label='New Clients'
-                name='newClients'
-                value='new'
-                checked={this.state.radioValue === 'new'}
-                onChange={this.revenueTotalsNON}
-                onClick={this.handleChange}
-              />
-            </Form.Field>
-          </Form>
-        </Segment>
-
+  displayChart = () => {
+    if (this.state.chartData.length > 2) {
+      return (
         <Segment style={{ width: 1079, height: 800 }}>
           <div>
             <Chart
@@ -420,6 +455,13 @@ class Churn extends Component {
               loader={<div>Loading Chart</div>}
               data={this.state.chartData}
               options={{
+                'vAxis': {
+                  'title': 'Churn %'
+                },
+                'hAxis': {
+                  'title': 'Date',
+                  'format': 'MMM-yy'
+                },
                 'legend': { 'position': 'top' },
                 'chartArea': { 'width': '80%', 'height': '80%' },
                 subtitle: 'in millions of dollars (USD)',
@@ -460,7 +502,35 @@ class Churn extends Component {
           </div>
 
         </Segment>
+      )
+    }
+  }
 
+  render() {
+    const headingStyle = {
+      textAlign: 'center'
+    }
+
+    const radioStyle = {
+      textAlign: 'left'
+    }
+
+    const { value } = this.state
+    return (
+      <div style={{ paddingTop: 20 }}>
+        <Segment style={{ width: 1079 }} >
+          <div>
+            <Dropdown
+              placeholder="Select Territory"
+              selection
+              onChange={this.handleSelection}
+              options={this.state.terOptions}
+              value={value}
+            />
+          </div>
+        </Segment>
+
+        {this.displayChart()}
 
 
         {/* <Button secondary onClick={this.getNewClients}>
@@ -475,9 +545,9 @@ class Churn extends Component {
         {/* {console.log(this.state.aus)} */}
         {/* {console.log(this.state.lost)} */}
         {/* {console.log(this.state.detail)} */}
-        {this.renderLostClients()}
+        {/* {this.renderLostClients()}
 
-        {this.renderNewClients()}
+        {this.renderNewClients()} */}
       </div>
 
     )

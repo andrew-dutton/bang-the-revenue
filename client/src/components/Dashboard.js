@@ -39,11 +39,6 @@ class Dashboard extends Component {
       key: "Churn",
       text: "Churn",
       value: "Churn"
-    },
-    {
-      key: "Invoice Search",
-      text: "Invoice Search",
-      value: "Invoice Search"
     }],
     activeClientsChart: false,
     recurringRevenueChart: false,
@@ -144,7 +139,7 @@ class Dashboard extends Component {
       <div>
 
         <h1 style={{ paddingTop: 20 }}>Dashboard</h1>
-        <Dropdown placeholder="Select Chart" selection onChange={this.handleSelection} options={this.state.graphsOptions} value={value} />
+        < Dropdown placeholder="Select Chart" selection onChange={this.handleSelection} options={this.state.graphsOptions} value={value} />
         {toDisplay}
 
       </div >
