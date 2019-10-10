@@ -373,7 +373,7 @@ class ActiveLicencesGraph extends Component {
   }
 
   render() {
-    console.log(this.state.ausDetail[this.state.ausDetail.length - 2])
+
     const headingStyle = {
       textAlign: 'center',
       width: 1300

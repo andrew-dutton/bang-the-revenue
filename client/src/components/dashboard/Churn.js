@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Segment, Button, Card, Dropdown, Form, Radio } from 'semantic-ui-react'
+import { Grid, Checkbox, Segment, Button, Card, Dropdown, Form, Radio } from 'semantic-ui-react'
 import Chart from 'react-google-charts'
 
 class Churn extends Component {
@@ -16,11 +16,16 @@ class Churn extends Component {
       newTest: [],
       totalTest: [],
       totalText: [],
+      annualOn: false,
+      projectOn: false,
+      staticOn: false,
+      budgetOn: false,
+      chartColor: [],
       forChurnForumla: [],
       monthsText: [],
       chartData: [
-        ['TERRITORY', 'AUS'],
-        [1, 1]
+        [],
+        []
       ],
       totalLost: [],
       churnTer: "",
@@ -56,30 +61,87 @@ class Churn extends Component {
     this.getLostValue = this.getLostValue.bind(this)
     this.getExpansion = this.getExpansion.bind(this)
     this.handleSelection = this.handleSelection.bind(this)
+    this.handleClickAnnual = this.handleClickAnnual.bind(this)
+    this.handleClickProject = this.handleClickProject.bind(this)
+    this.handleClickStatic = this.handleClickStatic.bind(this)
+    this.handleClickBudget = this.handleClickBudget.bind(this)
+  }
+
+  handleClickAnnual = () => {
+    if (this.state.annualOn) {
+      this.setState((prevState) => ({ annual: "" }))
+    } else {
+      this.setState((prevState) => ({ annual: "Annual" }))
+    }
+    if (this.state.churnTer === "Global") {
+      this.setState((prevState) => ({ annualActive: !prevState.annualActive, annualOn: !prevState.annualOn, loadButtonActive: true }), this.totalGlobalClients)
+    } else {
+      this.setState((prevState) => ({ annualActive: !prevState.annualActive, annualOn: !prevState.annualOn, loadButtonActive: true }), this.totalClients)
+    }
+  }
+
+  handleClickProject = () => {
+    if (this.state.projectOn) {
+      this.setState((prevState) => ({ project: "" }))
+    } else {
+      this.setState((prevState) => ({ project: "Project" }))
+    }
+    if (this.state.churnTer === "Global") {
+      this.setState((prevState) => ({ projectActive: !prevState.projectActive, projectOn: !prevState.projectOn, loadButtonActive: true }), this.totalGlobalClients)
+    } else {
+      this.setState((prevState) => ({ projectActive: !prevState.projectActive, projectOn: !prevState.projectOn, loadButtonActive: true }), this.totalClients)
+    }
+  }
+
+  handleClickStatic = () => {
+    if (this.state.staticOn) {
+      this.setState((prevState) => ({ static: "" }))
+    } else {
+      this.setState((prevState) => ({ static: "Static" }))
+    }
+    if (this.state.churnTer === "Global") {
+      this.setState((prevState) => ({ staticActive: !prevState.staticActive, staticOn: !prevState.staticOn, loadButtonActive: true }), this.totalGlobalClients)
+    } else {
+      this.setState((prevState) => ({ staticActive: !prevState.staticActive, staticOn: !prevState.staticOn, loadButtonActive: true }), this.totalClients)
+    }
+  }
+
+  handleClickBudget = () => {
+    if (this.state.budgetOn) {
+      this.setState((prevState) => ({ budget: "" }))
+    } else {
+      this.setState((prevState) => ({ budget: "Budget Allocator" }))
+    }
+    if (this.state.churnTer === "Global") {
+      this.setState((prevState) => ({ budgetActive: !prevState.budgetActive, budgetOn: !prevState.budgetOn, loadButtonActive: true }), this.totalGlobalClients)
+    } else {
+      this.setState((prevState) => ({ budgetActive: !prevState.budgetActive, budgetOn: !prevState.budgetOn, loadButtonActive: true }), this.totalClients)
+    }
   }
 
   updateChurnTer = () => {
     if (this.state.churnTer === "Australia") {
-      this.setState((prevState) => ({ churnTer: "AUS" }), this.totalClients)
+      this.setState((prevState) => ({ churnTer: "AUS", chartColor: ["#8CD75C"] }), this.totalClients)
     }
     if (this.state.churnTer === "Canada") {
-      this.setState((prevState) => ({ churnTer: "CAN" }), this.totalClients)
+      this.setState((prevState) => ({ churnTer: "CAN", chartColor: ["#EAE477"] }), this.totalClients)
     }
     if (this.state.churnTer === "United States") {
-      this.setState((prevState) => ({ churnTer: "USA" }), this.totalClients)
+      this.setState((prevState) => ({ churnTer: "USA", chartColor: ["#F28E7C"] }), this.totalClients)
     }
     if (this.state.churnTer === "United Kingdom") {
-      this.setState((prevState) => ({ churnTer: "UK" }), this.totalClients)
+      this.setState((prevState) => ({ churnTer: "UK", chartColor: ["#7CF2E4"] }), this.totalClients)
     }
     if (this.state.churnTer === "New Zealand") {
-      this.setState((prevState) => ({ churnTer: "NZ" }), this.totalClients)
+      this.setState((prevState) => ({ churnTer: "NZ", chartColor: ["#F27CEA"] }), this.totalClients)
     }
     if (this.state.churnTer === "Global") {
-      this.setState((prevState) => ({ churnTer: "Global" }), this.totalGlobalClients)
+      this.setState((prevState) => ({ churnTer: "Global", chartColor: ["#2B85D0"] }), this.totalGlobalClients)
     }
   }
 
   totalGlobalClients = () => {
+    this.setState((prevState) => ({ months: [], monthsText: [] }))
     this.createMonthsArray()
     const total = []
 
@@ -94,7 +156,12 @@ class Churn extends Component {
         let endDateParts = endString.split("/")
         let end = new Date(endDateParts[2], endDateParts[1] - 1, +endDateParts[0])
 
-        if (start <= month && end >= month) {
+        if (start <= month && end >= month && (
+          invoice["product"] === this.state.annual ||
+          invoice["product"] === this.state.project ||
+          invoice["product"] === this.state.static ||
+          invoice["product"] === this.state.budget
+        )) {
           counter.push(invoice["client"])
         }
       })
@@ -116,7 +183,7 @@ class Churn extends Component {
   }
 
   totalGlobalClientsDetail = () => {
-    this.setState((prevState) => ({ months: [] }))
+    this.setState((prevState) => ({ months: [], monthsText: [] }))
     this.createMonthsArray()
     const total = []
 
@@ -131,7 +198,12 @@ class Churn extends Component {
         let endDateParts = endString.split("/")
         let end = new Date(endDateParts[2], endDateParts[1] - 1, +endDateParts[0])
 
-        if (start <= month && end >= month) {
+        if (start <= month && end >= month && (
+          invoice["product"] === this.state.annual ||
+          invoice["product"] === this.state.project ||
+          invoice["product"] === this.state.static ||
+          invoice["product"] === this.state.budget
+        )) {
           counter.push(invoice)
         }
       })
@@ -148,6 +220,7 @@ class Churn extends Component {
 
 
   totalClients() {
+    this.setState((prevState) => ({ months: [], monthsText: [] }))
     this.createMonthsArray()
     const total = []
 
@@ -162,7 +235,12 @@ class Churn extends Component {
         let endDateParts = endString.split("/")
         let end = new Date(endDateParts[2], endDateParts[1] - 1, +endDateParts[0])
 
-        if (start <= month && end >= month && (invoice["territory"] === this.state.churnTer)) {
+        if (start <= month && end >= month && (invoice["territory"] === this.state.churnTer) && (
+          invoice["product"] === this.state.annual ||
+          invoice["product"] === this.state.project ||
+          invoice["product"] === this.state.static ||
+          invoice["product"] === this.state.budget
+        )) {
           counter.push(invoice["client"])
         }
       })
@@ -185,7 +263,7 @@ class Churn extends Component {
 
 
   totalClientsDetail() {
-    this.setState((prevState) => ({ months: [] }))
+    this.setState((prevState) => ({ months: [], monthsText: [] }))
     this.createMonthsArray()
     const total = []
 
@@ -201,7 +279,12 @@ class Churn extends Component {
         let end = new Date(endDateParts[2], endDateParts[1] - 1, +endDateParts[0])
 
         if (start <= month && end >= month
-          && (invoice["territory"] === this.state.churnTer)
+          && (invoice["territory"] === this.state.churnTer) && (
+            invoice["product"] === this.state.annual ||
+            invoice["product"] === this.state.project ||
+            invoice["product"] === this.state.static ||
+            invoice["product"] === this.state.budget
+          )
         ) {
           counter.push(invoice)
         }
@@ -219,7 +302,7 @@ class Churn extends Component {
   }
 
   getLostClients = () => {
-
+    this.setState((prevState) => ({ months: [], monthsText: [] }))
     this.createMonthsArray()
     let lostClients = []
     let lostClientsArray = []
@@ -242,6 +325,7 @@ class Churn extends Component {
   }
 
   getNewClients = () => {
+    this.setState((prevState) => ({ months: [], monthsText: [] }))
     this.createMonthsArray()
     let newClients = []
     let newClientsArray = []
@@ -303,24 +387,21 @@ class Churn extends Component {
 
     if (this.state.churnTer === "USA" || this.state.churnTer === "NZ" || this.state.churnTer === "UK") {
       for (let k = 9; k < churn.length - 1; k++) {
-        churnArray.push([new Date(2015, k + 7, 0), ((churn[k][0] / (churn[k][1] + churn[k][2])) * 100)])
+        churnArray.push([new Date(2015, k + 8, 0), ((churn[k][0] / (churn[k][1] + churn[k][2])) * 100)])
       }
     } else {
       for (let k = 0; k < churn.length - 1; k++) {
-        churnArray.push([new Date(2015, k + 7, 0), ((churn[k][0] / (churn[k][1] + churn[k][2])) * 100)])
+        churnArray.push([new Date(2015, k + 8, 0), ((churn[k][0] / (churn[k][1] + churn[k][2])) * 100)])
       }
     }
 
     this.setState((prevState) => ({
       chartData: churnArray
     }))
-    console.log(churnArray)
+
   }
 
   createMonthsArray = () => {
-    this.setState(previous => ({
-      months: []
-    }))
     const numberOfMonths = this.getNumberOfMonthsSinceJuly2015()
 
     let year = 2015
@@ -359,6 +440,7 @@ class Churn extends Component {
 
 
   getLostValue = () => {
+    this.setState((prevState) => ({ months: [], monthsText: [] }))
     this.createMonthsArray()
     let lostValue = []
     let lostValueArray = []
@@ -378,6 +460,7 @@ class Churn extends Component {
   }
 
   getExpansion = () => {
+    this.setState((prevState) => ({ months: [], monthsText: [] }))
     this.createMonthsArray()
     let expanseValue = []
     let expanseValueArray = []
@@ -389,7 +472,7 @@ class Churn extends Component {
         expanseValue = []
         this.state.new[i].forEach((newClient) => {
           let pos = this.state.detail[i + 1].findIndex(i => i.client === newClient)
-          console.log(this.state.detail[i + 1][pos]["valuepermonth"])
+
           expanseValue.push(this.state.detail[i + 1][pos]["valuepermonth"])
         })
 
@@ -398,115 +481,178 @@ class Churn extends Component {
     }
   }
 
-  renderNewClients = () => {
-    if (this.state.new.length === 0) {
-      return null
-    }
-
-    return (
-      <div>
-        {this.state.new.map((item, index) => (
-          <Card>
-            <h2 key={index}>{this.state.monthsText[index + 1]},{item.length}</h2>
-            <h4>{item.length} new client(s)</h4>
-            {item.map((client, index) => (
-              <p key={index}>{client}</p>
-            ))}
-          </Card>
-        ))}
-      </div>
-    )
-  }
-
   handleSelection = (event, data) => {
     event.persist()
     this.setState((prevState) => ({ churnTer: event.target.textContent }), this.updateChurnTer)
   }
 
-  renderLostClients = () => {
-    if (this.state.lost.length === 0) {
-      return null
+  displayTable = () => {
+    if (!isNaN(this.state.chartData[1][1])) {
+      return (
+        <div style={{ paddingTop: 12 }}>
+          <Segment style={{ width: 1079 }}>
+            <Grid>
+              <Grid.Column width={6}>
+                <Segment>
+                  <h2 style={{ textAlign: "center" }}>Clients LOST last month</h2>
+                  <h3 style={{ textAlign: "center" }}>{this.state.lost[this.state.lost.length - 2].length}</h3>
+                  <ul>
+                    {this.state.lost[this.state.lost.length - 2].map((client, index) => (
+                      <li key={index}>{client}</li>
+                    ))}
+                  </ul>
+                </Segment>
+              </Grid.Column>
+              <Grid.Column width={6}>
+                <Segment>
+                  <h2 style={{ textAlign: "center" }}>Clients ADDED last month</h2>
+                  <h3 style={{ textAlign: "center" }}>{this.state.new[this.state.new.length - 2].length}</h3>
+                  <ul>
+                    {this.state.new[this.state.new.length - 2].map((client, index) => (
+                      <li key={index}>{client}</li>
+                    ))}
+                  </ul>
+                </Segment>
+              </Grid.Column>
+              <Grid.Column width={4}>
+                <Segment>
+                  <h2 style={{ textAlign: "center" }}>Churn Calculation</h2>
+                  <h1 style={{ textAlign: "center" }}>{this.state.forChurnForumla[this.state.forChurnForumla.length - 2][0]}</h1>
+                  <h1 style={{ textAlign: "center" }}>({this.state.forChurnForumla[this.state.forChurnForumla.length - 2][1]} + {this.state.forChurnForumla[this.state.forChurnForumla.length - 4][2]})</h1>
+                  <h1 style={{ textAlign: "center" }}> = {this.state.chartData[this.state.chartData.length - 1][1].toFixed(2)}%</h1>
+                </Segment>
+              </Grid.Column>
+            </Grid>
+          </Segment>
+        </div >
+      )
     }
-
-    return (
-      <div>
-        {this.state.lost.map((item, index) => (
-          <Card>
-            <h2 key={index}>{this.state.monthsText[index + 1]},{item.length},{this.state.clients[index].length}</h2>
-            <h4>{item.length} client(s) lost</h4>
-            {item.map((client, index) => (
-              <p key={index}>{client}</p>
-            ))}
-          </Card>
-        ))}
-      </div>
-    )
   }
 
   displayChart = () => {
+    const headingStyle = {
+      textAlign: 'center'
+    }
+    const { annualActive, projectActive, staticActive, budgetActive } = this.state
     if (this.state.chartData.length > 2) {
       return (
-        <Segment style={{ width: 1079, height: 800 }}>
-          <div>
-            <Chart
-              width={'1000px'}
-              height={'700px'}
-              chartType="ScatterChart"
-              loader={<div>Loading Chart</div>}
-              data={this.state.chartData}
-              options={{
-                'vAxis': {
-                  'title': 'Churn %'
-                },
-                'hAxis': {
-                  'title': 'Date',
-                  'format': 'MMM-yy'
-                },
-                'legend': { 'position': 'top' },
-                'chartArea': { 'width': '80%', 'height': '80%' },
-                subtitle: 'in millions of dollars (USD)',
-                crosshair: { trigger: 'both', orientation: 'both' },
-                animation: {
-                  startup: true,
-                  easing: 'linear',
-                  duration: 750,
-                },
-                trendlines: {
-                  0: {
-                    type: 'polynomial',
-                    degree: 3,
-                    labelInLegend: 'Trend'
-                  },
-                  1: {
-                    type: 'polynomial',
-                    degree: 3,
-                    labelInLegend: 'Trend'
-                  },
-                  2: {
-                    type: 'polynomial',
-                    degree: 3,
-                    labelInLegend: 'Trend'
-                  },
-                  3: {
-                    type: 'polynomial',
-                    degree: 3,
-                    labelInLegend: 'Trend'
-                  },
-                }
-              }}
-            />
-          </div>
-          <div></div>
-          <div>
+        <Grid columns='equal' style={{ width: 1300 }}>
+          <Grid.Column>
+            <Segment style={{ width: 70, height: 513 }}>
+              <br />
+              <div>
+                Annual
+                <br />
+                <br />
+                <Checkbox toggle active={annualActive} onClick={this.handleClickAnnual} />
+              </div>
 
-          </div>
+              <br />
+              <div>
+                Project
+                <br />
+                <br />
+                <Checkbox toggle active={projectActive} onClick={this.handleClickProject} />
+              </div>
 
-        </Segment>
+              <br />
+              <div>
+                Static
+                <br />
+                <br />
+                <Checkbox toggle active={staticActive} onClick={this.handleClickStatic} />
+              </div>
+              <br />
+
+              <div>
+                Budget
+                <br />
+                <br />
+                <Checkbox toggle active={budgetActive} onClick={this.handleClickBudget} />
+              </div>
+              <br />
+              <br />
+              <div style={headingStyle}>
+                <br />
+                <br />
+              </div>
+              {/* <div>
+  <Button primary disabled={!this.state.loadButtonActive} onClick={this.totalClients}>
+    Load Chart
+  </Button>
+</div> */}
+            </Segment>
+          </Grid.Column>
+          <Grid.Column width={15}>
+            <Segment style={{ width: 1000 }}>
+              <div>
+                <Chart
+                  width={'984px'}
+                  height={'484px'}
+                  chartType="ScatterChart"
+                  loader={<div>Loading Chart</div>}
+                  data={this.state.chartData}
+                  options={{
+                    'vAxis': {
+                      'title': 'Churn %'
+                    },
+                    'hAxis': {
+                      'title': 'Date',
+                      'format': 'MMM-yy'
+                    },
+                    'legend': { 'position': 'top' },
+                    'chartArea': { 'width': '80%', 'height': '80%' },
+                    subtitle: 'in millions of dollars (USD)',
+                    crosshair: { trigger: 'both', orientation: 'both' },
+                    colors: this.state.chartColor,
+                    animation: {
+                      startup: true,
+                      easing: 'linear',
+                      duration: 750,
+                    },
+                    trendlines: {
+                      0: {
+                        type: 'polynomial',
+                        degree: 3,
+                        labelInLegend: 'Trend'
+                      },
+                      1: {
+                        type: 'polynomial',
+                        degree: 3,
+                        labelInLegend: 'Trend'
+                      },
+                      2: {
+                        type: 'polynomial',
+                        degree: 3,
+                        labelInLegend: 'Trend'
+                      },
+                      3: {
+                        type: 'polynomial',
+                        degree: 3,
+                        labelInLegend: 'Trend'
+                      },
+                    }
+                  }}
+                />
+              </div>
+              <div></div>
+              <div>
+
+              </div>
+
+
+            </Segment>
+          </Grid.Column>
+        </Grid>
+
+
+
       )
     }
   }
 
   render() {
+    { console.log(this.state.forChurnForumla[this.state.forChurnForumla.length - 1]) }
     const headingStyle = {
       textAlign: 'center'
     }
@@ -533,21 +679,8 @@ class Churn extends Component {
         {this.displayChart()}
 
 
-        {/* <Button secondary onClick={this.getNewClients}>
-          Get New Clients
-        </Button>
-        <Button secondary onClick={this.getLostValue}>
-          Get Lost Value
-        </Button>
-        <Button secondary onClick={this.getExpansion}>
-          Get Expanded Value
-        </Button> */}
-        {/* {console.log(this.state.aus)} */}
-        {/* {console.log(this.state.lost)} */}
-        {/* {console.log(this.state.detail)} */}
-        {/* {this.renderLostClients()}
+        {this.displayTable()}
 
-        {this.renderNewClients()} */}
       </div>
 
     )
