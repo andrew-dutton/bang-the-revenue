@@ -8,6 +8,7 @@ class Churn extends Component {
 
     this.state = {
       clients: [],
+      chartClick: 0,
       detail: [],
       lost: [],
       new: [],
@@ -487,10 +488,11 @@ class Churn extends Component {
     this.setState((prevState) => ({ churnTer: event.target.textContent }), this.updateChurnTer)
   }
 
-  displayTable = () => {
+  displayTable = (month) => {
     if (!isNaN(this.state.chartData[1][1])) {
       return (
         <div style={{ paddingTop: 12, paddingBottom: 30 }}>
+          <h1>{month}</h1>
           <Segment style={{ width: 1079 }}>
             <Grid>
               <Grid.Column width={4}>
@@ -538,20 +540,6 @@ class Churn extends Component {
         </div >
       )
     }
-  }
-
-  chartEvents = () => {
-    return (
-      [
-        {
-          callback: ({ chartWrapper, google }) => {
-            const chart = chartWrapper.getChart();
-            chart.container.addEventListener("click", (ev) => console.log(ev))
-          },
-          eventName: "ready"
-        }
-      ]
-    )
   }
 
   displayChart = () => {
@@ -618,8 +606,11 @@ class Churn extends Component {
                       eventName: "ready",
                       callback: ({ chartWrapper, google }) => {
                         const chart = chartWrapper.getChart();
-                        google.visualization.events.addListener(chart, "click", e => {
-                          console.log(e);
+                        google.visualization.events.addListener(chart, "select", () => {
+                          let selection = chart.getSelection()
+                          // this.setState((prevState) => ({
+                          //   chartClick: selection[0].row
+                          // }))
                         })
                       }
                     }
@@ -688,7 +679,6 @@ class Churn extends Component {
   }
 
   render() {
-    { console.log(this.state.forChurnForumla[this.state.forChurnForumla.length - 1]) }
     const headingStyle = {
       textAlign: 'center'
     }
@@ -716,7 +706,6 @@ class Churn extends Component {
 
 
         {this.displayTable()}
-
       </div>
 
     )
