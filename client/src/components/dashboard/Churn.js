@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Grid, Checkbox, Segment, Button, Card, Dropdown, Form, Radio } from 'semantic-ui-react'
+import { Popup, Grid, Checkbox, Segment, Button, Card, Dropdown, Form, Radio } from 'semantic-ui-react'
 import Chart from 'react-google-charts'
 
 class Churn extends Component {
@@ -495,7 +495,7 @@ class Churn extends Component {
             <Grid>
               <Grid.Column width={4}>
                 <Segment>
-                  <h3 style={{ textAlign: "center" }}>Total Clients Lost September 2019</h3>
+                  <h3 style={{ textAlign: "center" }}>Total Clients Lost in September 2019</h3>
                   <h2 style={{ textAlign: "center" }}>{this.state.lost[this.state.lost.length - 2].length}</h2>
                   <ul>
                     {this.state.lost[this.state.lost.length - 2].map((client, index) => (
@@ -506,7 +506,7 @@ class Churn extends Component {
               </Grid.Column>
               <Grid.Column width={4}>
                 <Segment>
-                  <h3 style={{ textAlign: "center" }}>Total Clients Added September 2019</h3>
+                  <h3 style={{ textAlign: "center" }}>Total Clients Added in September 2019</h3>
                   <h2 style={{ textAlign: "center" }}>{this.state.new[this.state.new.length - 2].length}</h2>
                   <ul>
                     {this.state.new[this.state.new.length - 2].map((client, index) => (
@@ -522,18 +522,36 @@ class Churn extends Component {
                 </Segment>
               </Grid.Column>
               <Grid.Column width={4}>
-                <Segment>
-                  <h3 style={{ textAlign: "center" }}>Monthly Churn Calculation</h3>
-                  <h1 style={{ textAlign: "center" }}>{this.state.forChurnForumla[this.state.forChurnForumla.length - 2][0]} ÷ ({this.state.forChurnForumla[this.state.forChurnForumla.length - 2][1]} + {this.state.forChurnForumla[this.state.forChurnForumla.length - 2][2]})</h1>
-                  {/* <h1 style={{ textAlign: "center" }}>({this.state.forChurnForumla[this.state.forChurnForumla.length - 2][1]} + {this.state.forChurnForumla[this.state.forChurnForumla.length - 4][2]})</h1> */}
-                  <h1 style={{ textAlign: "center" }}> = {this.state.chartData[this.state.chartData.length - 1][1].toFixed(2)}%</h1>
-                </Segment>
+                <div>
+                  <Segment>
+                    <h3 style={{ textAlign: "center" }}>Monthly Churn Calculation  <Popup
+                      content='The Monthly Churn rate here is calculated by dividing the number of clients we lost last month by the number of new clients added to the number of clients we had before the month started' trigger={<Button icon='calculator' />}
+                    /></h3>
+                    <h1 style={{ textAlign: "center" }}>{this.state.forChurnForumla[this.state.forChurnForumla.length - 2][0]} ÷ ({this.state.forChurnForumla[this.state.forChurnForumla.length - 2][1]} + {this.state.forChurnForumla[this.state.forChurnForumla.length - 2][2]})</h1>
+                    {/* <h1 style={{ textAlign: "center" }}>({this.state.forChurnForumla[this.state.forChurnForumla.length - 2][1]} + {this.state.forChurnForumla[this.state.forChurnForumla.length - 4][2]})</h1> */}
+                    <h1 style={{ textAlign: "center" }}> = {this.state.chartData[this.state.chartData.length - 1][1].toFixed(2)}%</h1>
+                  </Segment>
+                </div>
               </Grid.Column>
             </Grid>
           </Segment>
         </div >
       )
     }
+  }
+
+  chartEvents = () => {
+    return (
+      [
+        {
+          callback: ({ chartWrapper, google }) => {
+            const chart = chartWrapper.getChart();
+            chart.container.addEventListener("click", (ev) => console.log(ev))
+          },
+          eventName: "ready"
+        }
+      ]
+    )
   }
 
   displayChart = () => {
@@ -595,6 +613,17 @@ class Churn extends Component {
               <div>
                 <Chart
                   width={'984px'}
+                  chartEvents={[
+                    {
+                      eventName: "ready",
+                      callback: ({ chartWrapper, google }) => {
+                        const chart = chartWrapper.getChart();
+                        google.visualization.events.addListener(chart, "click", e => {
+                          console.log(e);
+                        })
+                      }
+                    }
+                  ]}
                   height={'484px'}
                   chartType="ScatterChart"
                   loader={<div>Loading Chart</div>}
@@ -608,7 +637,7 @@ class Churn extends Component {
                       'format': 'MMM-yy'
                     },
                     'legend': { 'position': 'top' },
-                    'chartArea': { 'width': '80%', 'height': '80%' },
+                    'chartArea': { 'width': '90%', 'height': '80%' },
                     subtitle: 'in millions of dollars (USD)',
                     crosshair: { trigger: 'both', orientation: 'both' },
                     colors: this.state.chartColor,
