@@ -153,6 +153,7 @@ class Churn extends Component {
         let startDateParts = startString.split("/")
         let start = new Date(startDateParts[2], startDateParts[1] - 1, +startDateParts[0])
         let endString = invoice["end"]
+
         let endDateParts = endString.split("/")
         let end = new Date(endDateParts[2], endDateParts[1] - 1, +endDateParts[0])
 
@@ -489,13 +490,13 @@ class Churn extends Component {
   displayTable = () => {
     if (!isNaN(this.state.chartData[1][1])) {
       return (
-        <div style={{ paddingTop: 12 }}>
+        <div style={{ paddingTop: 12, paddingBottom: 30 }}>
           <Segment style={{ width: 1079 }}>
             <Grid>
-              <Grid.Column width={6}>
+              <Grid.Column width={4}>
                 <Segment>
-                  <h2 style={{ textAlign: "center" }}>Clients LOST last month</h2>
-                  <h3 style={{ textAlign: "center" }}>{this.state.lost[this.state.lost.length - 2].length}</h3>
+                  <h3 style={{ textAlign: "center" }}>Total Clients Lost September 2019</h3>
+                  <h2 style={{ textAlign: "center" }}>{this.state.lost[this.state.lost.length - 2].length}</h2>
                   <ul>
                     {this.state.lost[this.state.lost.length - 2].map((client, index) => (
                       <li key={index}>{client}</li>
@@ -503,10 +504,10 @@ class Churn extends Component {
                   </ul>
                 </Segment>
               </Grid.Column>
-              <Grid.Column width={6}>
+              <Grid.Column width={4}>
                 <Segment>
-                  <h2 style={{ textAlign: "center" }}>Clients ADDED last month</h2>
-                  <h3 style={{ textAlign: "center" }}>{this.state.new[this.state.new.length - 2].length}</h3>
+                  <h3 style={{ textAlign: "center" }}>Total Clients Added September 2019</h3>
+                  <h2 style={{ textAlign: "center" }}>{this.state.new[this.state.new.length - 2].length}</h2>
                   <ul>
                     {this.state.new[this.state.new.length - 2].map((client, index) => (
                       <li key={index}>{client}</li>
@@ -516,9 +517,15 @@ class Churn extends Component {
               </Grid.Column>
               <Grid.Column width={4}>
                 <Segment>
-                  <h2 style={{ textAlign: "center" }}>Churn Calculation</h2>
-                  <h1 style={{ textAlign: "center" }}>{this.state.forChurnForumla[this.state.forChurnForumla.length - 2][0]}</h1>
-                  <h1 style={{ textAlign: "center" }}>({this.state.forChurnForumla[this.state.forChurnForumla.length - 2][1]} + {this.state.forChurnForumla[this.state.forChurnForumla.length - 4][2]})</h1>
+                  <h3 style={{ textAlign: "center" }}>Total Clients At End of August 2019</h3>
+                  <h2 style={{ textAlign: "center" }}>{this.state.forChurnForumla[this.state.forChurnForumla.length - 2][2]}</h2>
+                </Segment>
+              </Grid.Column>
+              <Grid.Column width={4}>
+                <Segment>
+                  <h3 style={{ textAlign: "center" }}>Monthly Churn Calculation</h3>
+                  <h1 style={{ textAlign: "center" }}>{this.state.forChurnForumla[this.state.forChurnForumla.length - 2][0]} ÷ ({this.state.forChurnForumla[this.state.forChurnForumla.length - 2][1]} + {this.state.forChurnForumla[this.state.forChurnForumla.length - 2][2]})</h1>
+                  {/* <h1 style={{ textAlign: "center" }}>({this.state.forChurnForumla[this.state.forChurnForumla.length - 2][1]} + {this.state.forChurnForumla[this.state.forChurnForumla.length - 4][2]})</h1> */}
                   <h1 style={{ textAlign: "center" }}> = {this.state.chartData[this.state.chartData.length - 1][1].toFixed(2)}%</h1>
                 </Segment>
               </Grid.Column>
