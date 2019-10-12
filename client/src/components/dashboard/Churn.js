@@ -593,6 +593,10 @@ class Churn extends Component {
     }
   }
 
+  scrollToTable = () => {
+    window.scrollTo({ top: 810, bottom: 0, behavior: 'smooth' })
+  }
+
   displayChart = () => {
     const headingStyle = {
       textAlign: 'center'
@@ -608,7 +612,7 @@ class Churn extends Component {
         },
         callback: ({ chartWrapper }) => {
           const chart = chartWrapper.getChart().getSelection()[0].row;
-          this.setState((prevState) => ({ selectedMonth: chart }))
+          this.setState((prevState) => ({ selectedMonth: chart }), this.scrollToTable)
           this.setChangedMonth()
         }
       }
@@ -749,7 +753,7 @@ class Churn extends Component {
         {this.displayChartMonth()}
 
         {this.displayTable()}
-        {console.log(this.state)}
+
       </div>
     )
   }
