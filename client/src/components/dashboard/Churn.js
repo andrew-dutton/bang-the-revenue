@@ -8,6 +8,7 @@ class Churn extends Component {
 
     this.state = {
       clients: [],
+      terText: "",
       showTable: false,
       currentMonth: "",
       currentPrevMonth: "",
@@ -225,22 +226,22 @@ class Churn extends Component {
 
   updateChurnTer = () => {
     if (this.state.churnTer === "Australia") {
-      this.setState((prevState) => ({ churnTer: "AUS", chartColor: ["#8CD75C"] }), this.totalClients)
+      this.setState((prevState) => ({ churnTer: "AUS", terText: "Australia", chartColor: ["#8CD75C"] }), this.totalClients)
     }
     if (this.state.churnTer === "Canada") {
-      this.setState((prevState) => ({ churnTer: "CAN", chartColor: ["#fcba03"] }), this.totalClients)
+      this.setState((prevState) => ({ churnTer: "CAN", terText: "Canada", chartColor: ["#fcba03"] }), this.totalClients)
     }
     if (this.state.churnTer === "United States") {
-      this.setState((prevState) => ({ churnTer: "USA", chartColor: ["#F28E7C"] }), this.totalClients)
+      this.setState((prevState) => ({ churnTer: "USA", terText: "United States", chartColor: ["#F28E7C"] }), this.totalClients)
     }
     if (this.state.churnTer === "United Kingdom") {
-      this.setState((prevState) => ({ churnTer: "UK", chartColor: ["#03fcd7"] }), this.totalClients)
+      this.setState((prevState) => ({ churnTer: "UK", terText: "U.K.", chartColor: ["#03fcd7"] }), this.totalClients)
     }
     if (this.state.churnTer === "New Zealand") {
-      this.setState((prevState) => ({ churnTer: "NZ", chartColor: ["#F27CEA"] }), this.totalClients)
+      this.setState((prevState) => ({ churnTer: "NZ", terText: "New Zealand", chartColor: ["#F27CEA"] }), this.totalClients)
     }
     if (this.state.churnTer === "Global") {
-      this.setState((prevState) => ({ churnTer: "Global", chartColor: ["#2B85D0"] }), this.totalGlobalClients)
+      this.setState((prevState) => ({ churnTer: "Global", terText: "Global", chartColor: ["#2B85D0"] }), this.totalGlobalClients)
     }
   }
 
@@ -585,6 +586,7 @@ class Churn extends Component {
           <Segment style={{ width: 1079 }}>
             <h1 style={{ textAlign: "center" }}>{this.state.currentMonth}</h1>
             <h2 style={{ textAlign: "center" }}>{this.state.forChurnForumla[this.state.selectedMonth + 1][2]} Clients</h2>
+            <h3 style={{ textAlign: "center" }}>{this.state.terText}</h3>
           </Segment>
         </div >
       )
@@ -678,7 +680,7 @@ class Churn extends Component {
                       'title': 'Date',
                       'format': 'MMM-yy'
                     },
-                    'legend': { 'position': 'top' },
+                    legend: 'none',
                     'chartArea': { 'width': '90%', 'height': '80%' },
                     colors: this.state.chartColor,
                     animation: {
@@ -747,7 +749,7 @@ class Churn extends Component {
         {this.displayChartMonth()}
 
         {this.displayTable()}
-
+        {console.log(this.state)}
       </div>
     )
   }
