@@ -79,7 +79,7 @@ class Churn extends Component {
 
   checkTableToggle = () => {
     if (this.state.annualOn === false && this.state.projectOn === false && this.state.staticOn === false && this.state.budgetOn === false) {
-      this.setState((prevState) => ({ showTable: false }))
+      this.setState((prevState) => ({ showTable: false }), this.setStartingMonth)
     }
   }
 
@@ -178,7 +178,7 @@ class Churn extends Component {
       this.setState((prevState) => ({ annual: "Annual" }))
     }
     if (this.state.churnTer === "Global") {
-      this.setState((prevState) => ({ annualActive: !prevState.annualActive, annualOn: !prevState.annualOn, loadButtonActive: true, showTable: true }), this.totalGlobalClients)
+      this.setState((prevState) => ({ annualActive: !prevState.annualActive, annualOn: !prevState.annualOn, showTable: true }), this.totalGlobalClients)
     } else {
       this.setState((prevState) => ({ annualActive: !prevState.annualActive, annualOn: !prevState.annualOn, loadButtonActive: true, showTable: true }), this.totalClients)
     }
@@ -228,13 +228,13 @@ class Churn extends Component {
       this.setState((prevState) => ({ churnTer: "AUS", chartColor: ["#8CD75C"] }), this.totalClients)
     }
     if (this.state.churnTer === "Canada") {
-      this.setState((prevState) => ({ churnTer: "CAN", chartColor: ["#EAE477"] }), this.totalClients)
+      this.setState((prevState) => ({ churnTer: "CAN", chartColor: ["#fcba03"] }), this.totalClients)
     }
     if (this.state.churnTer === "United States") {
       this.setState((prevState) => ({ churnTer: "USA", chartColor: ["#F28E7C"] }), this.totalClients)
     }
     if (this.state.churnTer === "United Kingdom") {
-      this.setState((prevState) => ({ churnTer: "UK", chartColor: ["#7CF2E4"] }), this.totalClients)
+      this.setState((prevState) => ({ churnTer: "UK", chartColor: ["#03fcd7"] }), this.totalClients)
     }
     if (this.state.churnTer === "New Zealand") {
       this.setState((prevState) => ({ churnTer: "NZ", chartColor: ["#F27CEA"] }), this.totalClients)
@@ -559,12 +559,15 @@ class Churn extends Component {
               <Grid.Column width={4}>
                 <div>
                   <Segment>
-                    <h3 style={{ textAlign: "center" }}>Monthly Churn Calculation  <Popup
-                      content='The Monthly Churn rate here is calculated by dividing the number of clients we lost last month by the number of new clients added to the number of clients we had before the month started' trigger={<Button icon='calculator' />}
-                    /></h3>
-                    <h1 style={{ textAlign: "center" }}>{this.state.forChurnForumla[this.state.selectedMonth][0]} ÷ ({this.state.forChurnForumla[this.state.selectedMonth][1]} + {this.state.forChurnForumla[this.state.selectedMonth][2]})</h1>
+                    <h3 style={{ textAlign: "center" }}>Churn Calculation<br />{this.state.currentMonth} </h3>
+                    <h2 style={{ textAlign: "center" }}>{this.state.forChurnForumla[this.state.selectedMonth][0]} ÷ ({this.state.forChurnForumla[this.state.selectedMonth][1]} + {this.state.forChurnForumla[this.state.selectedMonth][2]})</h2>
                     {/* <h1 style={{ textAlign: "center" }}>({this.state.forChurnForumla[this.state.forChurnForumla.length - 2][1]} + {this.state.forChurnForumla[this.state.forChurnForumla.length - 4][2]})</h1> */}
-                    <h1 style={{ textAlign: "center" }}> = {this.state.chartData[this.state.selectedMonth + 1][1].toFixed(2)}%</h1>
+                    <h2 style={{ textAlign: "center" }}> = {this.state.chartData[this.state.selectedMonth + 1][1].toFixed(2)}%</h2>
+                    <div style={{ textAlign: "center" }}>
+                      <Popup
+                        content='The Monthly Churn rate here is calculated by dividing the number of clients we lost last month by the number of new clients added to the number of clients we had before the month started' trigger={<Button icon='calculator' />}
+                      />
+                    </div>
                   </Segment>
                 </div>
               </Grid.Column>
@@ -581,6 +584,7 @@ class Churn extends Component {
         <div style={{ paddingTop: 14 }}>
           <Segment style={{ width: 1079 }}>
             <h1 style={{ textAlign: "center" }}>{this.state.currentMonth}</h1>
+            <h2 style={{ textAlign: "center" }}>{this.state.forChurnForumla[this.state.selectedMonth + 1][2]} Clients</h2>
           </Segment>
         </div >
       )
@@ -614,6 +618,7 @@ class Churn extends Component {
         <Grid columns='equal' style={{ width: 1300 }}>
           <Grid.Column>
             <Segment style={{ width: 70, height: 513 }}>
+              <br />
               <br />
               <div>
                 Annual
@@ -701,7 +706,7 @@ class Churn extends Component {
                         type: 'polynomial',
                         degree: 3,
                         labelInLegend: 'Trend'
-                      },
+                      }
                     }
                   }}
                 />
@@ -714,7 +719,6 @@ class Churn extends Component {
   }
 
   render() {
-
     const headingStyle = {
       textAlign: 'center'
     }
@@ -747,6 +751,7 @@ class Churn extends Component {
       </div>
     )
   }
+
 }
 
 export default Churn
