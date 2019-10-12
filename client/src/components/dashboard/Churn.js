@@ -8,7 +8,11 @@ class Churn extends Component {
 
     this.state = {
       clients: [],
-      chartClick: 0,
+      showTable: false,
+      currentMonth: "",
+      currentPrevMonth: "",
+      currrentMonthNumber: 0,
+      selectedMonth: 0,
       detail: [],
       lost: [],
       new: [],
@@ -68,6 +72,105 @@ class Churn extends Component {
     this.handleClickBudget = this.handleClickBudget.bind(this)
   }
 
+  componentDidMount() {
+    this.createMonthsArray()
+    this.setStartingMonth()
+  }
+
+  checkTableToggle = () => {
+    if (this.state.annualOn === false && this.state.projectOn === false && this.state.staticOn === false && this.state.budgetOn === false) {
+      this.setState((prevState) => ({ showTable: false }))
+    }
+  }
+
+  createMonthsArray = () => {
+    const numberOfMonths = this.getNumberOfMonthsSinceJuly2015()
+
+    let year = 2015
+    let yearStep = 12
+
+    for (let step = 0; step < numberOfMonths; step++) {
+      let month = 7
+      month += step
+
+      if ((month % 12) === 0) {
+        month = 12
+      } else {
+        month = month % 12
+      }
+
+      if (step >= 6) {
+        yearStep++
+        year = Math.floor(yearStep / 12) + 2015
+        if (yearStep % 12 === 0) {
+          year -= 1
+        }
+      }
+
+      this.state.months.push(new Date(year, month, 0))
+      this.state.monthsText.push(new Date(year, month, 0).toLocaleDateString().split(',')[0])
+    }
+  }
+
+  getNumberOfMonthsSinceJuly2015 = () => {
+    let today = new Date()
+    let thisMonth = today.getMonth()
+    let thisYear = today.getFullYear()
+    let monthsOfYears = (thisYear - (2015 + 1)) * 12
+    return monthsOfYears + thisMonth + 7
+  }
+
+  setStartingMonth = () => {
+    let monthsOfYear = [
+      "January", "February", "March", "April", "May", "June", "July",
+      "August", "September", "October", "November", "December"
+    ]
+
+    let startingMonthNumber = this.state.months.length - 3
+
+    let month = monthsOfYear[this.state.months[this.state.months.length - 2].getMonth()]
+    let year = this.state.months[this.state.months.length - 2].getFullYear()
+
+    let prevMonth = monthsOfYear[this.state.months[this.state.months.length - 3].getMonth()]
+    let prevYear = this.state.months[this.state.months.length - 3].getFullYear()
+
+    let theDate = month + " " + year
+    let thePrevDate = prevMonth + " " + prevYear
+
+    this.setState((prevState) => ({ currentMonth: theDate, currentPrevMonth: thePrevDate, selectedMonth: startingMonthNumber }))
+  }
+
+  setChangedMonth = () => {
+    let monthsOfYear = [
+      "January", "February", "March", "April", "May", "June", "July",
+      "August", "September", "October", "November", "December"
+    ]
+
+    let month = this.state.selectedMonth
+    let year = this.state.months[this.state.selectedMonth].getFullYear()
+
+    let prevMonth = this.state.selectedMonth - 1
+
+    let monthDisp
+    let prevMonthDisp
+    let prevYear
+
+    if (this.state.selectedMonth > -1) {
+      monthDisp = monthsOfYear[this.state.months[month + 1].getMonth()]
+      prevMonthDisp = monthsOfYear[this.state.months[prevMonth + 1].getMonth()]
+      prevYear = this.state.months[this.state.selectedMonth].getFullYear()
+    }
+
+    if (monthDisp == "January") {
+      year++
+    }
+
+    let theDate = monthDisp + " " + year
+    let thePrevDate = prevMonthDisp + " " + prevYear
+
+    this.setState((prevState) => ({ currentMonth: theDate, currentPrevMonth: thePrevDate }))
+  }
+
   handleClickAnnual = () => {
     if (this.state.annualOn) {
       this.setState((prevState) => ({ annual: "" }))
@@ -75,9 +178,9 @@ class Churn extends Component {
       this.setState((prevState) => ({ annual: "Annual" }))
     }
     if (this.state.churnTer === "Global") {
-      this.setState((prevState) => ({ annualActive: !prevState.annualActive, annualOn: !prevState.annualOn, loadButtonActive: true }), this.totalGlobalClients)
+      this.setState((prevState) => ({ annualActive: !prevState.annualActive, annualOn: !prevState.annualOn, loadButtonActive: true, showTable: true }), this.totalGlobalClients)
     } else {
-      this.setState((prevState) => ({ annualActive: !prevState.annualActive, annualOn: !prevState.annualOn, loadButtonActive: true }), this.totalClients)
+      this.setState((prevState) => ({ annualActive: !prevState.annualActive, annualOn: !prevState.annualOn, loadButtonActive: true, showTable: true }), this.totalClients)
     }
   }
 
@@ -88,9 +191,9 @@ class Churn extends Component {
       this.setState((prevState) => ({ project: "Project" }))
     }
     if (this.state.churnTer === "Global") {
-      this.setState((prevState) => ({ projectActive: !prevState.projectActive, projectOn: !prevState.projectOn, loadButtonActive: true }), this.totalGlobalClients)
+      this.setState((prevState) => ({ projectActive: !prevState.projectActive, projectOn: !prevState.projectOn, loadButtonActive: true, showTable: true }), this.totalGlobalClients)
     } else {
-      this.setState((prevState) => ({ projectActive: !prevState.projectActive, projectOn: !prevState.projectOn, loadButtonActive: true }), this.totalClients)
+      this.setState((prevState) => ({ projectActive: !prevState.projectActive, projectOn: !prevState.projectOn, loadButtonActive: true, showTable: true }), this.totalClients)
     }
   }
 
@@ -101,9 +204,9 @@ class Churn extends Component {
       this.setState((prevState) => ({ static: "Static" }))
     }
     if (this.state.churnTer === "Global") {
-      this.setState((prevState) => ({ staticActive: !prevState.staticActive, staticOn: !prevState.staticOn, loadButtonActive: true }), this.totalGlobalClients)
+      this.setState((prevState) => ({ staticActive: !prevState.staticActive, staticOn: !prevState.staticOn, loadButtonActive: true, showTable: true }), this.totalGlobalClients)
     } else {
-      this.setState((prevState) => ({ staticActive: !prevState.staticActive, staticOn: !prevState.staticOn, loadButtonActive: true }), this.totalClients)
+      this.setState((prevState) => ({ staticActive: !prevState.staticActive, staticOn: !prevState.staticOn, loadButtonActive: true, showTable: true }), this.totalClients)
     }
   }
 
@@ -114,9 +217,9 @@ class Churn extends Component {
       this.setState((prevState) => ({ budget: "Budget Allocator" }))
     }
     if (this.state.churnTer === "Global") {
-      this.setState((prevState) => ({ budgetActive: !prevState.budgetActive, budgetOn: !prevState.budgetOn, loadButtonActive: true }), this.totalGlobalClients)
+      this.setState((prevState) => ({ budgetActive: !prevState.budgetActive, budgetOn: !prevState.budgetOn, loadButtonActive: true, showTable: true }), this.totalGlobalClients)
     } else {
-      this.setState((prevState) => ({ budgetActive: !prevState.budgetActive, budgetOn: !prevState.budgetOn, loadButtonActive: true }), this.totalClients)
+      this.setState((prevState) => ({ budgetActive: !prevState.budgetActive, budgetOn: !prevState.budgetOn, loadButtonActive: true, showTable: true }), this.totalClients)
     }
   }
 
@@ -142,8 +245,6 @@ class Churn extends Component {
   }
 
   totalGlobalClients = () => {
-    this.setState((prevState) => ({ months: [], monthsText: [] }))
-    this.createMonthsArray()
     const total = []
 
     this.state.months.forEach((month) => {
@@ -185,8 +286,6 @@ class Churn extends Component {
   }
 
   totalGlobalClientsDetail = () => {
-    this.setState((prevState) => ({ months: [], monthsText: [] }))
-    this.createMonthsArray()
     const total = []
 
     this.state.months.forEach((month) => {
@@ -220,10 +319,7 @@ class Churn extends Component {
     return null
   }
 
-
   totalClients() {
-    this.setState((prevState) => ({ months: [], monthsText: [] }))
-    this.createMonthsArray()
     const total = []
 
     this.state.months.forEach((month) => {
@@ -263,10 +359,7 @@ class Churn extends Component {
     return null
   }
 
-
   totalClientsDetail() {
-    this.setState((prevState) => ({ months: [], monthsText: [] }))
-    this.createMonthsArray()
     const total = []
 
     this.state.months.forEach((month) => {
@@ -300,12 +393,9 @@ class Churn extends Component {
     }), this.getLostClients)
 
     return null
-
   }
 
   getLostClients = () => {
-    this.setState((prevState) => ({ months: [], monthsText: [] }))
-    this.createMonthsArray()
     let lostClients = []
     let lostClientsArray = []
 
@@ -313,9 +403,8 @@ class Churn extends Component {
       lostClients = []
       this.state.clients[i].forEach((client) => this.state.clients[i + 1].includes(client) ? null : lostClients.push(client))
       lostClientsArray.push(lostClients)
-
-
     }
+
     let holdingArray = []
     for (let k = 0; k < lostClientsArray.length - 1; k++) {
       holdingArray.push([k + 1, lostClientsArray[k].length])
@@ -327,8 +416,6 @@ class Churn extends Component {
   }
 
   getNewClients = () => {
-    this.setState((prevState) => ({ months: [], monthsText: [] }))
-    this.createMonthsArray()
     let newClients = []
     let newClientsArray = []
 
@@ -351,8 +438,6 @@ class Churn extends Component {
       new: [...newClientsArray],
       newTest: [...holdingArray]
     }), this.getPrevTotal)
-
-
   }
 
   getPrevTotal = () => {
@@ -387,63 +472,16 @@ class Churn extends Component {
     let churn = this.state.forChurnForumla
     let churnArray = [['TERRITORY', this.state.churnTer]]
 
-    if (this.state.churnTer === "USA" || this.state.churnTer === "NZ" || this.state.churnTer === "UK") {
-      for (let k = 9; k < churn.length - 1; k++) {
-        churnArray.push([new Date(2015, k + 8, 0), ((churn[k][0] / (churn[k][1] + churn[k][2])) * 100)])
-      }
-    } else {
-      for (let k = 0; k < churn.length - 1; k++) {
-        churnArray.push([new Date(2015, k + 8, 0), ((churn[k][0] / (churn[k][1] + churn[k][2])) * 100)])
-      }
+    for (let k = 0; k < churn.length - 1; k++) {
+      churnArray.push([new Date(2015, k + 8, 0), ((churn[k][0] / (churn[k][1] + churn[k][2])) * 100)])
     }
 
     this.setState((prevState) => ({
       chartData: churnArray
-    }))
-
+    }), this.checkTableToggle)
   }
-
-  createMonthsArray = () => {
-    const numberOfMonths = this.getNumberOfMonthsSinceJuly2015()
-
-    let year = 2015
-    let yearStep = 12
-
-    for (let step = 0; step < numberOfMonths; step++) {
-      let month = 7
-      month += step
-
-      if ((month % 12) === 0) {
-        month = 12
-      } else {
-        month = month % 12
-      }
-
-      if (step >= 6) {
-        yearStep++
-        year = Math.floor(yearStep / 12) + 2015
-        if (yearStep % 12 === 0) {
-          year -= 1
-        }
-      }
-
-      this.state.months.push(new Date(year, month, 0))
-      this.state.monthsText.push(new Date(year, month, 0).toLocaleDateString().split(',')[0])
-    }
-  }
-
-  getNumberOfMonthsSinceJuly2015 = () => {
-    let today = new Date()
-    let thisMonth = today.getMonth()
-    let thisYear = today.getFullYear()
-    let monthsOfYears = (thisYear - (2015 + 1)) * 12
-    return monthsOfYears + thisMonth + 7
-  }
-
 
   getLostValue = () => {
-    this.setState((prevState) => ({ months: [], monthsText: [] }))
-    this.createMonthsArray()
     let lostValue = []
     let lostValueArray = []
 
@@ -457,16 +495,11 @@ class Churn extends Component {
         lostValueArray.push(+lostValue.reduce((a, b) => a + b, 0).toFixed(2))
       }
     }
-
-    //console.log(lostValueArray)
   }
 
   getExpansion = () => {
-    this.setState((prevState) => ({ months: [], monthsText: [] }))
-    this.createMonthsArray()
     let expanseValue = []
     let expanseValueArray = []
-
 
     if (this.state.new.length > 0) {
       for (let i = 0; i < this.state.months.length - 1; i++) {
@@ -484,23 +517,23 @@ class Churn extends Component {
   }
 
   handleSelection = (event, data) => {
+    this.setStartingMonth()
     event.persist()
     this.setState((prevState) => ({ churnTer: event.target.textContent }), this.updateChurnTer)
   }
 
-  displayTable = (month) => {
-    if (!isNaN(this.state.chartData[1][1])) {
+  displayTable = () => {
+    if (this.state.showTable) {
       return (
         <div style={{ paddingTop: 12, paddingBottom: 30 }}>
-          <h1>{month}</h1>
           <Segment style={{ width: 1079 }}>
             <Grid>
               <Grid.Column width={4}>
                 <Segment>
-                  <h3 style={{ textAlign: "center" }}>Total Clients Lost in September 2019</h3>
-                  <h2 style={{ textAlign: "center" }}>{this.state.lost[this.state.lost.length - 2].length}</h2>
+                  <h3 style={{ textAlign: "center" }}>Total Clients Lost in<br />{this.state.currentMonth}</h3>
+                  <h2 style={{ textAlign: "center" }}>{this.state.lost[this.state.selectedMonth].length}</h2>
                   <ul>
-                    {this.state.lost[this.state.lost.length - 2].map((client, index) => (
+                    {this.state.lost[this.state.selectedMonth].map((client, index) => (
                       <li key={index}>{client}</li>
                     ))}
                   </ul>
@@ -508,10 +541,10 @@ class Churn extends Component {
               </Grid.Column>
               <Grid.Column width={4}>
                 <Segment>
-                  <h3 style={{ textAlign: "center" }}>Total Clients Added in September 2019</h3>
-                  <h2 style={{ textAlign: "center" }}>{this.state.new[this.state.new.length - 2].length}</h2>
+                  <h3 style={{ textAlign: "center" }}>Total Clients Added in<br />{this.state.currentMonth}</h3>
+                  <h2 style={{ textAlign: "center" }}>{this.state.new[this.state.selectedMonth].length}</h2>
                   <ul>
-                    {this.state.new[this.state.new.length - 2].map((client, index) => (
+                    {this.state.new[this.state.selectedMonth].map((client, index) => (
                       <li key={index}>{client}</li>
                     ))}
                   </ul>
@@ -519,8 +552,8 @@ class Churn extends Component {
               </Grid.Column>
               <Grid.Column width={4}>
                 <Segment>
-                  <h3 style={{ textAlign: "center" }}>Total Clients At End of August 2019</h3>
-                  <h2 style={{ textAlign: "center" }}>{this.state.forChurnForumla[this.state.forChurnForumla.length - 2][2]}</h2>
+                  <h3 style={{ textAlign: "center" }}>Total Clients At End of<br />{this.state.currentPrevMonth}</h3>
+                  <h2 style={{ textAlign: "center" }}>{this.state.forChurnForumla[this.state.selectedMonth][2]}</h2>
                 </Segment>
               </Grid.Column>
               <Grid.Column width={4}>
@@ -529,9 +562,9 @@ class Churn extends Component {
                     <h3 style={{ textAlign: "center" }}>Monthly Churn Calculation  <Popup
                       content='The Monthly Churn rate here is calculated by dividing the number of clients we lost last month by the number of new clients added to the number of clients we had before the month started' trigger={<Button icon='calculator' />}
                     /></h3>
-                    <h1 style={{ textAlign: "center" }}>{this.state.forChurnForumla[this.state.forChurnForumla.length - 2][0]} ÷ ({this.state.forChurnForumla[this.state.forChurnForumla.length - 2][1]} + {this.state.forChurnForumla[this.state.forChurnForumla.length - 2][2]})</h1>
+                    <h1 style={{ textAlign: "center" }}>{this.state.forChurnForumla[this.state.selectedMonth][0]} ÷ ({this.state.forChurnForumla[this.state.selectedMonth][1]} + {this.state.forChurnForumla[this.state.selectedMonth][2]})</h1>
                     {/* <h1 style={{ textAlign: "center" }}>({this.state.forChurnForumla[this.state.forChurnForumla.length - 2][1]} + {this.state.forChurnForumla[this.state.forChurnForumla.length - 4][2]})</h1> */}
-                    <h1 style={{ textAlign: "center" }}> = {this.state.chartData[this.state.chartData.length - 1][1].toFixed(2)}%</h1>
+                    <h1 style={{ textAlign: "center" }}> = {this.state.chartData[this.state.selectedMonth + 1][1].toFixed(2)}%</h1>
                   </Segment>
                 </div>
               </Grid.Column>
@@ -542,10 +575,39 @@ class Churn extends Component {
     }
   }
 
+  displayChartMonth = () => {
+    if (this.state.showTable) {
+      return (
+        <div style={{ paddingTop: 14 }}>
+          <Segment style={{ width: 1079 }}>
+            <h1 style={{ textAlign: "center" }}>{this.state.currentMonth}</h1>
+          </Segment>
+        </div >
+      )
+    }
+  }
+
   displayChart = () => {
     const headingStyle = {
       textAlign: 'center'
     }
+
+    const chartEvents = [
+      {
+        eventName: "select",
+        options: {
+          tooltip: {
+            trigger: "selection"
+          }
+        },
+        callback: ({ chartWrapper }) => {
+          const chart = chartWrapper.getChart().getSelection()[0].row;
+          this.setState((prevState) => ({ selectedMonth: chart }))
+          this.setChangedMonth()
+        }
+      }
+    ]
+
     const { annualActive, projectActive, staticActive, budgetActive } = this.state
     if (this.state.chartData.length > 2) {
       return (
@@ -589,11 +651,6 @@ class Churn extends Component {
                 <br />
                 <br />
               </div>
-              {/* <div>
-  <Button primary disabled={!this.state.loadButtonActive} onClick={this.totalClients}>
-    Load Chart
-  </Button>
-</div> */}
             </Segment>
           </Grid.Column>
           <Grid.Column width={15}>
@@ -601,22 +658,11 @@ class Churn extends Component {
               <div>
                 <Chart
                   width={'984px'}
-                  chartEvents={[
-                    {
-                      eventName: "ready",
-                      callback: ({ chartWrapper, google }) => {
-                        const chart = chartWrapper.getChart();
-                        google.visualization.events.addListener(chart, "select", () => {
-                          let selection = chart.getSelection()
-                          // this.setState((prevState) => ({
-                          //   chartClick: selection[0].row
-                          // }))
-                        })
-                      }
-                    }
-                  ]}
                   height={'484px'}
+                  chartEvents={chartEvents}
                   chartType="ScatterChart"
+                  crosshair={{ trigger: "selection" }}
+                  tooltip={{ trigger: "selection" }}
                   loader={<div>Loading Chart</div>}
                   data={this.state.chartData}
                   options={{
@@ -629,8 +675,6 @@ class Churn extends Component {
                     },
                     'legend': { 'position': 'top' },
                     'chartArea': { 'width': '90%', 'height': '80%' },
-                    subtitle: 'in millions of dollars (USD)',
-                    crosshair: { trigger: 'both', orientation: 'both' },
                     colors: this.state.chartColor,
                     animation: {
                       startup: true,
@@ -662,23 +706,15 @@ class Churn extends Component {
                   }}
                 />
               </div>
-              <div></div>
-              <div>
-
-              </div>
-
-
             </Segment>
           </Grid.Column>
         </Grid>
-
-
-
       )
     }
   }
 
   render() {
+
     const headingStyle = {
       textAlign: 'center'
     }
@@ -704,10 +740,11 @@ class Churn extends Component {
 
         {this.displayChart()}
 
+        {this.displayChartMonth()}
 
         {this.displayTable()}
-      </div>
 
+      </div>
     )
   }
 }
