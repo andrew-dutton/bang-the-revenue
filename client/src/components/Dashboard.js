@@ -6,11 +6,13 @@ import RecurringRevenueGraph from './dashboard/RecurringRevenueGraph'
 // import TotalValue from './dashboard/TotalValue'
 // import RevenueBreakdown from "./dashboard/RevenueBreakdown"
 import ActiveLicencesGraph from './dashboard/ActiveLicencesGraph'
-import RenderNoAuth from './Auth/RenderNoAuth'
 import Churn from './dashboard/Churn'
 import InvoiceSearch from './dashboard/InvoiceSearch'
+import ActiveLicencesBox from './dashboard/ActiveLicencesBox'
+import RecurringRevenueBox from './dashboard/RecurringRevenueBox'
+import ChurnBox from './dashboard/ChurnBox'
 
-import { Dropdown, Grid } from 'semantic-ui-react'
+import { Segment, Dropdown, Grid } from 'semantic-ui-react'
 
 class Dashboard extends Component {
   state = {
@@ -26,20 +28,7 @@ class Dashboard extends Component {
       'nathan.connors@bangthetable.com'
     ],
     compact: true,
-    graphsOptions: [{
-      key: "Active Licences",
-      text: "Active Licences",
-      value: "Active Licences"
-    }, {
-      key: "Recurring Revenue",
-      text: "Recurring Revenue",
-      value: "Recurring Revenue"
-    },
-    {
-      key: "Churn",
-      text: "Churn",
-      value: "Churn"
-    }],
+    active: true,
     activeClientsChart: false,
     recurringRevenueChart: false,
     selected: "Select Chart"
@@ -75,16 +64,12 @@ class Dashboard extends Component {
   }
 
   handleSelection = (event, data) => {
-    event.persist()
-    this.setState((prevState) => ({ selected: event.target.textContent }))
+    this.setState((prevState) => ({ selected: event, active: false }))
   }
 
   renderDashboard() {
     let toDisplay;
     const { value } = this.state
-    if (this.state.selected === "Select Chart") {
-
-    }
 
     if (this.state.selected === "Active Licences") {
       toDisplay = <ActiveLicencesGraph rawData={this.state.rawData} />
@@ -136,41 +121,64 @@ class Dashboard extends Component {
 
 
     return (
-      <div>
-
-        <h1 style={{ paddingTop: 20, fontFamily: 'Titillium Web' }}>Dashboard</h1>
-        < Dropdown placeholder="Select Chart" selection onChange={this.handleSelection} options={this.state.graphsOptions} value={value} />
+      <div style={{ fontFamily: 'Titillium Web' }}>
+        {/* < Dropdown placeholder="Select Chart" selection onChange={this.handleSelection} options={this.state.graphsOptions} value={value} /> */}
         {toDisplay}
 
       </div >
     )
   }
 
+  newDashboard = () => {
+    return (
+      <div style={{ paddingTop: 12 }}>
+        <Segment style={{ width: 1079, textAlign: "center" }}>
+          <Grid>
+            <Grid.Row columns={3}>
+              <Grid.Column>
+                <div id="Active Licences" onClick={e => this.handleSelection(e.currentTarget.id)}>
+                  <Segment>
+                    <h1>Active Licences</h1>
+                    <ActiveLicencesBox selected={this.state.selected} rawData={this.state.rawData} />
+                  </Segment>
+                </div>
+              </Grid.Column>
+              <Grid.Column>
+                <div id="Recurring Revenue" onClick={e => this.handleSelection(e.currentTarget.id)}>
+                  <Segment>
+                    <h1>Recurring Revenue</h1>
+                    <RecurringRevenueBox selected={this.state.selected} rawData={this.state.rawData} />
+                  </Segment>
+                </div>
+              </Grid.Column>
+              <Grid.Column>
+                <div id="Churn" onClick={e => this.handleSelection(e.currentTarget.id)}>
+                  <Segment>
+                    <h1>Churn</h1>
+                    <ChurnBox selected={this.state.selected} rawData={this.state.rawData} />
+                  </Segment>
+                </div>
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+        </Segment>
+      </div >
+    )
+  }
+
   render() {
+
     if (!this.props.auth) {
       return null
     }
 
     return (
       <div style={{ fontFamily: 'Titillium Web' }}>
+        {this.newDashboard()}
         {this.renderDashboard()}
+
       </div>
     )
-
-    // if (this.state.authorised.includes(this.props.auth.email)) {
-    //   if (this.props.auth.email) {
-    //     { console.log(this.props.auth) }
-    //   }
-    //   return <div>{this.renderDashboard()}</div>
-    // }
-    // if (this.props.auth.email) {
-    //   { console.log(this.props.auth) }
-    // }
-    // if (this.props.auth.email) {
-    //   { console.log(this.props.auth) }
-    // }
-    // return <div><RenderNoAuth /></div>
-
   }
 }
 

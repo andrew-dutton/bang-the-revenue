@@ -731,9 +731,6 @@ class Churn extends Component {
 
     return (
       <div style={{ paddingTop: 12, fontFamily: 'Titillium Web' }}>
-
-
-
         <Segment style={{ width: 1079 }} >
           <div>
             <div style={{ fontFamily: 'Titillium Web', textAlign: 'center' }}>

@@ -340,7 +340,7 @@ class ActiveLicencesGraph extends Component {
   displayDetails = () => {
     if ((this.state.currentAus + this.state.currentCan + this.state.currentUsa + this.state.currentUk + this.state.currentNz) > 0) {
       return (
-        <Grid columns='equal' style={{ width: 1109 }}>
+        <Grid columns='equal' style={{ width: 1109, paddingBottom: 50 }}>
           <Grid.Column>
             <Segment>
               <h3><strong>Total: {this.displayTotal()}</strong></h3>
@@ -363,7 +363,7 @@ class ActiveLicencesGraph extends Component {
                     return cellPrp
                   }
                   }
-                  height={260}
+                  height={400}
                   readOnly={true}
                   filters={true}
                   dropdownMenu={true}
@@ -521,7 +521,7 @@ class ActiveLicencesGraph extends Component {
     }
 
     return (
-      <div style={{ paddingTop: 20 }}>
+      <div style={{ paddingTop: 12 }}>
         <div>
           <div>
 
