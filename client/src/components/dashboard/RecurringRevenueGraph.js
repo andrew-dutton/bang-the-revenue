@@ -22,6 +22,11 @@ class RecurringRevenueChart extends Component {
 
   handleChange = (e, { value }) => this.setState({ value })
 
+  componentDidMount() {
+    this.setState(prevState => ({ value: "Local" }))
+    this.revenueTotals()
+  }
+
   getNumberOfMonthsSinceJuly2015 = () => {
     let today = new Date()
     let thisMonth = today.getMonth()
@@ -476,12 +481,7 @@ class RecurringRevenueChart extends Component {
         <Grid columns='equal' style={{ width: 1300 }}>
           <Grid.Column>
             <Segment style={{ width: 1079 }} >
-
-
               <Form style={radioStyle}>
-                {/* <Form.Field>
-              Currency: <b>{this.state.value}</b>
-            </Form.Field> */}
                 <Form.Field >
                   <Radio
                     style={{ "paddingRight": "20px" }}

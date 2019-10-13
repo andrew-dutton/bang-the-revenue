@@ -22,10 +22,14 @@ class Churn extends Component {
       newTest: [],
       totalTest: [],
       totalText: [],
-      annualOn: false,
-      projectOn: false,
-      staticOn: false,
-      budgetOn: false,
+      annual: "Annual",
+      project: "Project",
+      static: "Static",
+      budget: "Budget Allocator",
+      annualOn: true,
+      projectOn: true,
+      staticOn: true,
+      budgetOn: true,
       chartColor: [],
       forChurnForumla: [],
       monthsText: [],
@@ -34,7 +38,7 @@ class Churn extends Component {
         []
       ],
       totalLost: [],
-      churnTer: "",
+      churnTer: "Global",
       terOptions: [{
         key: "Global",
         text: "Global",
@@ -76,11 +80,16 @@ class Churn extends Component {
   componentDidMount() {
     this.createMonthsArray()
     this.setStartingMonth()
+    this.updateChurnTer()
   }
+
+
 
   checkTableToggle = () => {
     if (this.state.annualOn === false && this.state.projectOn === false && this.state.staticOn === false && this.state.budgetOn === false) {
       this.setState((prevState) => ({ showTable: false }), this.setStartingMonth)
+    } else {
+      this.setState((prevState) => ({ showTable: true }))
     }
   }
 
@@ -466,9 +475,6 @@ class Churn extends Component {
   }
 
   calculateChurn = () => {
-    let lost = this.state.forChurnForumla[0][0]
-    let news = this.state.forChurnForumla[0][1]
-    let prevTotal = this.state.forChurnForumla[0][2]
 
     let churn = this.state.forChurnForumla
     let churnArray = [['TERRITORY', this.state.churnTer]]
@@ -526,13 +532,13 @@ class Churn extends Component {
   displayTable = () => {
     if (this.state.showTable) {
       return (
-        <div style={{ paddingTop: 12, paddingBottom: 30 }}>
+        <div style={{ paddingTop: 12, paddingBottom: 30, fontFamily: 'Titillium Web' }}>
           <Segment style={{ width: 1079 }}>
             <Grid>
               <Grid.Column width={4}>
                 <Segment>
-                  <h3 style={{ textAlign: "center" }}>Total Clients Lost in<br />{this.state.currentMonth}</h3>
-                  <h2 style={{ textAlign: "center" }}>{this.state.lost[this.state.selectedMonth].length}</h2>
+                  <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Total Clients Lost in<br />{this.state.currentMonth}</h3>
+                  <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.lost[this.state.selectedMonth].length}</h2>
                   <ul>
                     {this.state.lost[this.state.selectedMonth].map((client, index) => (
                       <li key={index}>{client}</li>
@@ -542,8 +548,8 @@ class Churn extends Component {
               </Grid.Column>
               <Grid.Column width={4}>
                 <Segment>
-                  <h3 style={{ textAlign: "center" }}>Total Clients Added in<br />{this.state.currentMonth}</h3>
-                  <h2 style={{ textAlign: "center" }}>{this.state.new[this.state.selectedMonth].length}</h2>
+                  <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Total Clients Added in<br />{this.state.currentMonth}</h3>
+                  <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.new[this.state.selectedMonth].length}</h2>
                   <ul>
                     {this.state.new[this.state.selectedMonth].map((client, index) => (
                       <li key={index}>{client}</li>
@@ -553,20 +559,20 @@ class Churn extends Component {
               </Grid.Column>
               <Grid.Column width={4}>
                 <Segment>
-                  <h3 style={{ textAlign: "center" }}>Total Clients At End of<br />{this.state.currentPrevMonth}</h3>
-                  <h2 style={{ textAlign: "center" }}>{this.state.forChurnForumla[this.state.selectedMonth][2]}</h2>
+                  <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Total Clients At End of<br />{this.state.currentPrevMonth}</h3>
+                  <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.forChurnForumla[this.state.selectedMonth][2]}</h2>
                 </Segment>
               </Grid.Column>
               <Grid.Column width={4}>
                 <div>
                   <Segment>
-                    <h3 style={{ textAlign: "center" }}>Churn Calculation<br />{this.state.currentMonth} </h3>
-                    <h2 style={{ textAlign: "center" }}>{this.state.forChurnForumla[this.state.selectedMonth][0]} ÷ ({this.state.forChurnForumla[this.state.selectedMonth][1]} + {this.state.forChurnForumla[this.state.selectedMonth][2]})</h2>
+                    <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Churn Calculation<br />{this.state.currentMonth} </h3>
+                    {/* <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.forChurnForumla[this.state.selectedMonth][0]} ÷ ({this.state.forChurnForumla[this.state.selectedMonth][1]} + {this.state.forChurnForumla[this.state.selectedMonth][2]})</h2> */}
                     {/* <h1 style={{ textAlign: "center" }}>({this.state.forChurnForumla[this.state.forChurnForumla.length - 2][1]} + {this.state.forChurnForumla[this.state.forChurnForumla.length - 4][2]})</h1> */}
-                    <h2 style={{ textAlign: "center" }}> = {this.state.chartData[this.state.selectedMonth + 1][1].toFixed(2)}%</h2>
-                    <div style={{ textAlign: "center" }}>
-                      <Popup
-                        content='The Monthly Churn rate here is calculated by dividing the number of clients we lost last month by the number of new clients added to the number of clients we had before the month started' trigger={<Button icon='calculator' />}
+                    <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.chartData[this.state.selectedMonth + 1][1].toFixed(2)}%</h2>
+                    <div style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>
+                      <Popup position={'bottom center'}
+                        content='The Monthly Churn rate is calculated by dividing the number of clients we lost last month by the number of new clients added to the number of clients we had before the month started.' trigger={<Button icon='calculator' />}
                       />
                     </div>
                   </Segment>
@@ -582,19 +588,14 @@ class Churn extends Component {
   displayChartMonth = () => {
     if (this.state.showTable) {
       return (
-        <div style={{ paddingTop: 14 }}>
-          <Segment style={{ width: 1079 }}>
-            <h1 style={{ textAlign: "center" }}>{this.state.currentMonth}</h1>
-            <h2 style={{ textAlign: "center" }}>{this.state.forChurnForumla[this.state.selectedMonth + 1][2]} Clients</h2>
-            <h3 style={{ textAlign: "center" }}>{this.state.terText}</h3>
+        <div style={{ paddingTop: 14, fontFamily: 'Titillium Web' }}>
+          <Segment style={{ width: 1079, fontFamily: 'Titillium Web' }}>
+            <h1 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.currentMonth}</h1>
+            <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.forChurnForumla[this.state.selectedMonth + 1][2]} Clients</h2>
           </Segment>
         </div >
       )
     }
-  }
-
-  scrollToTable = () => {
-    window.scrollTo({ top: 810, bottom: 0, behavior: 'smooth' })
   }
 
   displayChart = () => {
@@ -612,7 +613,7 @@ class Churn extends Component {
         },
         callback: ({ chartWrapper }) => {
           const chart = chartWrapper.getChart().getSelection()[0].row;
-          this.setState((prevState) => ({ selectedMonth: chart }), this.scrollToTable)
+          this.setState((prevState) => ({ selectedMonth: chart }))
           this.setChangedMonth()
         }
       }
@@ -621,7 +622,7 @@ class Churn extends Component {
     const { annualActive, projectActive, staticActive, budgetActive } = this.state
     if (this.state.chartData.length > 2) {
       return (
-        <Grid columns='equal' style={{ width: 1300 }}>
+        <Grid columns='equal' style={{ width: 1300, paddingTop: 20, fontFamily: 'Titillium Web' }}>
           <Grid.Column>
             <Segment style={{ width: 70, height: 513 }}>
               <br />
@@ -630,7 +631,7 @@ class Churn extends Component {
                 Annual
                 <br />
                 <br />
-                <Checkbox toggle active={annualActive} onClick={this.handleClickAnnual} />
+                <Checkbox toggle defaultChecked active={annualActive} onClick={this.handleClickAnnual} />
               </div>
 
               <br />
@@ -638,7 +639,7 @@ class Churn extends Component {
                 Project
                 <br />
                 <br />
-                <Checkbox toggle active={projectActive} onClick={this.handleClickProject} />
+                <Checkbox toggle defaultChecked active={projectActive} onClick={this.handleClickProject} />
               </div>
 
               <br />
@@ -646,7 +647,7 @@ class Churn extends Component {
                 Static
                 <br />
                 <br />
-                <Checkbox toggle active={staticActive} onClick={this.handleClickStatic} />
+                <Checkbox toggle defaultChecked active={staticActive} onClick={this.handleClickStatic} />
               </div>
               <br />
 
@@ -654,7 +655,7 @@ class Churn extends Component {
                 Budget
                 <br />
                 <br />
-                <Checkbox toggle active={budgetActive} onClick={this.handleClickBudget} />
+                <Checkbox toggle defaultChecked active={budgetActive} onClick={this.handleClickBudget} />
               </div>
               <br />
               <br />
@@ -665,8 +666,8 @@ class Churn extends Component {
             </Segment>
           </Grid.Column>
           <Grid.Column width={15}>
-            <Segment style={{ width: 1000 }}>
-              <div>
+            <Segment style={{ width: 1000, fontFamily: 'Titillium Web' }}>
+              <div style={{ fontFamily: 'Titillium Web' }}>
                 <Chart
                   width={'984px'}
                   height={'484px'}
@@ -678,13 +679,19 @@ class Churn extends Component {
                   data={this.state.chartData}
                   options={{
                     'vAxis': {
-                      'title': 'Churn %'
+                      'title': 'Churn %',
+                      'titleTextStyle': {
+                        fontName: 'Titillium Web'
+                      }
                     },
                     'hAxis': {
                       'title': 'Date',
                       'format': 'MMM-yy'
                     },
+                    pointSize: 8,
                     legend: 'none',
+                    titleTextStyle: { fontName: 'Titillium Web', bold: false },
+                    title: 'You can click on any point in the scatter graph to see the churn breakdown for that month',
                     'chartArea': { 'width': '90%', 'height': '80%' },
                     colors: this.state.chartColor,
                     animation: {
@@ -696,22 +703,9 @@ class Churn extends Component {
                       0: {
                         type: 'polynomial',
                         degree: 3,
-                        labelInLegend: 'Trend'
-                      },
-                      1: {
-                        type: 'polynomial',
-                        degree: 3,
-                        labelInLegend: 'Trend'
-                      },
-                      2: {
-                        type: 'polynomial',
-                        degree: 3,
-                        labelInLegend: 'Trend'
-                      },
-                      3: {
-                        type: 'polynomial',
-                        degree: 3,
-                        labelInLegend: 'Trend'
+                        labelInLegend: 'Trend',
+                        lineWidth: 7,
+                        opacity: .5
                       }
                     }
                   }}
@@ -734,17 +728,22 @@ class Churn extends Component {
     }
 
     const { value } = this.state
+
     return (
-      <div style={{ paddingTop: 20 }}>
+      <div style={{ paddingTop: 12, fontFamily: 'Titillium Web' }}>
+
+
+
         <Segment style={{ width: 1079 }} >
           <div>
-            <Dropdown
-              placeholder="Select Territory"
-              selection
-              onChange={this.handleSelection}
-              options={this.state.terOptions}
-              value={value}
-            />
+            <div style={{ fontFamily: 'Titillium Web', textAlign: 'center' }}>
+              <Button primary onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Global</Button>
+              <Button color="green" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Australia</Button>
+              <Button color="yellow" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Canada</Button>
+              <Button color="red" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>United States</Button>
+              <Button color="teal" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>United Kingdom</Button>
+              <Button color="purple" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>New Zealand</Button>
+            </div>
           </div>
         </Segment>
 

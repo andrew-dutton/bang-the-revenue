@@ -6,7 +6,7 @@ import * as actions from '../actions'
 import Landing from './Landing'
 import './App.css'
 import 'handsontable/dist/handsontable.full.css'
-
+import GoogleFontLoader from 'react-google-font-loader'
 
 
 import Header from './Header'
@@ -20,6 +20,15 @@ class App extends Component {
   render() {
     return (
       <div className="main">
+        <GoogleFontLoader
+          fonts={[
+            {
+              font: 'Titillium Web',
+              weights: [400, '400i'],
+            },
+          ]}
+          subsets={['cyrillic-ext', 'greek']}
+        />
         <BrowserRouter>
           <Container>
             <Header />

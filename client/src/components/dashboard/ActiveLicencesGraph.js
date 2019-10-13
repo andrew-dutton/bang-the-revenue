@@ -19,21 +19,25 @@ class ActiveLicencesGraph extends Component {
       ukDetail: [],
       nzDetai: [],
       months: [],
-      annualOn: false,
-      projectOn: false,
-      staticOn: false,
-      budgetOn: false,
-      annual: "",
-      project: "",
-      static: "",
-      budget: "",
+      annualOn: true,
+      projectOn: true,
+      staticOn: true,
+      budgetOn: true,
+      annual: "Annual",
+      project: "Project",
+      static: "Static",
+      budget: "Budget Allocator",
       currentMonth: "",
       currentAus: 0,
       currentCan: 0,
       currentUsa: 0,
       currentUk: 0,
       currentNz: 0,
-      loadButtonActive: false,
+      loadButtonActive: true,
+      annualActive: true,
+      projectActive: true,
+      staticActive: true,
+      budgetActive: true,
       currentTotal: "Reload Chart",
       table: {
         colHeaders: ["Client", "Location", "Invoice", "Date", "Licence", "Start", "End", "Value"]
@@ -45,6 +49,10 @@ class ActiveLicencesGraph extends Component {
     this.handleClickProject = this.handleClickProject.bind(this)
     this.handleClickStatic = this.handleClickStatic.bind(this)
     this.handleClickBudget = this.handleClickBudget.bind(this)
+  }
+
+  componentDidMount() {
+    this.totalClients()
   }
 
   handleClickAnnual = () => {
@@ -373,7 +381,6 @@ class ActiveLicencesGraph extends Component {
   }
 
   render() {
-
     const headingStyle = {
       textAlign: 'center',
       width: 1300
@@ -532,7 +539,7 @@ class ActiveLicencesGraph extends Component {
                   Annual
                 <br />
                   <br />
-                  <Checkbox toggle active={annualActive} onClick={this.handleClickAnnual} />
+                  <Checkbox defaultChecked toggle active={annualActive} onClick={this.handleClickAnnual} />
                 </div>
 
                 <br />
@@ -540,7 +547,7 @@ class ActiveLicencesGraph extends Component {
                   Project
                 <br />
                   <br />
-                  <Checkbox toggle active={projectActive} onClick={this.handleClickProject} />
+                  <Checkbox defaultChecked toggle active={projectActive} onClick={this.handleClickProject} />
                 </div>
 
                 <br />
@@ -548,7 +555,7 @@ class ActiveLicencesGraph extends Component {
                   Static
                 <br />
                   <br />
-                  <Checkbox toggle active={staticActive} onClick={this.handleClickStatic} />
+                  <Checkbox defaultChecked toggle active={staticActive} onClick={this.handleClickStatic} />
                 </div>
                 <br />
 
@@ -556,7 +563,7 @@ class ActiveLicencesGraph extends Component {
                   Budget
                 <br />
                   <br />
-                  <Checkbox toggle active={budgetActive} onClick={this.handleClickBudget} />
+                  <Checkbox defaultChecked toggle active={budgetActive} onClick={this.handleClickBudget} />
                 </div>
                 <br />
                 <br />
