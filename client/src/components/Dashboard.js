@@ -157,7 +157,7 @@ class Dashboard extends Component {
               <Grid.Column>
                 <div id="Churn" onClick={e => this.handleSelection(e.currentTarget.id)}>
                   <Segment>
-                    <h1 style={{ fontFamily: 'Titillium Web' }}>Churn</h1>
+                    <h1>Churn</h1>
                     <ChurnBox selected={this.state.selected} rawData={this.state.rawData} />
                   </Segment>
                 </div>

@@ -493,7 +493,7 @@ class RecurringRevenueChart extends Component {
                     onClick={this.handleChange}
                   />
                 </Form.Field>
-                <Form.Field>
+                {/* <Form.Field>
                   <Radio
                     label='Recurring Revenue in AUD'
                     name='radioGroup'
@@ -502,7 +502,7 @@ class RecurringRevenueChart extends Component {
                     onChange={this.revenueTotalsAUD}
                     onClick={this.handleChange}
                   />
-                </Form.Field>
+                </Form.Field> */}
                 <Form.Field>
                   <Radio
                     label='Non Recurring Revenue in Local Currency'
