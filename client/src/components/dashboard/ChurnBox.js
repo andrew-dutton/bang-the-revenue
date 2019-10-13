@@ -73,7 +73,7 @@ class ChurnBox extends Component {
     if (this.props.selected === "Churn") {
       return (
         <div style={{ height: 150 }}>
-          <h1 style={{ position: 'absolute', left: '50%', top: '70%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>1.57%</h1>
+          <h1 style={{ position: 'absolute', left: '50%', top: '70%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>1.18%</h1>
           <h3 style={{ fontFamily: 'Titillium Web' }}>{this.state.monthName}</h3>
           <h4 style={{ fontFamily: 'Titillium Web' }}><Icon name="triangle up" color="red" />{this.state.diff}</h4>
           <br />
@@ -83,7 +83,7 @@ class ChurnBox extends Component {
     } else {
       return (
         <div style={{ height: 150 }}>
-          <h1 style={{ position: 'absolute', left: '50%', top: '70%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>1.57%</h1>
+          <h1 style={{ position: 'absolute', left: '50%', top: '70%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>1.18%</h1>
           <h3 style={{ fontFamily: 'Titillium Web' }}>{this.state.monthName}</h3>
           <h4 style={{ fontFamily: 'Titillium Web' }}><Icon name="triangle up" color="red" />{this.state.diff}</h4>
           <br />
