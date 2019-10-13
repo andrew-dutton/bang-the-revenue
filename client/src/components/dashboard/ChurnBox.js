@@ -6,9 +6,9 @@ class ChurnBox extends Component {
     super(props)
 
     this.state = {
-      thisMonth: "1.57%",
+      thisMonth: "1.18%",
       lastMonth: "0.61%",
-      diff: "0.96%",
+      diff: "0.57%",
       thisMonth: "",
       monthName: "",
       months: []
