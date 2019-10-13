@@ -74,8 +74,8 @@ class ChurnBox extends Component {
       return (
         <div style={{ height: 150 }}>
           <h1 style={{ position: 'absolute', left: '50%', top: '70%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>1.57%</h1>
-          <h3>{this.state.monthName}</h3>
-          <h4><Icon name="triangle up" color="red" />{this.state.diff}</h4>
+          <h3 style={{ fontFamily: 'Titillium Web' }}>{this.state.monthName}</h3>
+          <h4 style={{ fontFamily: 'Titillium Web' }}><Icon name="triangle up" color="red" />{this.state.diff}</h4>
           <br />
           <h4><Icon size="small" name="circle" color="blue" /></h4>
         </div>
@@ -84,8 +84,8 @@ class ChurnBox extends Component {
       return (
         <div style={{ height: 150 }}>
           <h1 style={{ position: 'absolute', left: '50%', top: '70%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>1.57%</h1>
-          <h3>{this.state.monthName}</h3>
-          <h4><Icon name="triangle up" color="red" />{this.state.diff}</h4>
+          <h3 style={{ fontFamily: 'Titillium Web' }}>{this.state.monthName}</h3>
+          <h4 style={{ fontFamily: 'Titillium Web' }}><Icon name="triangle up" color="red" />{this.state.diff}</h4>
           <br />
           <h4><Icon size="small" name="circle outline" /></h4>
         </div>

@@ -74,7 +74,7 @@ class ActiveLicencesBox extends Component {
       return (
         <div style={{ height: 150 }}>
           <h1 style={{ position: 'absolute', left: '50%', top: '70%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>{this.state.thisMonth}</h1>
-          <h3>{this.state.monthName}</h3>
+          <h3 style={{ fontFamily: 'Titillium Web' }}>{this.state.monthName}</h3>
           <h4><Icon name="triangle up" color="green" />{this.state.diff}</h4>
           <br />
           <h4><Icon size="small" name="circle" color="blue" /></h4>
@@ -84,7 +84,7 @@ class ActiveLicencesBox extends Component {
       return (
         <div style={{ height: 150 }}>
           <h1 style={{ position: 'absolute', left: '50%', top: '70%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>{this.state.thisMonth}</h1>
-          <h3>{this.state.monthName}</h3>
+          <h3 style={{ fontFamily: 'Titillium Web' }}>{this.state.monthName}</h3>
           <h4><Icon name="triangle up" color="green" />{this.state.diff}</h4>
           <br />
           <h4><Icon size="small" name="circle outline" /></h4>

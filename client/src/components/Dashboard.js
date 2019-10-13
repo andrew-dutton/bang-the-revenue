@@ -141,7 +141,7 @@ class Dashboard extends Component {
               <Grid.Column>
                 <div id="Active Licences" onClick={e => this.handleSelection(e.currentTarget.id)}>
                   <Segment>
-                    <h1>Active Licences</h1>
+                    <h1 style={{ fontFamily: 'Titillium Web' }}>Active Licences</h1>
                     <ActiveLicencesBox selected={this.state.selected} rawData={this.state.rawData} />
                   </Segment>
                 </div>
@@ -149,7 +149,7 @@ class Dashboard extends Component {
               <Grid.Column>
                 <div id="Recurring Revenue" onClick={e => this.handleSelection(e.currentTarget.id)}>
                   <Segment>
-                    <h1>Recurring Revenue</h1>
+                    <h1 style={{ fontFamily: 'Titillium Web' }}>Recurring Revenue</h1>
                     <RecurringRevenueBox selected={this.state.selected} rawData={this.state.rawData} />
                   </Segment>
                 </div>
@@ -157,7 +157,7 @@ class Dashboard extends Component {
               <Grid.Column>
                 <div id="Churn" onClick={e => this.handleSelection(e.currentTarget.id)}>
                   <Segment>
-                    <h1>Churn</h1>
+                    <h1 style={{ fontFamily: 'Titillium Web' }}>Churn</h1>
                     <ChurnBox selected={this.state.selected} rawData={this.state.rawData} />
                   </Segment>
                 </div>
