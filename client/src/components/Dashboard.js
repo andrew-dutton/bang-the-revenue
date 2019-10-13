@@ -64,6 +64,9 @@ class Dashboard extends Component {
   }
 
   handleSelection = (event, data) => {
+    if (this.state.rawData.length < 1) {
+      return null
+    }
     this.setState((prevState) => ({ selected: event, active: false }))
   }
 
