@@ -12,7 +12,7 @@ import ActiveLicencesBox from './dashboard/ActiveLicencesBox'
 import RecurringRevenueBox from './dashboard/RecurringRevenueBox'
 import ChurnBox from './dashboard/ChurnBox'
 
-import { Segment, Dropdown, Grid } from 'semantic-ui-react'
+import { Segment, Dropdown, Grid, Dimmer, Loader } from 'semantic-ui-react'
 
 class Dashboard extends Component {
   state = {
@@ -31,7 +31,32 @@ class Dashboard extends Component {
     active: true,
     activeClientsChart: false,
     recurringRevenueChart: false,
-    selected: "Select Chart"
+    selected: "Select Chart",
+    raised: ""
+  }
+
+  onMouseEnterRecurringRevenue = () => {
+    this.setState((prevState) => ({ raised: "Recurring Revenue" }))
+  }
+
+  onMouseLeaveRecurringRevenue = () => {
+    this.setState((prevState) => ({ raised: '' }))
+  }
+
+  onMouseEnterActiveLicences = () => {
+    this.setState((prevState) => ({ raised: "Active Licences" }))
+  }
+
+  onMouseLeaveActiveLiecences = () => {
+    this.setState((prevState) => ({ raised: '' }))
+  }
+
+  onMouseEnterChurn = () => {
+    this.setState((prevState) => ({ raised: "Churn" }))
+  }
+
+  onMouseLeaveChurn = () => {
+    this.setState((prevState) => ({ raised: '' }))
   }
 
   componentDidMount() {
@@ -67,8 +92,9 @@ class Dashboard extends Component {
     if (this.state.rawData.length < 1) {
       return null
     }
-    this.setState((prevState) => ({ selected: event, active: false }))
+    this.setState((prevState) => ({ selected: event, raised: event, active: false }))
   }
+
 
   renderDashboard() {
     let toDisplay;
@@ -76,6 +102,7 @@ class Dashboard extends Component {
 
     if (this.state.selected === "Active Licences") {
       toDisplay = <ActiveLicencesGraph rawData={this.state.rawData} />
+
     }
 
     if (this.state.selected === "Recurring Revenue") {
@@ -136,28 +163,31 @@ class Dashboard extends Component {
     return (
       <div style={{ paddingTop: 12 }}>
         <Segment style={{ width: 1079, textAlign: "center" }}>
+          <Dimmer active={this.state.rawData.length < 1}>
+            <Loader>Connecting to database....</Loader>
+          </Dimmer>
           <Grid>
             <Grid.Row columns={3}>
               <Grid.Column>
-                <div id="Active Licences" onClick={e => this.handleSelection(e.currentTarget.id)}>
-                  <Segment>
+                <div id="Active Licences" onMouseEnter={() => this.onMouseEnterActiveLicences()} onMouseLeave={() => this.onMouseLeaveActiveLiecences()} onClick={e => this.handleSelection(e.currentTarget.id)}>
+                  <Segment inverted={this.state.selected === "Active Licences"} raised={this.state.raised === "Active Licences"}>
                     <h1 style={{ fontFamily: 'Titillium Web' }}>Active Licences</h1>
                     <ActiveLicencesBox selected={this.state.selected} rawData={this.state.rawData} />
                   </Segment>
                 </div>
               </Grid.Column>
               <Grid.Column>
-                <div id="Recurring Revenue" onClick={e => this.handleSelection(e.currentTarget.id)}>
-                  <Segment>
+                <div onMouseEnter={() => this.onMouseEnterRecurringRevenue()} onMouseLeave={() => this.onMouseLeaveRecurringRevenue()} id="Recurring Revenue" onClick={e => this.handleSelection(e.currentTarget.id)}>
+                  <Segment inverted={this.state.selected === "Recurring Revenue"} raised={this.state.raised === "Recurring Revenue"}>
                     <h1 style={{ fontFamily: 'Titillium Web' }}>Recurring Revenue</h1>
                     <RecurringRevenueBox selected={this.state.selected} rawData={this.state.rawData} />
                   </Segment>
                 </div>
               </Grid.Column>
               <Grid.Column>
-                <div id="Churn" onClick={e => this.handleSelection(e.currentTarget.id)}>
-                  <Segment>
-                    <h1>Churn</h1>
+                <div id="Churn" onMouseEnter={() => this.onMouseEnterChurn()} onMouseLeave={() => this.onMouseLeaveChurn()} onClick={e => this.handleSelection(e.currentTarget.id)}>
+                  <Segment inverted={this.state.selected === "Churn"} raised={this.state.raised === "Churn"}>
+                    <h1 style={{ fontFamily: 'Titillium Web' }}>Churn</h1>
                     <ChurnBox selected={this.state.selected} rawData={this.state.rawData} />
                   </Segment>
                 </div>
@@ -170,7 +200,7 @@ class Dashboard extends Component {
   }
 
   render() {
-
+    console.log(this.state.rawData.length)
     if (!this.props.auth) {
       return null
     }
