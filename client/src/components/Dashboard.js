@@ -12,7 +12,7 @@ import ActiveLicencesBox from './dashboard/ActiveLicencesBox'
 import RecurringRevenueBox from './dashboard/RecurringRevenueBox'
 import ChurnBox from './dashboard/ChurnBox'
 
-import { Segment, Dropdown, Grid, Dimmer, Loader } from 'semantic-ui-react'
+import { Segment, Grid, Dimmer, Loader } from 'semantic-ui-react'
 
 class Dashboard extends Component {
   state = {
@@ -27,9 +27,6 @@ class Dashboard extends Component {
       'nathan@bangthetable.com',
       'nathan.connors@bangthetable.com'
     ],
-    compact: true,
-    active: true,
-    activeClientsChart: false,
     recurringRevenueChart: false,
     selected: "Select Chart",
     raised: ""
@@ -98,7 +95,6 @@ class Dashboard extends Component {
 
   renderDashboard() {
     let toDisplay;
-    const { value } = this.state
 
     if (this.state.selected === "Active Licences") {
       toDisplay = <ActiveLicencesGraph rawData={this.state.rawData} />
@@ -200,7 +196,6 @@ class Dashboard extends Component {
   }
 
   render() {
-    console.log(this.state.rawData.length)
     if (!this.props.auth) {
       return null
     }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { HotTable } from '@handsontable/react';
-import { Search, Grid, Segment, Button, Checkbox } from 'semantic-ui-react'
+import { Grid, Segment, Button } from 'semantic-ui-react'
 
 class InvoiceSearch extends Component {
   constructor(props) {

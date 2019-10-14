@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Line } from 'react-chartjs-2'
-import { Grid, Segment, Button, Checkbox } from 'semantic-ui-react'
+import { Grid, Segment, Checkbox } from 'semantic-ui-react'
 import { HotTable } from '@handsontable/react';
 
 class ActiveLicencesGraph extends Component {
@@ -146,10 +146,6 @@ class ActiveLicencesGraph extends Component {
 
     this.state.months.forEach((month) => {
       const allDet = []
-      const canDet = []
-      const usaDet = []
-      const ukDet = []
-      const nzDet = []
 
       const ausCounter = []
       const canCounter = []

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Popup, Grid, Checkbox, Segment, Button, Card, Dropdown, Form, Radio } from 'semantic-ui-react'
+import { Popup, Grid, Checkbox, Segment, Button } from 'semantic-ui-react'
 import Chart from 'react-google-charts'
 
 class Churn extends Component {
@@ -171,7 +171,7 @@ class Churn extends Component {
       prevYear = this.state.months[this.state.selectedMonth].getFullYear()
     }
 
-    if (monthDisp == "January") {
+    if (monthDisp === "January") {
       year++
     }
 
@@ -719,16 +719,6 @@ class Churn extends Component {
   }
 
   render() {
-    const headingStyle = {
-      textAlign: 'center'
-    }
-
-    const radioStyle = {
-      textAlign: 'left'
-    }
-
-    const { value } = this.state
-
     return (
       <div style={{ paddingTop: 12, fontFamily: 'Titillium Web' }}>
         <Segment style={{ width: 1079 }} >

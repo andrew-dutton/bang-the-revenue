@@ -351,10 +351,6 @@ class RecurringRevenueChart extends Component {
   }
 
   render() {
-    const headingStyle = {
-      textAlign: 'center'
-    }
-
     const radioStyle = {
       textAlign: 'left'
     }

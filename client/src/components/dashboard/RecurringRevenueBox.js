@@ -73,21 +73,17 @@ class RecurringRevenueBox extends Component {
     if (this.props.selected === "Recurring Revenue") {
       return (
         <div style={{ height: 150 }}>
-          <h1 style={{ position: 'absolute', left: '50%', top: '70%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>A {this.state.thisMonth}</h1>
+          <h1 style={{ position: 'absolute', left: '50%', top: '75%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>A {this.state.thisMonth}</h1>
           <h3 style={{ fontFamily: 'Titillium Web' }}>{this.state.monthName}</h3>
           <h4 style={{ fontFamily: 'Titillium Web' }}><Icon name="triangle up" color="green" />A {this.state.diff}</h4>
-          <br />
-          <h4><Icon size="small" name="circle" color="blue" /></h4>
         </div>
       )
     } else {
       return (
         <div style={{ height: 150 }}>
-          <h1 style={{ position: 'absolute', left: '50%', top: '70%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>A {this.state.thisMonth}</h1>
+          <h1 style={{ position: 'absolute', left: '50%', top: '75%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>A {this.state.thisMonth}</h1>
           <h3 style={{ fontFamily: 'Titillium Web' }}>{this.state.monthName}</h3>
           <h4 style={{ fontFamily: 'Titillium Web' }}><Icon name="triangle up" color="green" />A {this.state.diff}</h4>
-          <br />
-          <h4><Icon size="small" name="circle outline" /></h4>
         </div>
       )
     }
