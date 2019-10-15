@@ -131,7 +131,6 @@ class ActiveLicencesGraph extends Component {
 
   totalClients() {
     this.setState(prevState => ({ months: [] }))
-
     this.createMonthsArray()
 
     const ausTotal = []
@@ -141,8 +140,6 @@ class ActiveLicencesGraph extends Component {
     const nzTotal = []
 
     let ausDetLogged = []
-
-
 
     this.state.months.forEach((month) => {
       const allDet = []
@@ -336,7 +333,7 @@ class ActiveLicencesGraph extends Component {
   displayDetails = () => {
     if ((this.state.currentAus + this.state.currentCan + this.state.currentUsa + this.state.currentUk + this.state.currentNz) > 0) {
       return (
-        <Grid columns='equal' style={{ width: 1109, paddingBottom: 50 }}>
+        <Grid columns='equal' style={{ width: 1109, paddingBottom: 50, color: 'black' }}>
           <Grid.Column>
             <Segment>
               <h3><strong>Total: {this.displayTotal()}</strong></h3>
@@ -344,7 +341,7 @@ class ActiveLicencesGraph extends Component {
                 <HotTable
                   licenseKey="non-commercial-and-evaluation"
                   className={"htCenter"}
-                  style={{ fontSize: 10 }}
+                  style={{ fontSize: 10, color: 'black' }}
                   cells={function (row, col) {
                     var cellPrp = {};
                     if (col === 0) {
@@ -359,12 +356,15 @@ class ActiveLicencesGraph extends Component {
                     return cellPrp
                   }
                   }
+                  htDimmed
+                  manualColumnResize
+                  wordWrap={false}
                   height={400}
-                  readOnly={true}
+                  editor={false}
                   filters={true}
                   dropdownMenu={true}
                   columnSorting={true}
-                  colWidths={[280, 100, 100, 100, 100, 100, 100, 100]}
+                  colWidths={[522, 50, 59, 75, 75, 75, 75, 60]}
                   rowHeaders={true}
                   colHeaders={this.state.table.colHeaders}
                   data={this.state.ausDetail[this.state.ausDetail.length - 2]} />

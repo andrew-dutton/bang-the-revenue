@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Line } from 'react-chartjs-2'
 import { Segment, Grid, Form, Radio } from 'semantic-ui-react'
+import { HotTable } from '@handsontable/react';
 
 class RecurringRevenueChart extends Component {
   constructor(props) {
@@ -12,7 +13,11 @@ class RecurringRevenueChart extends Component {
       usaData: [],
       ukData: [],
       nzData: [],
-      months: []
+      months: [],
+      tableData: [],
+      table: {
+        colHeaders: ["Client", "MRR Value", "EHQ/EIQ", "Location", "Invoice", "Date", "Licence", "Start", "End", "Value"]
+      }
     }
 
     this.revenueTotals = this.revenueTotals.bind(this)
@@ -77,6 +82,8 @@ class RecurringRevenueChart extends Component {
     const ukTotal = []
     const nzTotal = []
 
+    const detailLogged = []
+
     this.state.months.forEach((thisMonthEnd) => {
       let ausCounter = []
       let canCounter = []
@@ -84,7 +91,10 @@ class RecurringRevenueChart extends Component {
       let ukCounter = []
       let nzCounter = []
 
+      let allDet = []
+
       this.props.rawData.forEach((invoice) => {
+
         let startString = invoice["start"]
         let startDateParts = startString.split("/")
         let startContract = new Date(startDateParts[2], startDateParts[1] - 1, +startDateParts[0])
@@ -92,6 +102,7 @@ class RecurringRevenueChart extends Component {
         let endString = invoice["end"]
         let endDateParts = endString.split("/")
         let endContract = new Date(endDateParts[2], endDateParts[1] - 1, +endDateParts[0])
+
 
         let actualStartMonth = startContract.getMonth()
         let actualStartYear = startContract.getFullYear()
@@ -101,73 +112,319 @@ class RecurringRevenueChart extends Component {
 
         if (startContract <= thisMonthEnd && endContract >= thisMonthEnd && (invoice["territory"] === "AUS")) {
           if (invoice["spreadmonths"] > invoice["months"]) {
+            // INVOICE DATES ARE NOT FIRST AND/OR LAST DAYS OF MONTH SO NEED PARTIAL CALCULATIONS
             if (actualStartMonth === thisMonthEnd.getMonth() && actualStartYear === thisMonthEnd.getFullYear()) {
-              ausCounter.push((invoice["valuepermonth"] / 30) * (30 - (startContract.getDay())))
+              // CONTRACT START DATE IS THIS MONTH, THEREFORE DIVIDE MONTH AMOUNT BY 30 AND TIMES BY REMAINING DAYS IN MONTH/*
+              // EG INVOICE WITH $1000 MRR AND START DATE OF 24TH OF MONTH = ($1000 / 30) X (30-24) 
+              ausCounter.push((invoice["valuepermonth"] / 30) * (31 - (startContract.getDate())))
+              allDet.push([
+                invoice["client"],
+                (invoice["valuepermonth"] / 30) * (31 - (startContract.getDate())),
+                invoice["ehqveiq"],
+                invoice["territory"],
+                invoice["invoice"],
+                invoice["date"],
+                invoice["product"],
+                invoice["start"],
+                invoice["end"],
+                invoice["total"]
+              ])
             } else if (actualEndMonth <= thisMonthEnd.getMonth() && actualEndYear === thisMonthEnd.getFullYear()) {
-              ausCounter.push((invoice["valuepermonth"] / 30) * (endContract.getDay()))
+              ausCounter.push((invoice["valuepermonth"] / 30) * (endContract.getDate()))
+              allDet.push([
+                invoice["client"],
+                (invoice["valuepermonth"] / 30) * (endContract.getDate()),
+                invoice["ehqveiq"],
+                invoice["territory"],
+                invoice["invoice"],
+                invoice["date"],
+                invoice["product"],
+                invoice["start"],
+                invoice["end"],
+                invoice["total"]
+              ])
             } else {
               ausCounter.push(invoice["valuepermonth"])
+              allDet.push([
+                invoice["client"],
+                invoice["valuepermonth"],
+                invoice["ehqveiq"],
+                invoice["territory"],
+                invoice["invoice"],
+                invoice["date"],
+                invoice["product"],
+                invoice["start"],
+                invoice["end"],
+                invoice["total"]
+              ])
             }
           } else {
             ausCounter.push(invoice["valuepermonth"])
+            allDet.push([
+              invoice["client"],
+              invoice["valuepermonth"],
+              invoice["ehqveiq"],
+              invoice["territory"],
+              invoice["invoice"],
+              invoice["date"],
+              invoice["product"],
+              invoice["start"],
+              invoice["end"],
+              invoice["total"]
+            ])
           }
         }
 
         if (startContract <= thisMonthEnd && endContract >= thisMonthEnd && (invoice["territory"] === "CAN")) {
           if (invoice["spreadmonths"] > invoice["months"]) {
             if (actualStartMonth === thisMonthEnd.getMonth() && actualStartYear === thisMonthEnd.getFullYear()) {
-              canCounter.push((invoice["valuepermonth"] / 30) * (30 - (startContract.getDay())))
+              canCounter.push((invoice["valuepermonth"] / 30) * (31 - (startContract.getDate())))
+              allDet.push([
+                invoice["client"],
+                (invoice["valuepermonth"] / 30) * (31 - (startContract.getDate())),
+                invoice["ehqveiq"],
+                invoice["territory"],
+                invoice["invoice"],
+                invoice["date"],
+                invoice["product"],
+                invoice["start"],
+                invoice["end"],
+                invoice["total"]
+              ])
             } else if (actualEndMonth <= thisMonthEnd.getMonth() && actualEndYear === thisMonthEnd.getFullYear()) {
-              canCounter.push((invoice["valuepermonth"] / 30) * (endContract.getDay()))
+              canCounter.push((invoice["valuepermonth"] / 30) * (endContract.getDate()))
+              allDet.push([
+                invoice["client"],
+                (invoice["valuepermonth"] / 30) * (endContract.getDate()),
+                invoice["ehqveiq"],
+                invoice["territory"],
+                invoice["invoice"],
+                invoice["date"],
+                invoice["product"],
+                invoice["start"],
+                invoice["end"],
+                invoice["total"]
+              ])
             } else {
               canCounter.push(invoice["valuepermonth"])
+              allDet.push([
+                invoice["client"],
+                invoice["valuepermonth"],
+                invoice["ehqveiq"],
+                invoice["territory"],
+                invoice["invoice"],
+                invoice["date"],
+                invoice["product"],
+                invoice["start"],
+                invoice["end"],
+                invoice["total"]
+              ])
             }
           } else {
             canCounter.push(invoice["valuepermonth"])
+            allDet.push([
+              invoice["client"],
+              invoice["valuepermonth"],
+              invoice["ehqveiq"],
+              invoice["territory"],
+              invoice["invoice"],
+              invoice["date"],
+              invoice["product"],
+              invoice["start"],
+              invoice["end"],
+              invoice["total"]
+            ])
           }
         }
 
         if (startContract <= thisMonthEnd && endContract >= thisMonthEnd && (invoice["territory"] === "USA")) {
           if (invoice["spreadmonths"] > invoice["months"]) {
             if (actualStartMonth === thisMonthEnd.getMonth() && actualStartYear === thisMonthEnd.getFullYear()) {
-              usaCounter.push((invoice["valuepermonth"] / 30) * (30 - (startContract.getDay())))
+              usaCounter.push((invoice["valuepermonth"] / 30) * (31 - (startContract.getDate())))
+              allDet.push([
+                invoice["client"],
+                (invoice["valuepermonth"] / 30) * (31 - (startContract.getDate())),
+                invoice["ehqveiq"],
+                invoice["territory"],
+                invoice["invoice"],
+                invoice["date"],
+                invoice["product"],
+                invoice["start"],
+                invoice["end"],
+                invoice["total"]
+              ])
             } else if (actualEndMonth <= thisMonthEnd.getMonth() && actualEndYear === thisMonthEnd.getFullYear()) {
-              usaCounter.push((invoice["valuepermonth"] / 30) * (endContract.getDay()))
+
+              usaCounter.push((invoice["valuepermonth"] / 30) * (endContract.getDate()))
+              allDet.push([
+                invoice["client"],
+                (invoice["valuepermonth"] / 30) * (endContract.getDate()),
+                invoice["ehqveiq"],
+                invoice["territory"],
+                invoice["invoice"],
+                invoice["date"],
+                invoice["product"],
+                invoice["start"],
+                invoice["end"],
+                invoice["total"]
+              ])
             } else {
               usaCounter.push(invoice["valuepermonth"])
+              allDet.push([
+                invoice["client"],
+                invoice["valuepermonth"],
+                invoice["ehqveiq"],
+                invoice["territory"],
+                invoice["invoice"],
+                invoice["date"],
+                invoice["product"],
+                invoice["start"],
+                invoice["end"],
+                invoice["total"]
+              ])
             }
           } else {
             usaCounter.push(invoice["valuepermonth"])
+            allDet.push([
+              invoice["client"],
+              invoice["valuepermonth"],
+              invoice["ehqveiq"],
+              invoice["territory"],
+              invoice["invoice"],
+              invoice["date"],
+              invoice["product"],
+              invoice["start"],
+              invoice["end"],
+              invoice["total"]
+            ])
           }
         }
 
         if (startContract <= thisMonthEnd && endContract >= thisMonthEnd && (invoice["territory"] === "UK")) {
           if (invoice["spreadmonths"] > invoice["months"]) {
             if (actualStartMonth === thisMonthEnd.getMonth() && actualStartYear === thisMonthEnd.getFullYear()) {
-              ukCounter.push((invoice["valuepermonth"] / 30) * (30 - (startContract.getDay())))
+              ukCounter.push((invoice["valuepermonth"] / 30) * (31 - (startContract.getDate())))
+              allDet.push([
+                invoice["client"],
+                (invoice["valuepermonth"] / 30) * (31 - (startContract.getDate())),
+                invoice["ehqveiq"],
+                invoice["territory"],
+                invoice["invoice"],
+                invoice["date"],
+                invoice["product"],
+                invoice["start"],
+                invoice["end"],
+                invoice["total"]
+              ])
             } else if (actualEndMonth <= thisMonthEnd.getMonth() && actualEndYear === thisMonthEnd.getFullYear()) {
-              ukCounter.push((invoice["valuepermonth"] / 30) * (endContract.getDay()))
+              ukCounter.push((invoice["valuepermonth"] / 30) * (endContract.getDate()))
+              allDet.push([
+                invoice["client"],
+                (invoice["valuepermonth"] / 30) * (endContract.getDate()),
+                invoice["ehqveiq"],
+                invoice["territory"],
+                invoice["invoice"],
+                invoice["date"],
+                invoice["product"],
+                invoice["start"],
+                invoice["end"],
+                invoice["total"]
+              ])
             } else {
               ukCounter.push(invoice["valuepermonth"])
+              allDet.push([
+                invoice["client"],
+                invoice["valuepermonth"],
+                invoice["ehqveiq"],
+                invoice["territory"],
+                invoice["invoice"],
+                invoice["date"],
+                invoice["product"],
+                invoice["start"],
+                invoice["end"],
+                invoice["total"]
+              ])
             }
           } else {
             ukCounter.push(invoice["valuepermonth"])
+            allDet.push([
+              invoice["client"],
+              invoice["valuepermonth"],
+              invoice["ehqveiq"],
+              invoice["territory"],
+              invoice["invoice"],
+              invoice["date"],
+              invoice["product"],
+              invoice["start"],
+              invoice["end"],
+              invoice["total"]
+            ])
           }
         }
 
         if (startContract <= thisMonthEnd && endContract >= thisMonthEnd && (invoice["territory"] === "NZ")) {
           if (invoice["spreadmonths"] > invoice["months"]) {
             if (actualStartMonth === thisMonthEnd.getMonth() && actualStartYear === thisMonthEnd.getFullYear()) {
-              nzCounter.push((invoice["valuepermonth"] / 30) * (30 - (startContract.getDay())))
+              nzCounter.push((invoice["valuepermonth"] / 30) * (31 - (startContract.getDate())))
+              allDet.push([
+                invoice["client"],
+                (invoice["valuepermonth"] / 30) * (31 - (startContract.getDate())),
+                invoice["ehqveiq"],
+                invoice["territory"],
+                invoice["invoice"],
+                invoice["date"],
+                invoice["product"],
+                invoice["start"],
+                invoice["end"],
+                invoice["total"]
+              ])
             } else if (actualEndMonth <= thisMonthEnd.getMonth() && actualEndYear === thisMonthEnd.getFullYear()) {
-              nzCounter.push((invoice["valuepermonth"] / 30) * (endContract.getDay()))
+              nzCounter.push((invoice["valuepermonth"] / 30) * (endContract.getDate()))
+              allDet.push([
+                invoice["client"],
+                (invoice["valuepermonth"] / 30) * (endContract.getDate()),
+                invoice["ehqveiq"],
+                invoice["territory"],
+                invoice["invoice"],
+                invoice["date"],
+                invoice["product"],
+                invoice["start"],
+                invoice["end"],
+                invoice["total"]
+              ])
             } else {
               nzCounter.push(invoice["valuepermonth"])
+              allDet.push([
+                invoice["client"],
+                invoice["valuepermonth"],
+                invoice["ehqveiq"],
+                invoice["territory"],
+                invoice["invoice"],
+                invoice["date"],
+                invoice["product"],
+                invoice["start"],
+                invoice["end"],
+                invoice["total"]
+              ])
             }
           } else {
             nzCounter.push(invoice["valuepermonth"])
+            allDet.push([
+              invoice["client"],
+              invoice["valuepermonth"],
+              invoice["ehqveiq"],
+              invoice["territory"],
+              invoice["invoice"],
+              invoice["date"],
+              invoice["product"],
+              invoice["start"],
+              invoice["end"],
+              invoice["total"]
+            ])
           }
         }
+
+
       })
 
       ausTotal.push(Math.round(ausCounter.reduce((a, b) => a + b, 0)))
@@ -175,6 +432,8 @@ class RecurringRevenueChart extends Component {
       usaTotal.push(Math.round(usaCounter.reduce((a, b) => a + b, 0)))
       ukTotal.push(Math.round(ukCounter.reduce((a, b) => a + b, 0)))
       nzTotal.push(Math.round(nzCounter.reduce((a, b) => a + b, 0)))
+
+      detailLogged.push(allDet)
 
     })
 
@@ -196,6 +455,10 @@ class RecurringRevenueChart extends Component {
 
     this.setState(prevState => ({
       nzData: [...nzTotal]
+    }))
+
+    this.setState((prevState) => ({
+      tableData: [...detailLogged]
     }))
 
     return null
@@ -348,6 +611,52 @@ class RecurringRevenueChart extends Component {
     }))
 
     return null
+  }
+
+  displayDetails = () => {
+    return (
+      <div>
+        <Grid columns='equal' style={{ width: 1109, paddingBottom: 50, color: 'black' }}>
+          <Grid.Column>
+            <Segment>
+              <div id="hot-app">
+                <HotTable
+                  licenseKey="non-commercial-and-evaluation"
+                  className={"htCenter"}
+                  columns={[{}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }, {}, {}, {}, {}, {}, {}, {}, { type: "numeric", numericFormat: { pattern: "0,00" } }]}
+                  style={{ fontSize: 10, color: 'black' }}
+                  cells={function (row, col) {
+                    var cellPrp = {};
+                    if (col === 0) {
+                      if (col % 2 === 0) {
+                        cellPrp.className = 'htLeft'
+                      } else if (col === 1) {
+                        cellPrp.className = 'htCenter'
+                      }
+                    } else {
+                      cellPrp.className = 'htCenter htMiddle'
+                    }
+                    return cellPrp
+                  }
+                  }
+                  htDimmed
+                  manualColumnResize
+                  wordWrap={false}
+                  height={400}
+                  editor={false}
+                  filters={true}
+                  dropdownMenu={false}
+                  columnSorting={true}
+                  colWidths={[434, 57, 45, 42, 53, 75, 75, 75, 75, 60]}
+                  rowHeaders={true}
+                  colHeaders={this.state.table.colHeaders}
+                  data={this.state.tableData[this.state.tableData.length - 2]} />
+              </div>
+            </Segment>
+          </Grid.Column>
+        </Grid>
+      </div>
+    )
   }
 
   render() {
@@ -526,6 +835,9 @@ class RecurringRevenueChart extends Component {
             </Segment>
           </Grid.Column>
         </Grid>
+        <div>
+          {this.displayDetails()}
+        </div>
       </div>
     )
   }
