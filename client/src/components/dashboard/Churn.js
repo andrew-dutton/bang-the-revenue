@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { Popup, Grid, Checkbox, Segment, Button } from 'semantic-ui-react'
+import { Popup, Grid, Checkbox, Segment, Button, Table } from 'semantic-ui-react'
 import Chart from 'react-google-charts'
+import { HotTable } from '@handsontable/react';
 
 class Churn extends Component {
   constructor(props) {
@@ -8,7 +9,10 @@ class Churn extends Component {
 
     this.state = {
       clients: [],
+      amounts: [],
+      lostValues: [],
       terText: "",
+      lostValuesForTable: [],
       showTable: false,
       currentMonth: "",
       currentPrevMonth: "",
@@ -63,7 +67,10 @@ class Churn extends Component {
         key: "NZ",
         text: "New Zealand",
         value: "NZ"
-      }]
+      }],
+      table: {
+        colHeaders: ["Client", "Location", "Invoice", "Date", "Licence", "Start", "End", "MRR", "Total"]
+      }
     }
 
     this.totalClients = this.totalClients.bind(this)
@@ -178,7 +185,7 @@ class Churn extends Component {
     let theDate = monthDisp + " " + year
     let thePrevDate = prevMonthDisp + " " + prevYear
 
-    this.setState((prevState) => ({ currentMonth: theDate, currentPrevMonth: thePrevDate }))
+    this.setState((prevState) => ({ currentMonth: theDate, currentPrevMonth: thePrevDate }), this.getValuesForLostClients)
   }
 
   handleClickAnnual = () => {
@@ -485,8 +492,62 @@ class Churn extends Component {
 
     this.setState((prevState) => ({
       chartData: churnArray
-    }), this.checkTableToggle)
+    }), this.getValuesForLostClients)
   }
+
+  getValuesForLostClients = () => {
+    // need to get end day of contract and add condition to only get data if date is in the selected month.
+
+    let selectedMonth = this.state.selectedMonth
+    let endOfThisMonth = this.state.months[selectedMonth + 1]
+    let endOfLastMonth = this.state.months[selectedMonth] - 86400000
+
+
+    let details = this.state.lost
+    let holderArray = []
+    for (let i = 0; i < this.state.months.length - 2; i++) {
+      let holder = []
+      for (let k = 0; k < details[i].length; k++) {
+        this.props.rawData.forEach((invoice) => {
+          let endString = invoice["end"]
+          let endDateParts = endString.split("/")
+          let end = new Date(endDateParts[2], endDateParts[1] - 1, +endDateParts[0])
+
+          if (invoice["client"] === details[i][k]) {
+            if ((end < endOfThisMonth && end > endOfLastMonth)) {
+              holder.push([
+                invoice["client"],
+                invoice["territory"],
+                invoice["invoice"],
+                invoice["date"],
+                invoice["product"],
+                invoice["start"],
+                invoice["end"],
+                invoice["valuepermonth"],
+                invoice["total"]
+
+              ])
+            }
+          }
+        })
+
+      }
+      holderArray.push(holder)
+
+    }
+    this.setState((prevState) => ({ lostValues: holderArray }), this.formatChurnTableData)
+  }
+
+  formatChurnTableData = () => {
+    let dataToUpdate = this.state.lostValues
+    let newData = []
+
+
+
+
+    this.checkTableToggle()
+  }
+
 
   getLostValue = () => {
     let lostValue = []
@@ -527,6 +588,45 @@ class Churn extends Component {
     this.setStartingMonth()
     event.persist()
     this.setState((prevState) => ({ churnTer: event.target.textContent }), this.updateChurnTer)
+  }
+
+  displayChurnTable = () => {
+    return (
+      <div>
+        <h1>
+          Churn Table
+        </h1>
+        <HotTable
+          licenseKey="non-commercial-and-evaluation"
+          className={"htCenter"}
+          style={{ fontSize: 10, color: 'black' }}
+          cells={function (row, col) {
+            var cellPrp = {};
+            if (col === 0) {
+              if (col % 2 === 0) {
+                cellPrp.className = 'htLeft'
+              } else if (col === 1) {
+                cellPrp.className = 'htCenter'
+              }
+            } else {
+              cellPrp.className = 'htCenter htMiddle'
+            }
+            return cellPrp
+          }
+          }
+          htDimmed
+          manualColumnResize
+          wordWrap={false}
+          // height={400}
+          editor={false}
+          filters={true}
+          columnSorting={true}
+          colWidths={[522, 50, 59, 75, 75, 75, 75, 60]}
+          rowHeaders={true}
+          colHeaders={this.state.table.colHeaders}
+          data={this.state.lostValues[this.state.selectedMonth]} />
+      </div>
+    )
   }
 
   displayTable = () => {
@@ -620,6 +720,7 @@ class Churn extends Component {
     ]
 
     const { annualActive, projectActive, staticActive, budgetActive } = this.state
+
     if (this.state.chartData.length > 2) {
       return (
         <Grid columns='equal' style={{ width: 1300, paddingTop: 20, fontFamily: 'Titillium Web' }}>
@@ -719,6 +820,7 @@ class Churn extends Component {
   }
 
   render() {
+
     return (
       <div style={{ paddingTop: 12, fontFamily: 'Titillium Web' }}>
         <Segment style={{ width: 1079 }} >
@@ -740,6 +842,9 @@ class Churn extends Component {
 
         {this.displayTable()}
 
+        <div style={{ paddingBottom: 100 }}>
+          {this.displayChurnTable()}
+        </div>
       </div>
     )
   }
