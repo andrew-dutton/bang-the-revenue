@@ -623,18 +623,18 @@ class RecurringRevenueChart extends Component {
                 <HotTable
                   licenseKey="non-commercial-and-evaluation"
                   className={"htCenter"}
-                  columns={[{}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }, {}, {}, {}, {}, {}, {}, {}, { type: "numeric", numericFormat: { pattern: "0,00" } }]}
+                  columns={[{}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }, {}, {}, {}, {}, {}, {}, {}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }]}
                   style={{ fontSize: 10, color: 'black' }}
                   cells={function (row, col) {
                     var cellPrp = {};
                     if (col === 0) {
-                      if (col % 2 === 0) {
-                        cellPrp.className = 'htLeft'
-                      } else if (col === 1) {
-                        cellPrp.className = 'htCenter'
-                      }
+                      cellPrp.className = 'htLeft'
+                    } else if (col === 1) {
+                      cellPrp.className = 'htRight'
+                    } else if (col === 9) {
+                      cellPrp.className = "htRight"
                     } else {
-                      cellPrp.className = 'htCenter htMiddle'
+                      cellPrp.className = "htCenter"
                     }
                     return cellPrp
                   }

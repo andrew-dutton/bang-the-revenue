@@ -361,8 +361,7 @@ class ActiveLicencesGraph extends Component {
                   wordWrap={false}
                   height={400}
                   editor={false}
-                  filters={true}
-                  dropdownMenu={true}
+                  columns={[{}, {}, {}, {}, {}, {}, {}, { type: "numeric", numericFormat: { pattern: "0,00" } }]}
                   columnSorting={true}
                   colWidths={[522, 50, 59, 75, 75, 75, 75, 60]}
                   rowHeaders={true}

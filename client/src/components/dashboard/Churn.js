@@ -10,7 +10,9 @@ class Churn extends Component {
     this.state = {
       clients: [],
       amounts: [],
+      forexData: this.props.forexData,
       lostValues: [],
+      churnTotalInAud: 0,
       terText: "",
       lostValuesForTable: [],
       showTable: false,
@@ -69,7 +71,7 @@ class Churn extends Component {
         value: "NZ"
       }],
       table: {
-        colHeaders: ["Client", "Location", "Invoice", "Date", "Licence", "Start", "End", "MRR", "Total"]
+        colHeaders: ["Client", "MRR", "Location", "Currency", "Invoice", "Date", "Licence", "Start", "End", "Total"]
       }
     }
 
@@ -482,7 +484,6 @@ class Churn extends Component {
   }
 
   calculateChurn = () => {
-
     let churn = this.state.forChurnForumla
     let churnArray = [['TERRITORY', this.state.churnTer]]
 
@@ -496,8 +497,6 @@ class Churn extends Component {
   }
 
   getValuesForLostClients = () => {
-    // need to get end day of contract and add condition to only get data if date is in the selected month.
-
     let selectedMonth = this.state.selectedMonth
     let endOfThisMonth = this.state.months[selectedMonth + 1]
     let endOfLastMonth = this.state.months[selectedMonth] - 86400000
@@ -517,15 +516,15 @@ class Churn extends Component {
             if ((end < endOfThisMonth && end > endOfLastMonth)) {
               holder.push([
                 invoice["client"],
+                invoice["valuepermonth"],
                 invoice["territory"],
+                invoice["currency"],
                 invoice["invoice"],
                 invoice["date"],
                 invoice["product"],
                 invoice["start"],
                 invoice["end"],
-                invoice["valuepermonth"],
                 invoice["total"]
-
               ])
             }
           }
@@ -533,19 +532,8 @@ class Churn extends Component {
 
       }
       holderArray.push(holder)
-
     }
-    this.setState((prevState) => ({ lostValues: holderArray }), this.formatChurnTableData)
-  }
-
-  formatChurnTableData = () => {
-    let dataToUpdate = this.state.lostValues
-    let newData = []
-
-
-
-
-    this.checkTableToggle()
+    this.setState((prevState) => ({ lostValues: holderArray }), this.getChurnTotalInAud)
   }
 
 
@@ -591,11 +579,23 @@ class Churn extends Component {
   }
 
   displayChurnTable = () => {
+    let todDisplay = <p>Cannot fetch Forex data...</p>
+    if (typeof this.state.monthsText[this.state.selectedMonth + 1] !== "undefined") {
+      let forexMonth = this.state.monthsText[this.state.selectedMonth + 1].substring(3)
+      let forex = this.state.forexData
+      todDisplay = (
+        <div>
+          <p>AUD/CAD: {(1 / (forex[forexMonth]["AUD/CAD"])).toFixed(4)}</p>
+          <p>AUD/USD: {(1 / (forex[forexMonth]["AUD/USD"])).toFixed(4)}</p>
+          <p>AUD/GBP: {(1 / (forex[forexMonth]["AUD/GBP"])).toFixed(4)}</p>
+          <p>AUD/NZD: {(1 / (forex[forexMonth]["AUD/NZD"])).toFixed(4)}</p>
+        </div>
+      )
+    }
+
     return (
-      <div>
-        <h1>
-          Churn Table
-        </h1>
+      <div style={{ paddingTop: 15 }}>
+        <h1 style={{ fontFamily: 'Titillium Web' }}>Lost client details</h1>
         <HotTable
           licenseKey="non-commercial-and-evaluation"
           className={"htCenter"}
@@ -603,13 +603,13 @@ class Churn extends Component {
           cells={function (row, col) {
             var cellPrp = {};
             if (col === 0) {
-              if (col % 2 === 0) {
-                cellPrp.className = 'htLeft'
-              } else if (col === 1) {
-                cellPrp.className = 'htCenter'
-              }
+              cellPrp.className = 'htLeft'
+            } else if (col === 1) {
+              cellPrp.className = 'htRight'
+            } else if (col === 9) {
+              cellPrp.className = "htRight"
             } else {
-              cellPrp.className = 'htCenter htMiddle'
+              cellPrp.className = "htCenter"
             }
             return cellPrp
           }
@@ -620,14 +620,65 @@ class Churn extends Component {
           // height={400}
           editor={false}
           filters={true}
+          columns={[{}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }, {}, {}, {}, {}, {}, {}, {}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }]}
           columnSorting={true}
-          colWidths={[522, 50, 59, 75, 75, 75, 75, 60]}
+          colWidths={[400, 70, 55, 55, 75, 75, 78, 75, 75, 70]}
           rowHeaders={true}
           colHeaders={this.state.table.colHeaders}
           data={this.state.lostValues[this.state.selectedMonth]} />
+        <div style={{ paddingRight: 50, fontSize: 11, fontStyle: "italic", textAlign: "right" }}>
+          <br />
+          {todDisplay}
+        </div>
       </div>
     )
   }
+
+  getChurnTotalInAud = () => {
+    let total = 0
+    if (typeof this.state.monthsText[this.state.selectedMonth + 1] !== "undefined") {
+      let forexMonth = this.state.monthsText[this.state.selectedMonth + 1].substring(3)
+      let forex = this.state.forexData
+      let data = this.state.lostValues[this.state.selectedMonth]
+      let audArray = []
+      let audcad = forex[forexMonth]["AUD/CAD"]
+      let audusd = forex[forexMonth]["AUD/USD"]
+      let audgbp = forex[forexMonth]["AUD/GBP"]
+      let audnzd = forex[forexMonth]["AUD/NZD"]
+
+      if (typeof data !== 'undefined') {
+        data.forEach((invoice) => {
+          if (invoice[3] === "CAD") {
+            audArray.push(invoice[1] * audcad)
+          } else if (invoice[3] === "USD") {
+            audArray.push(invoice[1] * audusd)
+          } else if (invoice[3] === "GBP") {
+            audArray.push(invoice[1] * audgbp)
+          } else if (invoice[3] === "NZD") {
+            audArray.push(invoice[1] * audnzd)
+          } else {
+            audArray.push(invoice[1])
+          }
+        })
+
+        total = audArray.reduce((a, b) => a + b, 0).toFixed(2)
+      }
+
+    }
+
+    this.setState((prevState) => ({ churnTotalInAud: total }), this.checkTableToggle)
+
+    // let data = this.state.lostValues
+    // let audArray = []
+    // let audcad = 
+
+    // data.forEach((invoice) => {
+    //   if(invoice[3] === "CAD") {
+    //     let cad = invoi
+    //   } e
+    // })
+  }
+
 
   displayTable = () => {
     if (this.state.showTable) {
@@ -685,13 +736,19 @@ class Churn extends Component {
     }
   }
 
+  numberWithCommas = (x) => {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+  }
+
   displayChartMonth = () => {
+
+
     if (this.state.showTable) {
       return (
         <div style={{ paddingTop: 14, fontFamily: 'Titillium Web' }}>
           <Segment style={{ width: 1079, fontFamily: 'Titillium Web' }}>
             <h1 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.currentMonth}</h1>
-            <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.forChurnForumla[this.state.selectedMonth + 1][2]} Clients</h2>
+            <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>MRR Lost in AUD ${this.numberWithCommas(this.state.churnTotalInAud)}</h2>
           </Segment>
         </div >
       )
