@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Popup, Grid, Checkbox, Segment, Button, Table } from 'semantic-ui-react'
+import { Icon, Flag, Popup, Grid, Checkbox, Segment, Button, Table, GridColumn } from 'semantic-ui-react'
 import Chart from 'react-google-charts'
 import { HotTable } from '@handsontable/react';
 
@@ -10,9 +10,11 @@ class Churn extends Component {
     this.state = {
       clients: [],
       amounts: [],
+      newValues: [],
       forexData: this.props.forexData,
       lostValues: [],
       churnTotalInAud: 0,
+      addedTotalInAud: 0,
       terText: "",
       lostValuesForTable: [],
       showTable: false,
@@ -501,7 +503,6 @@ class Churn extends Component {
     let endOfThisMonth = this.state.months[selectedMonth + 1]
     let endOfLastMonth = this.state.months[selectedMonth] - 86400000
 
-
     let details = this.state.lost
     let holderArray = []
     for (let i = 0; i < this.state.months.length - 2; i++) {
@@ -529,12 +530,51 @@ class Churn extends Component {
             }
           }
         })
-
       }
       holderArray.push(holder)
     }
     this.setState((prevState) => ({ lostValues: holderArray }), this.getChurnTotalInAud)
   }
+
+  getValuesForNewClients = () => {
+    let selectedMonth = this.state.selectedMonth
+    let startfThisMonth = this.state.months[selectedMonth + 1]
+    let startOfLastMonth = this.state.months[selectedMonth]
+
+    let details = this.state.new
+    let holderArray = []
+
+    for (let i = 0; i < this.state.months.length - 2; i++) {
+      let holder = []
+      for (let k = 0; k < details[i].length; k++) {
+        this.props.rawData.forEach((invoice) => {
+          let startString = invoice["start"]
+          let startDateParts = startString.split("/")
+          let start = new Date(startDateParts[2], startDateParts[1] - 1, +startDateParts[0])
+          if (invoice["client"] === details[i][k]) {
+            if ((start < startfThisMonth) && (start > startOfLastMonth)) {
+              holder.push([
+                invoice["client"],
+                invoice["valuepermonth"],
+                invoice["territory"],
+                invoice["currency"],
+                invoice["invoice"],
+                invoice["date"],
+                invoice["product"],
+                invoice["start"],
+                invoice["end"],
+                invoice["total"]
+              ])
+            }
+          }
+        })
+      }
+      holderArray.push(holder)
+    }
+    this.setState((prevState) => ({ newValues: holderArray }), this.getAddedTotalInAud)
+
+  }
+
 
 
   getLostValue = () => {
@@ -579,23 +619,9 @@ class Churn extends Component {
   }
 
   displayChurnTable = () => {
-    let todDisplay = <p>Cannot fetch Forex data...</p>
-    if (typeof this.state.monthsText[this.state.selectedMonth + 1] !== "undefined") {
-      let forexMonth = this.state.monthsText[this.state.selectedMonth + 1].substring(3)
-      let forex = this.state.forexData
-      todDisplay = (
-        <div>
-          <p>AUD/CAD: {(1 / (forex[forexMonth]["AUD/CAD"])).toFixed(4)}</p>
-          <p>AUD/USD: {(1 / (forex[forexMonth]["AUD/USD"])).toFixed(4)}</p>
-          <p>AUD/GBP: {(1 / (forex[forexMonth]["AUD/GBP"])).toFixed(4)}</p>
-          <p>AUD/NZD: {(1 / (forex[forexMonth]["AUD/NZD"])).toFixed(4)}</p>
-        </div>
-      )
-    }
-
     return (
       <div style={{ paddingTop: 15 }}>
-        <h1 style={{ fontFamily: 'Titillium Web' }}>Lost client details</h1>
+        <h3 style={{ fontFamily: 'Titillium Web' }}>Lost client details</h3>
         <HotTable
           licenseKey="non-commercial-and-evaluation"
           className={"htCenter"}
@@ -622,14 +648,48 @@ class Churn extends Component {
           filters={true}
           columns={[{}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }, {}, {}, {}, {}, {}, {}, {}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }]}
           columnSorting={true}
-          colWidths={[400, 70, 55, 55, 75, 75, 78, 75, 75, 70]}
+          colWidths={[350, 70, 55, 55, 75, 75, 78, 75, 75, 70]}
           rowHeaders={true}
           colHeaders={this.state.table.colHeaders}
           data={this.state.lostValues[this.state.selectedMonth]} />
-        <div style={{ paddingRight: 50, fontSize: 11, fontStyle: "italic", textAlign: "right" }}>
-          <br />
-          {todDisplay}
-        </div>
+      </div>
+    )
+  }
+
+  displayAddedTable = () => {
+    return (
+      <div style={{ paddingTop: 15 }}>
+        <h3 style={{ fontFamily: 'Titillium Web' }}>Added client details</h3>
+        <HotTable
+          licenseKey="non-commercial-and-evaluation"
+          className={"htCenter"}
+          style={{ fontSize: 10, color: 'black' }}
+          cells={function (row, col) {
+            var cellPrp = {};
+            if (col === 0) {
+              cellPrp.className = 'htLeft'
+            } else if (col === 1) {
+              cellPrp.className = 'htRight'
+            } else if (col === 9) {
+              cellPrp.className = "htRight"
+            } else {
+              cellPrp.className = "htCenter"
+            }
+            return cellPrp
+          }
+          }
+          htDimmed
+          manualColumnResize
+          wordWrap={false}
+          // height={400}
+          editor={false}
+          filters={true}
+          columns={[{}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }, {}, {}, {}, {}, {}, {}, {}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }]}
+          columnSorting={true}
+          colWidths={[350, 70, 55, 55, 75, 75, 78, 75, 75, 70]}
+          rowHeaders={true}
+          colHeaders={this.state.table.colHeaders}
+          data={this.state.newValues[this.state.selectedMonth]} />
       </div>
     )
   }
@@ -666,46 +726,60 @@ class Churn extends Component {
 
     }
 
-    this.setState((prevState) => ({ churnTotalInAud: total }), this.checkTableToggle)
+    this.setState((prevState) => ({ churnTotalInAud: total }), this.getValuesForNewClients)
+  }
 
-    // let data = this.state.lostValues
-    // let audArray = []
-    // let audcad = 
+  getAddedTotalInAud = () => {
+    let total = 0
+    if (typeof this.state.monthsText[this.state.selectedMonth + 1] !== "undefined") {
+      let forexMonth = this.state.monthsText[this.state.selectedMonth + 1].substring(3)
+      let forex = this.state.forexData
+      let data = this.state.newValues[this.state.selectedMonth]
+      let audArray = []
+      let audcad = forex[forexMonth]["AUD/CAD"]
+      let audusd = forex[forexMonth]["AUD/USD"]
+      let audgbp = forex[forexMonth]["AUD/GBP"]
+      let audnzd = forex[forexMonth]["AUD/NZD"]
 
-    // data.forEach((invoice) => {
-    //   if(invoice[3] === "CAD") {
-    //     let cad = invoi
-    //   } e
-    // })
+      if (typeof data !== 'undefined') {
+        data.forEach((invoice) => {
+          if (invoice[3] === "CAD") {
+            audArray.push(invoice[1] * audcad)
+          } else if (invoice[3] === "USD") {
+            audArray.push(invoice[1] * audusd)
+          } else if (invoice[3] === "GBP") {
+            audArray.push(invoice[1] * audgbp)
+          } else if (invoice[3] === "NZD") {
+            audArray.push(invoice[1] * audnzd)
+          } else {
+            audArray.push(invoice[1])
+          }
+        })
+
+        total = audArray.reduce((a, b) => a + b, 0).toFixed(2)
+      }
+
+    }
+    this.setState((prevState) => ({ addedTotalInAud: total }), this.checkTableToggle)
   }
 
 
   displayTable = () => {
     if (this.state.showTable) {
       return (
-        <div style={{ paddingTop: 12, paddingBottom: 30, fontFamily: 'Titillium Web' }}>
+        <div style={{ paddingTop: 12, paddingBottom: 12, fontFamily: 'Titillium Web' }}>
           <Segment style={{ width: 1079 }}>
             <Grid>
               <Grid.Column width={4}>
                 <Segment>
                   <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Total Clients Lost in<br />{this.state.currentMonth}</h3>
                   <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.lost[this.state.selectedMonth].length}</h2>
-                  <ul>
-                    {this.state.lost[this.state.selectedMonth].map((client, index) => (
-                      <li key={index}>{client}</li>
-                    ))}
-                  </ul>
                 </Segment>
               </Grid.Column>
               <Grid.Column width={4}>
                 <Segment>
                   <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Total Clients Added in<br />{this.state.currentMonth}</h3>
                   <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.new[this.state.selectedMonth].length}</h2>
-                  <ul>
-                    {this.state.new[this.state.selectedMonth].map((client, index) => (
-                      <li key={index}>{client}</li>
-                    ))}
-                  </ul>
                 </Segment>
               </Grid.Column>
               <Grid.Column width={4}>
@@ -721,11 +795,74 @@ class Churn extends Component {
                     {/* <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.forChurnForumla[this.state.selectedMonth][0]} ÷ ({this.state.forChurnForumla[this.state.selectedMonth][1]} + {this.state.forChurnForumla[this.state.selectedMonth][2]})</h2> */}
                     {/* <h1 style={{ textAlign: "center" }}>({this.state.forChurnForumla[this.state.forChurnForumla.length - 2][1]} + {this.state.forChurnForumla[this.state.forChurnForumla.length - 4][2]})</h1> */}
                     <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.chartData[this.state.selectedMonth + 1][1].toFixed(2)}%</h2>
-                    <div style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>
+                    {/* <div style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>
                       <Popup position={'bottom center'}
                         content='The Monthly Churn rate is calculated by dividing the number of clients we lost last month by the number of new clients added to the number of clients we had before the month started.' trigger={<Button icon='calculator' />}
                       />
-                    </div>
+                    </div> */}
+                  </Segment>
+                </div>
+              </Grid.Column>
+            </Grid>
+          </Segment>
+        </div >
+      )
+    }
+  }
+
+  displayMRRTable = () => {
+    let todDisplay = <p>Cannot fetch Forex data...</p>
+    if (typeof this.state.monthsText[this.state.selectedMonth + 1] !== "undefined") {
+      let forexMonth = this.state.monthsText[this.state.selectedMonth + 1].substring(3)
+      let forex = this.state.forexData
+      todDisplay = (
+        <div style={{ fontSize: 10, textAlign: "center", fontFamily: 'Titillium Web' }}>
+          <p><Flag name="ca" />AUD/CAD: {(1 / (forex[forexMonth]["AUD/CAD"])).toFixed(4)}</p>
+          <p><Flag name="us" />AUD/USD: {(1 / (forex[forexMonth]["AUD/USD"])).toFixed(4)}</p>
+          <p><Flag name="uk" />AUD/GBP: {(1 / (forex[forexMonth]["AUD/GBP"])).toFixed(4)}</p>
+          <p><Flag name="nz" />AUD/NZD: {(1 / (forex[forexMonth]["AUD/NZD"])).toFixed(4)}</p>
+        </div>
+      )
+    }
+
+    if (this.state.showTable) {
+      let added = this.state.addedTotalInAud
+      let churn = this.state.churnTotalInAud
+      let net = (added - churn).toFixed(2)
+      let displayTotal = this.numberWithCommas(net)
+      let arrow = ""
+      if ((added - churn) < 0) {
+        arrow = "caret down red"
+      } else {
+        arrow = "caret up green"
+      }
+
+      return (
+        <div style={{ paddingTop: 12, paddingBottom: 12, fontFamily: 'Titillium Web' }}>
+          <Segment style={{ width: 1079 }}>
+            <Grid>
+              <Grid.Column width={4}>
+                <Segment>
+                  <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>MRR Lost</h3>
+                  <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>A${this.numberWithCommas(this.state.churnTotalInAud)}</h2>
+                </Segment>
+              </Grid.Column>
+              <Grid.Column width={4}>
+                <Segment>
+                  <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>MRR Added</h3>
+                  <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>A${this.numberWithCommas(this.state.addedTotalInAud)}</h2>
+                </Segment>
+              </Grid.Column>
+              <Grid.Column width={4}>
+                <Segment>
+                  <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Net MRR Change</h3>
+                  <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}><Icon name={arrow}></Icon>A${displayTotal}<Icon name={arrow}></Icon></h2>
+                </Segment>
+              </Grid.Column>
+              <Grid.Column width={4}>
+                <div>
+                  <Segment>
+                    {todDisplay}
                   </Segment>
                 </div>
               </Grid.Column>
@@ -740,15 +877,54 @@ class Churn extends Component {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
   }
 
-  displayChartMonth = () => {
+  displayMonth = () => {
+    if (this.state.showTable) {
+      return (
+        <div style={{ textAlign: 'center', paddingTop: 14, fontFamily: 'Titillium Web' }}>
+          <Segment style={{ width: 1079, fontFamily: 'Titillium Web' }}>
+            <h1 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.currentMonth}</h1>
+          </Segment>
+        </div >
+      )
+    }
+  }
 
+  displayMRRTotals = () => {
+    let todDisplay = <p>Cannot fetch Forex data...</p>
+    if (typeof this.state.monthsText[this.state.selectedMonth + 1] !== "undefined") {
+      let forexMonth = this.state.monthsText[this.state.selectedMonth + 1].substring(3)
+      let forex = this.state.forexData
+      todDisplay = (
+        <div style={{ fontSize: 10 }}>
+          <p><Flag name="ca" />AUD/CAD: {(1 / (forex[forexMonth]["AUD/CAD"])).toFixed(4)}</p>
+          <p><Flag name="us" />AUD/USD: {(1 / (forex[forexMonth]["AUD/USD"])).toFixed(4)}</p>
+          <p><Flag name="uk" />AUD/GBP: {(1 / (forex[forexMonth]["AUD/GBP"])).toFixed(4)}</p>
+          <p><Flag name="nz" />AUD/NZD: {(1 / (forex[forexMonth]["AUD/NZD"])).toFixed(4)}</p>
+        </div>
+      )
+    }
 
     if (this.state.showTable) {
       return (
         <div style={{ paddingTop: 14, fontFamily: 'Titillium Web' }}>
           <Segment style={{ width: 1079, fontFamily: 'Titillium Web' }}>
-            <h1 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.currentMonth}</h1>
-            <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>MRR Lost in AUD ${this.numberWithCommas(this.state.churnTotalInAud)}</h2>
+            <Grid>
+              <Grid.Column width={3}>
+                <h3 style={{ textAlign: "left", fontFamily: 'Titillium Web' }}>MRR Lost</h3>
+                <h3 style={{ textAlign: "left", fontFamily: 'Titillium Web' }}>MRR Added </h3>
+                <h3 style={{ textAlign: "left", fontFamily: 'Titillium Web' }}>Net MRR Change</h3>
+              </Grid.Column>
+              <Grid.Column width={7}>
+                <h3 style={{ textAlign: "centleftr", fontFamily: 'Titillium Web' }}>A${this.numberWithCommas(this.state.churnTotalInAud)}</h3>
+                <h3 style={{ textAlign: "centleftr", fontFamily: 'Titillium Web' }}>A${this.numberWithCommas(this.state.addedTotalInAud)}</h3>
+                <h3 style={{ textAlign: "centleftr", fontFamily: 'Titillium Web' }}>A${this.numberWithCommas((this.state.addedTotalInAud) - (this.state.churnTotalInAud))}</h3>
+              </Grid.Column>
+              <Grid.Column width={6}>
+                <div style={{ textAlign: 'right' }}>
+                  {todDisplay}
+                </div>
+              </Grid.Column>
+            </Grid>
           </Segment>
         </div >
       )
@@ -780,7 +956,7 @@ class Churn extends Component {
 
     if (this.state.chartData.length > 2) {
       return (
-        <Grid columns='equal' style={{ width: 1300, paddingTop: 20, fontFamily: 'Titillium Web' }}>
+        <Grid columns='equal' style={{ width: 1300, paddingTop: 12, fontFamily: 'Titillium Web' }}>
           <Grid.Column>
             <Segment style={{ width: 70, height: 513 }}>
               <br />
@@ -877,7 +1053,6 @@ class Churn extends Component {
   }
 
   render() {
-
     return (
       <div style={{ paddingTop: 12, fontFamily: 'Titillium Web' }}>
         <Segment style={{ width: 1079 }} >
@@ -895,13 +1070,18 @@ class Churn extends Component {
 
         {this.displayChart()}
 
-        {this.displayChartMonth()}
+        {this.displayMonth()}
 
         {this.displayTable()}
 
-        <div style={{ paddingBottom: 100 }}>
+        {this.displayMRRTable()}
+
+        <Segment style={{ width: 1079 }}>
           {this.displayChurnTable()}
-        </div>
+          {this.displayAddedTable()}
+        </Segment>
+
+        <div style={{ paddingBottom: 100 }}></div>
       </div>
     )
   }
