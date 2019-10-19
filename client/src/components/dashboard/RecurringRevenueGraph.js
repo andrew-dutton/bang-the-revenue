@@ -782,8 +782,15 @@ class RecurringRevenueChart extends Component {
     }
 
     return (
-      <div style={{ paddingTop: 20 }}>
-        <Grid columns='equal' style={{ width: 1300 }}>
+      <div style={{ paddingTop: 24, paddingBotton: 24 }}>
+        <div >
+          <Segment style={{ width: 1079 }}>
+            <h1 style={{ fontSize: 40, textAlign: "center", fontFamily: 'Titillium Web' }}>
+              Recurring Revenue
+              </h1>
+          </Segment>
+        </div>
+        <Grid columns='equal' style={{ width: 1300, paddingTop: 24 }}>
           <Grid.Column>
             <Segment style={{ width: 1079 }} >
               <Form style={radioStyle}>
@@ -838,7 +845,7 @@ class RecurringRevenueChart extends Component {
         <div>
           {this.displayDetails()}
         </div>
-      </div>
+      </div >
     )
   }
 }

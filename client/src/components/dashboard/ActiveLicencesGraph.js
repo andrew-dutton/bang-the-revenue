@@ -55,6 +55,14 @@ class ActiveLicencesGraph extends Component {
     this.totalClients()
   }
 
+  autoScroll = () => {
+    window.scrollTo({
+      top: 1000,
+      behavior: 'smooth',
+    })
+  }
+
+
   handleClickAnnual = () => {
     if (this.state.annualOn) {
       this.setState((prevState) => ({ annual: "" }))
@@ -516,15 +524,14 @@ class ActiveLicencesGraph extends Component {
     }
 
     return (
-      <div style={{ paddingTop: 12 }}>
+      <div style={{ paddingTop: 24, paddingBotton: 24 }}>
         <div>
-          <div>
-
-            {/* <p>Australia: {this.state.currentAus}</p>
-            <p>Canada: {this.state.currentCan}</p>
-            <p>USA: {this.state.currentUsa}</p>
-            <p>UK: {this.state.currentUk}</p>
-            <p>NZ: {this.state.currentNz}</p> */}
+          <div style={{ paddingBottom: 24 }}>
+            <Segment style={{ width: 1079 }}>
+              <h1 style={{ fontSize: 40, textAlign: "center", fontFamily: 'Titillium Web' }}>
+                Active Licences
+              </h1>
+            </Segment>
           </div>
           <Grid columns='equal' style={{ width: 1300 }}>
             <Grid.Column>

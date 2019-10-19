@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Icon, Flag, Popup, Grid, Checkbox, Segment, Button, Table, GridColumn } from 'semantic-ui-react'
+import { Dimmer, Loader, Icon, Flag, Grid, Checkbox, Segment, Button } from 'semantic-ui-react'
 import Chart from 'react-google-charts'
 import { HotTable } from '@handsontable/react';
 
@@ -9,6 +9,7 @@ class Churn extends Component {
 
     this.state = {
       clients: [],
+      dimmer: false,
       amounts: [],
       newValues: [],
       forexData: this.props.forexData,
@@ -659,6 +660,9 @@ class Churn extends Component {
   displayAddedTable = () => {
     return (
       <div style={{ paddingTop: 15 }}>
+        <Dimmer active={this.state.dimmer}>
+          <Loader>Loading</Loader>
+        </Dimmer>
         <h3 style={{ fontFamily: 'Titillium Web' }}>Added client details</h3>
         <HotTable
           licenseKey="non-commercial-and-evaluation"
@@ -769,6 +773,9 @@ class Churn extends Component {
       return (
         <div style={{ paddingTop: 12, paddingBottom: 12, fontFamily: 'Titillium Web' }}>
           <Segment style={{ width: 1079 }}>
+            <Dimmer active={this.state.dimmer}>
+              <Loader>Loading</Loader>
+            </Dimmer>
             <Grid>
               <Grid.Column width={4}>
                 <Segment>
@@ -817,10 +824,17 @@ class Churn extends Component {
       let forex = this.state.forexData
       todDisplay = (
         <div style={{ fontSize: 10, textAlign: "center", fontFamily: 'Titillium Web' }}>
-          <p><Flag name="ca" />AUD/CAD: {(1 / (forex[forexMonth]["AUD/CAD"])).toFixed(4)}</p>
-          <p><Flag name="us" />AUD/USD: {(1 / (forex[forexMonth]["AUD/USD"])).toFixed(4)}</p>
-          <p><Flag name="uk" />AUD/GBP: {(1 / (forex[forexMonth]["AUD/GBP"])).toFixed(4)}</p>
-          <p><Flag name="nz" />AUD/NZD: {(1 / (forex[forexMonth]["AUD/NZD"])).toFixed(4)}</p>
+          <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>AUD Exchange Rates</h3>
+          <Grid>
+            <Grid.Column width={8}>
+              <p><Flag name="ca" />{(1 / (forex[forexMonth]["AUD/CAD"])).toFixed(4)}</p>
+              <p><Flag name="us" />{(1 / (forex[forexMonth]["AUD/USD"])).toFixed(4)}</p>
+            </Grid.Column>
+            <Grid.Column width={8}>
+              <p><Flag name="uk" />{(1 / (forex[forexMonth]["AUD/GBP"])).toFixed(4)}</p>
+              <p><Flag name="nz" />{(1 / (forex[forexMonth]["AUD/NZD"])).toFixed(4)}</p>
+            </Grid.Column>
+          </Grid>
         </div>
       )
     }
@@ -840,6 +854,9 @@ class Churn extends Component {
       return (
         <div style={{ paddingTop: 12, paddingBottom: 12, fontFamily: 'Titillium Web' }}>
           <Segment style={{ width: 1079 }}>
+            <Dimmer active={this.state.dimmer}>
+              <Loader>Loading</Loader>
+            </Dimmer>
             <Grid>
               <Grid.Column width={4}>
                 <Segment>
@@ -883,48 +900,6 @@ class Churn extends Component {
         <div style={{ textAlign: 'center', paddingTop: 14, fontFamily: 'Titillium Web' }}>
           <Segment style={{ width: 1079, fontFamily: 'Titillium Web' }}>
             <h1 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.currentMonth}</h1>
-          </Segment>
-        </div >
-      )
-    }
-  }
-
-  displayMRRTotals = () => {
-    let todDisplay = <p>Cannot fetch Forex data...</p>
-    if (typeof this.state.monthsText[this.state.selectedMonth + 1] !== "undefined") {
-      let forexMonth = this.state.monthsText[this.state.selectedMonth + 1].substring(3)
-      let forex = this.state.forexData
-      todDisplay = (
-        <div style={{ fontSize: 10 }}>
-          <p><Flag name="ca" />AUD/CAD: {(1 / (forex[forexMonth]["AUD/CAD"])).toFixed(4)}</p>
-          <p><Flag name="us" />AUD/USD: {(1 / (forex[forexMonth]["AUD/USD"])).toFixed(4)}</p>
-          <p><Flag name="uk" />AUD/GBP: {(1 / (forex[forexMonth]["AUD/GBP"])).toFixed(4)}</p>
-          <p><Flag name="nz" />AUD/NZD: {(1 / (forex[forexMonth]["AUD/NZD"])).toFixed(4)}</p>
-        </div>
-      )
-    }
-
-    if (this.state.showTable) {
-      return (
-        <div style={{ paddingTop: 14, fontFamily: 'Titillium Web' }}>
-          <Segment style={{ width: 1079, fontFamily: 'Titillium Web' }}>
-            <Grid>
-              <Grid.Column width={3}>
-                <h3 style={{ textAlign: "left", fontFamily: 'Titillium Web' }}>MRR Lost</h3>
-                <h3 style={{ textAlign: "left", fontFamily: 'Titillium Web' }}>MRR Added </h3>
-                <h3 style={{ textAlign: "left", fontFamily: 'Titillium Web' }}>Net MRR Change</h3>
-              </Grid.Column>
-              <Grid.Column width={7}>
-                <h3 style={{ textAlign: "centleftr", fontFamily: 'Titillium Web' }}>A${this.numberWithCommas(this.state.churnTotalInAud)}</h3>
-                <h3 style={{ textAlign: "centleftr", fontFamily: 'Titillium Web' }}>A${this.numberWithCommas(this.state.addedTotalInAud)}</h3>
-                <h3 style={{ textAlign: "centleftr", fontFamily: 'Titillium Web' }}>A${this.numberWithCommas((this.state.addedTotalInAud) - (this.state.churnTotalInAud))}</h3>
-              </Grid.Column>
-              <Grid.Column width={6}>
-                <div style={{ textAlign: 'right' }}>
-                  {todDisplay}
-                </div>
-              </Grid.Column>
-            </Grid>
           </Segment>
         </div >
       )
@@ -1054,7 +1029,14 @@ class Churn extends Component {
 
   render() {
     return (
-      <div style={{ paddingTop: 12, fontFamily: 'Titillium Web' }}>
+      <div style={{ paddingTop: 24, fontFamily: 'Titillium Web' }}>
+        <div style={{ paddingBottom: 12 }}>
+          <Segment style={{ width: 1079 }}>
+            <h1 style={{ fontSize: 40, textAlign: "center", fontFamily: 'Titillium Web' }}>
+              Client Churn
+              </h1>
+          </Segment>
+        </div>
         <Segment style={{ width: 1079 }} >
           <div>
             <div style={{ fontFamily: 'Titillium Web', textAlign: 'center' }}>

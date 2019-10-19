@@ -11,6 +11,12 @@ import InvoiceSearch from './dashboard/InvoiceSearch'
 import ActiveLicencesBox from './dashboard/ActiveLicencesBox'
 import RecurringRevenueBox from './dashboard/RecurringRevenueBox'
 import ChurnBox from './dashboard/ChurnBox'
+import MRRChurnBox from './dashboard/MRRChurnBox'
+import BudgetBox from './dashboard/BudgetBox'
+import EIQBox from './dashboard/EIQBox'
+import NonRecurringBox from './dashboard/NonRecurringBox'
+import RRRBox from './dashboard/RRRBox'
+import LTVBox from './dashboard/LTVBox'
 
 import { Segment, Grid, Dimmer, Loader } from 'semantic-ui-react'
 
@@ -365,6 +371,54 @@ class Dashboard extends Component {
     this.setState((prevState) => ({ raised: '' }))
   }
 
+  onMouseEnterMRRChurn = () => {
+    this.setState((prevState) => ({ raised: "MRR Churn" }))
+  }
+
+  onMouseLeaveMRRChurn = () => {
+    this.setState((prevState) => ({ raised: '' }))
+  }
+
+  onMouseEnterBudget = () => {
+    this.setState((prevState) => ({ raised: "Budget" }))
+  }
+
+  onMouseLeaveBudget = () => {
+    this.setState((prevState) => ({ raised: '' }))
+  }
+
+  onMouseEnterEIQ = () => {
+    this.setState((prevState) => ({ raised: "EIQ" }))
+  }
+
+  onMouseLeaveEIQ = () => {
+    this.setState((prevState) => ({ raised: '' }))
+  }
+
+  onMouseEnterRRR = () => {
+    this.setState((prevState) => ({ raised: "RRR" }))
+  }
+
+  onMouseLeaveRRR = () => {
+    this.setState((prevState) => ({ raised: '' }))
+  }
+
+  onMouseEnterNonRecurring = () => {
+    this.setState((prevState) => ({ raised: "Non Recurring" }))
+  }
+
+  onMouseLeaveNonRecurring = () => {
+    this.setState((prevState) => ({ raised: '' }))
+  }
+
+  onMouseEnterLTV = () => {
+    this.setState((prevState) => ({ raised: "LTV" }))
+  }
+
+  onMouseLeaveLTV = () => {
+    this.setState((prevState) => ({ raised: '' }))
+  }
+
   componentDidMount() {
     this.client = Stitch.initializeDefaultAppClient("bang-qfbza")
 
@@ -459,43 +513,105 @@ class Dashboard extends Component {
   }
 
   newDashboard = () => {
-    return (
-      <div style={{ paddingTop: 12 }}>
-        <Segment style={{ width: 1079, textAlign: "center" }}>
-          <Dimmer active={this.state.rawData.length < 1}>
-            <Loader>Connecting to database....</Loader>
-          </Dimmer>
-          <Grid>
-            <Grid.Row columns={3}>
-              <Grid.Column>
-                <div id="Active Licences" onMouseEnter={() => this.onMouseEnterActiveLicences()} onMouseLeave={() => this.onMouseLeaveActiveLiecences()} onClick={e => this.handleSelection(e.currentTarget.id)}>
-                  <Segment inverted={this.state.selected === "Active Licences"} raised={this.state.raised === "Active Licences"}>
-                    <h1 style={{ fontFamily: 'Titillium Web' }}>Active Licences</h1>
-                    <ActiveLicencesBox selected={this.state.selected} rawData={this.state.rawData} />
-                  </Segment>
-                </div>
-              </Grid.Column>
-              <Grid.Column>
-                <div onMouseEnter={() => this.onMouseEnterRecurringRevenue()} onMouseLeave={() => this.onMouseLeaveRecurringRevenue()} id="Recurring Revenue" onClick={e => this.handleSelection(e.currentTarget.id)}>
-                  <Segment inverted={this.state.selected === "Recurring Revenue"} raised={this.state.raised === "Recurring Revenue"}>
-                    <h1 style={{ fontFamily: 'Titillium Web' }}>Recurring Revenue</h1>
-                    <RecurringRevenueBox selected={this.state.selected} rawData={this.state.rawData} />
-                  </Segment>
-                </div>
-              </Grid.Column>
-              <Grid.Column>
-                <div id="Churn" onMouseEnter={() => this.onMouseEnterChurn()} onMouseLeave={() => this.onMouseLeaveChurn()} onClick={e => this.handleSelection(e.currentTarget.id)}>
-                  <Segment inverted={this.state.selected === "Churn"} raised={this.state.raised === "Churn"}>
-                    <h1 style={{ fontFamily: 'Titillium Web' }}>Churn</h1>
-                    <ChurnBox selected={this.state.selected} rawData={this.state.rawData} />
-                  </Segment>
-                </div>
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-        </Segment>
-      </div >
-    )
+    if (this.state.selected === "Select Chart") {
+      return (
+        <div style={{ paddingTop: 24, paddingBotton: 24 }}>
+          <div style={{ paddingBottom: 12 }}>
+            <Segment style={{ width: 1079 }}>
+              <h1 style={{ fontSize: 40, textAlign: "center", fontFamily: 'Titillium Web' }}>
+                Dashboard
+              </h1>
+            </Segment>
+          </div>
+          <Segment style={{ width: 1079, textAlign: "center" }}>
+            <Dimmer active={this.state.rawData.length < 1}>
+              <Loader>Connecting to database....</Loader>
+            </Dimmer>
+            <Grid>
+              <Grid.Row columns={3}>
+                <Grid.Column>
+                  <div id="Active Licences" onMouseEnter={() => this.onMouseEnterActiveLicences()} onMouseLeave={() => this.onMouseLeaveActiveLiecences()} onClick={e => this.handleSelection(e.currentTarget.id)}>
+                    <Segment inverted={this.state.selected === "Active Licences"} raised={this.state.raised === "Active Licences"}>
+                      <h1 style={{ fontFamily: 'Titillium Web' }}>Active Licences</h1>
+                      <ActiveLicencesBox selected={this.state.selected} rawData={this.state.rawData} />
+                    </Segment>
+                  </div>
+                </Grid.Column>
+                <Grid.Column>
+                  <div onMouseEnter={() => this.onMouseEnterRecurringRevenue()} onMouseLeave={() => this.onMouseLeaveRecurringRevenue()} id="Recurring Revenue" onClick={e => this.handleSelection(e.currentTarget.id)}>
+                    <Segment inverted={this.state.selected === "Recurring Revenue"} raised={this.state.raised === "Recurring Revenue"}>
+                      <h1 style={{ fontFamily: 'Titillium Web' }}>Recurring Revenue</h1>
+                      <RecurringRevenueBox selected={this.state.selected} rawData={this.state.rawData} />
+                    </Segment>
+                  </div>
+                </Grid.Column>
+                <Grid.Column>
+                  <div id="Churn" onMouseEnter={() => this.onMouseEnterChurn()} onMouseLeave={() => this.onMouseLeaveChurn()} onClick={e => this.handleSelection(e.currentTarget.id)}>
+                    <Segment inverted={this.state.selected === "Churn"} raised={this.state.raised === "Churn"}>
+                      <h1 style={{ fontFamily: 'Titillium Web' }}>Client Churn</h1>
+                      <ChurnBox selected={this.state.selected} rawData={this.state.rawData} />
+                    </Segment>
+                  </div>
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row style={{ color: '#E0E0E0' }} columns={3}>
+                <Grid.Column>
+                  <div id="MRR Churn" onMouseEnter={() => this.onMouseEnterMRRChurn()} onMouseLeave={() => this.onMouseLeaveMRRChurn()}>
+                    <Segment inverted={this.state.selected === "MRR Churn"} raised={this.state.raised === "MRR Churn"}>
+                      <h1 style={{ fontFamily: 'Titillium Web' }}>MRR Churn</h1>
+                      <MRRChurnBox selected={this.state.selected} rawData={this.state.rawData} />
+                    </Segment>
+                  </div>
+                </Grid.Column>
+                <Grid.Column>
+                  <div id="Non Recurring" onMouseEnter={() => this.onMouseEnterNonRecurring()} onMouseLeave={() => this.onMouseLeaveNonRecurring()}>
+                    <Segment inverted={this.state.selected === "Non Recurring"} raised={this.state.raised === "Non Recurring"}>
+                      <h1 style={{ fontFamily: 'Titillium Web' }}>Non Recurring Revenue</h1>
+                      <NonRecurringBox selected={this.state.selected} rawData={this.state.rawData} />
+                    </Segment>
+                  </div>
+
+                </Grid.Column>
+                <Grid.Column>
+                  <div id="EIQ" onMouseEnter={() => this.onMouseEnterEIQ()} onMouseLeave={() => this.onMouseLeaveEIQ()}>
+                    <Segment inverted={this.state.selected === "EIQ"} raised={this.state.raised === "EIQ"}>
+                      <h1 style={{ fontFamily: 'Titillium Web' }}>EngagementIQ</h1>
+                      <EIQBox selected={this.state.selected} rawData={this.state.rawData} />
+                    </Segment>
+                  </div>
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row style={{ color: '#E0E0E0' }} columns={3}>
+                <Grid.Column>
+                  <div id="RRR" onMouseEnter={() => this.onMouseEnterRRR()} onMouseLeave={() => this.onMouseLeaveRRR()}>
+                    <Segment inverted={this.state.selected === "RRR"} raised={this.state.raised === "RRR"}>
+                      <h1 style={{ fontFamily: 'Titillium Web' }}>Revenue Run Rate</h1>
+                      <RRRBox selected={this.state.selected} rawData={this.state.rawData} />
+                    </Segment>
+                  </div>
+                </Grid.Column>
+                <Grid.Column>
+                  <div id="LTV" onMouseEnter={() => this.onMouseEnterLTV()} onMouseLeave={() => this.onMouseLeaveLTV()}>
+                    <Segment inverted={this.state.selected === "LTV"} raised={this.state.raised === "LTV"}>
+                      <h1 style={{ fontFamily: 'Titillium Web' }}>Client Life Time Value</h1>
+                      <LTVBox selected={this.state.selected} rawData={this.state.rawData} />
+                    </Segment>
+                  </div>
+                </Grid.Column>
+                <Grid.Column>
+                  <div id="Budget" onMouseEnter={() => this.onMouseEnterBudget()} onMouseLeave={() => this.onMouseLeaveBudget()}>
+                    <Segment inverted={this.state.selected === "Budget"} raised={this.state.raised === "Budget"}>
+                      <h1 style={{ fontFamily: 'Titillium Web' }}>Budget Variances</h1>
+                      <BudgetBox selected={this.state.selected} rawData={this.state.rawData} />
+                    </Segment>
+                  </div>
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+          </Segment>
+        </div >
+      )
+    }
   }
 
   render() {
