@@ -535,7 +535,7 @@ class Dashboard extends Component {
               </Grid>
             </Segment>
           </div>
-          <Segment style={{ width: 1079, textAlign: "center" }}>
+          <Segment style={{ width: 1079, textAlign: "center", backgroundColor: '#F7F7F7' }}>
             <Dimmer active={this.state.rawData.length < 1}>
               <Loader>Connecting to database....</Loader>
             </Dimmer>
@@ -645,8 +645,8 @@ class Dashboard extends Component {
               <li>Toggle to add non recurring revenue (by invoice date) to MRR and chart results</li>
               <li>Add toggle buttons for territories which update data table below (same style as Churn page)</li>
               <li>Allow any combination of territory data to be displayed on chart at once</li>
-              <li>Add toggle to show total revenue line to chart</li>
-              <li>Add option to show revenue data in USD or AUD</li>
+              <li>Include toggle to show total revenue line on chart</li>
+              <li>Add option to show revenue data in USD or AUD (any other currencies worthwhile?)</li>
             </ol>
 
             <h3 style={{ fontFamily: 'Titillium Web' }}>Main Dashboard</h3>
@@ -656,37 +656,40 @@ class Dashboard extends Component {
 
             <h3 style={{ fontFamily: 'Titillium Web' }}>Revenue Run Rate</h3>
             <ol start={7}>
-              <li>Build out RRR dahsboard</li>
+              <li>Build out RRR dashboard</li>
             </ol>
 
             <h3 style={{ fontFamily: 'Titillium Web' }}>Churn</h3>
             <ol start={8}>
               <li>Add option to show churn data quarterly and annually</li>
-              <li>Add functionality to show either Client Number Churn (as is currently displayed) or MRR churn dollar value vs Added business values in chart</li>
+              <li>Add switch to show Client Number Churn (as is currently displayed) or Churn by dollar value with option to select currency</li>
             </ol>
 
             <h3 style={{ fontFamily: 'Titillium Web' }}>Other tasks, not ordered by priority</h3>
             <ul style={{ fontFamily: 'Titillium Web' }}>
               <li>Build out remaining dashboards</li>
-              <li>Add mini graphs to each dashboard squares where logical</li>
+              <li>Create a privacy concious report of spending data that is meaningful and easy to report against revenue numbers. This is a very big job</li>
+              <li>Add mini graphs to each dashboard square where it would be better than just text</li>
               <li>Add ability to change currency being displayed when currency flags are clicked (On Client Churn page only for now, but could be used on any dashboard)</li>
-              <li>Add funcionality to display all data related to a specific client when their name is clicked on any table in which it appears</li>
-              <li>Time travel back to specific months on Active Licence Graph and Recurring Revenue Graph (same functionality as Client Churn graph)</li>
+              <li>Add functionality to display all data related to a specific client when their name is clicked on any table in which it appears</li>
+              <li>Time travel back to specific months on Active Licence Graph and Recurring Revenue Graph (same as currently available on Client Churn graph)</li>
               <li>Non Recurring Revenue dashboard build out - use this to analyse sales for each product family</li>
               <li>Set up Cost of Acquiring Clients Dashboard (CAC) - showing total marketing spend vs converted new leads (by month/qtr/annual)</li>
               <li>EIQ dashboard build out - Show list of current EIQ licences and show their added value relative to client's EHQ licence</li>
-              <li>LTV dashboard - there are a number of different formulas for calculating this. Create dynamic chart that can show results of different calculation methods</li>
-              <li>Create board report option that automatically runs a set of specific chart combinations in an exportable format</li>
+              <li>LTV dashboard - there are a number of different formulas for calculating this. Create dynamic chart that can show results using different calculation methods</li>
+              <li>Create board report option that automatically outputs a set of specific charts and table combinations in an exportable format</li>
               <li>Toggle to switch main dashboard to dislpay all figures for current quarter rather than just previous month(current view)</li>
               <li>Track "Expansion": Increase in revenue when we sell more than just a renewal, or renew clients on higher tier EIQ package</li>
+              <li>Toggle to switch main dashboard to dislpay all figures in any chosen currency</li>
 
             </ul>
             <h3 style={{ fontFamily: 'Titillium Web' }}>Non data related site improvements</h3>
             <ul style={{ fontFamily: 'Titillium Web' }}>
-              <li>Add basic invoice search page. Not as a dashboard</li>
+              <li>Add basic invoice search page. Not as a dashboard. Link to this in will be in the header</li>
               <li>Need a "Loading" icon for when toggling options take a while. A lot of number crunching in Client Churn causing some lag</li>
               <li>Consider changing layout or colour scheme. Maybe make things smaller, or use more width of screen</li>
-              <li>Create funcionality for people to comment</li>
+              <li>Add current forex rates on main screen</li>
+              <li>Create funcionality for people to make comments</li>
               <li>Create ability to export tables to a google sheet</li>
               <li>Templates to create printer/PDF friendly nicely formatted reports</li>
               <li>code should be refactored to make it more dry</li>

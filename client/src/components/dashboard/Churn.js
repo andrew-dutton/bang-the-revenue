@@ -772,7 +772,7 @@ class Churn extends Component {
     if (this.state.showTable) {
       return (
         <div style={{ paddingTop: 12, paddingBottom: 12, fontFamily: 'Titillium Web' }}>
-          <Segment style={{ width: 1079 }}>
+          <Segment style={{ width: 1079, backgroundColor: '#F7F7F7' }}>
             <Dimmer active={this.state.dimmer}>
               <Loader>Loading</Loader>
             </Dimmer>
@@ -853,7 +853,7 @@ class Churn extends Component {
 
       return (
         <div style={{ paddingTop: 12, paddingBottom: 12, fontFamily: 'Titillium Web' }}>
-          <Segment style={{ width: 1079 }}>
+          <Segment style={{ width: 1079, backgroundColor: '#F7F7F7' }}>
             <Dimmer active={this.state.dimmer}>
               <Loader>Loading</Loader>
             </Dimmer>

@@ -19,7 +19,7 @@ class App extends Component {
 
   render() {
     return (
-      <div className="main">
+      <div style={{ backgroundColor: '#F7F7F7' }} className="main" >
         <GoogleFontLoader
           fonts={[
             {
