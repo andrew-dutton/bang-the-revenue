@@ -618,7 +618,7 @@ class RecurringRevenueChart extends Component {
       <div>
         <Grid columns='equal' style={{ width: 1109, paddingBottom: 50, color: 'black' }}>
           <Grid.Column>
-            <Segment>
+            <Segment color="orange">
               <div id="hot-app">
                 <HotTable
                   licenseKey="non-commercial-and-evaluation"
@@ -784,7 +784,7 @@ class RecurringRevenueChart extends Component {
     return (
       <div style={{ paddingTop: 24, paddingBotton: 24 }}>
         <div >
-          <Segment style={{ width: 1079 }}>
+          <Segment color={"orange"} style={{ width: 1079 }}>
             <h1 style={{ fontSize: 40, textAlign: "center", fontFamily: 'Titillium Web' }}>
               Recurring Revenue
               </h1>
@@ -792,7 +792,7 @@ class RecurringRevenueChart extends Component {
         </div>
         <Grid columns='equal' style={{ width: 1300, paddingTop: 24 }}>
           <Grid.Column>
-            <Segment style={{ width: 1079 }} >
+            <Segment color="orange" style={{ width: 1079 }} >
               <Form style={radioStyle}>
                 <Form.Field >
                   <Radio
@@ -827,7 +827,7 @@ class RecurringRevenueChart extends Component {
                 </Form.Field>
               </Form>
             </Segment>
-            <Segment style={{ width: 1079 }} >
+            <Segment color="orange" style={{ width: 1079 }} >
               <Line
                 data={data}
                 options={{

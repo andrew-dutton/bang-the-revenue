@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-class ChurnBox extends Component {
+class CACBox extends Component {
   constructor(props) {
     super(props)
 
@@ -68,7 +68,7 @@ class ChurnBox extends Component {
   }
 
   boxSelected = () => {
-    if (this.props.selected === "Churn") {
+    if (this.props.selected === "CAC") {
       return (
         <div style={{ height: 150 }}>
           <h1 style={{ position: 'absolute', left: '50%', top: '75%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>Coming soon...</h1>
@@ -96,4 +96,4 @@ class ChurnBox extends Component {
   }
 }
 
-export default ChurnBox
+export default CACBox

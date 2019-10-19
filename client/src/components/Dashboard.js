@@ -11,18 +11,19 @@ import InvoiceSearch from './dashboard/InvoiceSearch'
 import ActiveLicencesBox from './dashboard/ActiveLicencesBox'
 import RecurringRevenueBox from './dashboard/RecurringRevenueBox'
 import ChurnBox from './dashboard/ChurnBox'
-import MRRChurnBox from './dashboard/MRRChurnBox'
+import CACBox from './dashboard/CACBox'
 import BudgetBox from './dashboard/BudgetBox'
 import EIQBox from './dashboard/EIQBox'
 import NonRecurringBox from './dashboard/NonRecurringBox'
 import RRRBox from './dashboard/RRRBox'
 import LTVBox from './dashboard/LTVBox'
 
-import { Segment, Grid, Dimmer, Loader } from 'semantic-ui-react'
+import { Segment, Grid, Dimmer, Loader, Icon, Button } from 'semantic-ui-react'
 
 class Dashboard extends Component {
   state = {
     rawData: [],
+    whatsNext: false,
     forexData:
     {
       "07/2015": {
@@ -371,11 +372,11 @@ class Dashboard extends Component {
     this.setState((prevState) => ({ raised: '' }))
   }
 
-  onMouseEnterMRRChurn = () => {
-    this.setState((prevState) => ({ raised: "MRR Churn" }))
+  onMouseEnterCAC = () => {
+    this.setState((prevState) => ({ raised: "CAC" }))
   }
 
-  onMouseLeaveMRRChurn = () => {
+  onMouseLeaveCAC = () => {
     this.setState((prevState) => ({ raised: '' }))
   }
 
@@ -470,6 +471,10 @@ class Dashboard extends Component {
       toDisplay = <InvoiceSearch rawData={this.state.rawData} />
     }
 
+    if (this.state.selected === "Whats Next") {
+      this.displayWhatsNext()
+    }
+
     // if (this.state.selected === "Revenue Breakdown") {
     //   toDisplay = (
     //     <div>
@@ -517,10 +522,17 @@ class Dashboard extends Component {
       return (
         <div style={{ paddingTop: 24, paddingBotton: 24 }}>
           <div style={{ paddingBottom: 12 }}>
-            <Segment style={{ width: 1079 }}>
-              <h1 style={{ fontSize: 40, textAlign: "center", fontFamily: 'Titillium Web' }}>
-                Dashboard
-              </h1>
+            <Segment color="black" style={{ width: 1079 }}>
+              <Grid verticalAlign={"middle"}>
+                <Grid.Column width={4}>
+                  <Button basic style={{ cursor: 'pointer', fontSize: 12 }} onClick={() => this.triggerWhatsNext()} compact color="orange"><Icon name="cogs"></Icon>What's next?</Button>
+                </Grid.Column>
+                <Grid.Column width={8}>
+                  <h1 style={{ fontSize: 40, textAlign: "center", fontFamily: 'Titillium Web' }}>Dashboard</h1>
+                </Grid.Column>
+                <Grid.Column width={4}>
+                </Grid.Column>
+              </Grid>
             </Segment>
           </div>
           <Segment style={{ width: 1079, textAlign: "center" }}>
@@ -530,24 +542,24 @@ class Dashboard extends Component {
             <Grid>
               <Grid.Row columns={3}>
                 <Grid.Column>
-                  <div id="Active Licences" onMouseEnter={() => this.onMouseEnterActiveLicences()} onMouseLeave={() => this.onMouseLeaveActiveLiecences()} onClick={e => this.handleSelection(e.currentTarget.id)}>
-                    <Segment inverted={this.state.selected === "Active Licences"} raised={this.state.raised === "Active Licences"}>
+                  <div style={{ cursor: 'pointer' }} id="Active Licences" onMouseEnter={() => this.onMouseEnterActiveLicences()} onMouseLeave={() => this.onMouseLeaveActiveLiecences()} onClick={e => this.handleSelection(e.currentTarget.id)}>
+                    <Segment color={"green"} inverted={this.state.selected === "Active Licences"} raised={this.state.raised === "Active Licences"}>
                       <h1 style={{ fontFamily: 'Titillium Web' }}>Active Licences</h1>
                       <ActiveLicencesBox selected={this.state.selected} rawData={this.state.rawData} />
                     </Segment>
                   </div>
                 </Grid.Column>
                 <Grid.Column>
-                  <div onMouseEnter={() => this.onMouseEnterRecurringRevenue()} onMouseLeave={() => this.onMouseLeaveRecurringRevenue()} id="Recurring Revenue" onClick={e => this.handleSelection(e.currentTarget.id)}>
-                    <Segment inverted={this.state.selected === "Recurring Revenue"} raised={this.state.raised === "Recurring Revenue"}>
+                  <div style={{ cursor: 'pointer' }} onMouseEnter={() => this.onMouseEnterRecurringRevenue()} onMouseLeave={() => this.onMouseLeaveRecurringRevenue()} id="Recurring Revenue" onClick={e => this.handleSelection(e.currentTarget.id)}>
+                    <Segment color={"orange"} inverted={this.state.selected === "Recurring Revenue"} raised={this.state.raised === "Recurring Revenue"}>
                       <h1 style={{ fontFamily: 'Titillium Web' }}>Recurring Revenue</h1>
                       <RecurringRevenueBox selected={this.state.selected} rawData={this.state.rawData} />
                     </Segment>
                   </div>
                 </Grid.Column>
                 <Grid.Column>
-                  <div id="Churn" onMouseEnter={() => this.onMouseEnterChurn()} onMouseLeave={() => this.onMouseLeaveChurn()} onClick={e => this.handleSelection(e.currentTarget.id)}>
-                    <Segment inverted={this.state.selected === "Churn"} raised={this.state.raised === "Churn"}>
+                  <div style={{ cursor: 'pointer' }} id="Churn" onMouseEnter={() => this.onMouseEnterChurn()} onMouseLeave={() => this.onMouseLeaveChurn()} onClick={e => this.handleSelection(e.currentTarget.id)}>
+                    <Segment color={"blue"} inverted={this.state.selected === "Churn"} raised={this.state.raised === "Churn"}>
                       <h1 style={{ fontFamily: 'Titillium Web' }}>Client Churn</h1>
                       <ChurnBox selected={this.state.selected} rawData={this.state.rawData} />
                     </Segment>
@@ -556,10 +568,10 @@ class Dashboard extends Component {
               </Grid.Row>
               <Grid.Row style={{ color: '#E0E0E0' }} columns={3}>
                 <Grid.Column>
-                  <div id="MRR Churn" onMouseEnter={() => this.onMouseEnterMRRChurn()} onMouseLeave={() => this.onMouseLeaveMRRChurn()}>
-                    <Segment inverted={this.state.selected === "MRR Churn"} raised={this.state.raised === "MRR Churn"}>
-                      <h1 style={{ fontFamily: 'Titillium Web' }}>MRR Churn</h1>
-                      <MRRChurnBox selected={this.state.selected} rawData={this.state.rawData} />
+                  <div style={{ color: '#3996D4' }} id="RRR" onMouseEnter={() => this.onMouseEnterRRR()} onMouseLeave={() => this.onMouseLeaveRRR()}>
+                    <Segment color="grey" inverted={this.state.selected === "RRR"} raised={this.state.raised === "RRR"}>
+                      <h1 style={{ fontFamily: 'Titillium Web' }}>Revenue Run Rate</h1>
+                      <RRRBox selected={this.state.selected} rawData={this.state.rawData} />
                     </Segment>
                   </div>
                 </Grid.Column>
@@ -583,10 +595,10 @@ class Dashboard extends Component {
               </Grid.Row>
               <Grid.Row style={{ color: '#E0E0E0' }} columns={3}>
                 <Grid.Column>
-                  <div id="RRR" onMouseEnter={() => this.onMouseEnterRRR()} onMouseLeave={() => this.onMouseLeaveRRR()}>
-                    <Segment inverted={this.state.selected === "RRR"} raised={this.state.raised === "RRR"}>
-                      <h1 style={{ fontFamily: 'Titillium Web' }}>Revenue Run Rate</h1>
-                      <RRRBox selected={this.state.selected} rawData={this.state.rawData} />
+                  <div id="CAC" onMouseEnter={() => this.onMouseEnterCAC()} onMouseLeave={() => this.onMouseLeaveCAC()}>
+                    <Segment inverted={this.state.selected === "CAC"} raised={this.state.raised === "CAC"}>
+                      <h1 style={{ fontFamily: 'Titillium Web' }}>Cost of Acquiring Clients</h1>
+                      <CACBox selected={this.state.selected} rawData={this.state.rawData} />
                     </Segment>
                   </div>
                 </Grid.Column>
@@ -609,22 +621,111 @@ class Dashboard extends Component {
               </Grid.Row>
             </Grid>
           </Segment>
+
+        </div >
+      )
+    }
+  }
+
+  triggerWhatsNext = () => {
+    this.setState((prevState) => ({ selected: "whats next" }))
+  }
+
+  displayWhatsNext = () => {
+    if (this.state.selected === "whats next") {
+      return (
+        <div style={{ paddingTop: 24 }}>
+          <Segment color="purple" style={{ width: 1079, paddingTop: 24, fontFamily: 'Titillium Web' }}>
+            <h1 style={{ fontFamily: 'Titillium Web' }}>
+              What's next
+            </h1>
+
+            <h3 style={{ fontFamily: 'Titillium Web' }}>Recurring Revenue</h3>
+            <ol start={1} style={{ fontFamily: 'Titillium Web' }}>
+              <li>Toggle to add non recurring revenue (by invoice date) to MRR and chart results</li>
+              <li>Add toggle buttons for territories which update data table below (same style as Churn page)</li>
+              <li>Allow any combination of territory data to be displayed on chart at once</li>
+              <li>Add toggle to show total revenue line to chart</li>
+              <li>Add option to show revenue data in USD or AUD</li>
+            </ol>
+
+            <h3 style={{ fontFamily: 'Titillium Web' }}>Main Dashboard</h3>
+            <ol start={6}>
+              <li>Hook data up to each section. Numbers here are currently hardcoded for September</li>
+            </ol>
+
+            <h3 style={{ fontFamily: 'Titillium Web' }}>Revenue Run Rate</h3>
+            <ol start={7}>
+              <li>Build out RRR dahsboard</li>
+            </ol>
+
+            <h3 style={{ fontFamily: 'Titillium Web' }}>Churn</h3>
+            <ol start={8}>
+              <li>Add option to show churn data quarterly and annually</li>
+              <li>Add functionality to show either Client Number Churn (as is currently displayed) or MRR churn dollar value vs Added business values in chart</li>
+            </ol>
+
+            <h3 style={{ fontFamily: 'Titillium Web' }}>Other tasks, not ordered by priority</h3>
+            <ul style={{ fontFamily: 'Titillium Web' }}>
+              <li>Build out remaining dashboards</li>
+              <li>Add mini graphs to each dashboard squares where logical</li>
+              <li>Add ability to change currency being displayed when currency flags are clicked (On Client Churn page only for now, but could be used on any dashboard)</li>
+              <li>Add funcionality to display all data related to a specific client when their name is clicked on any table in which it appears</li>
+              <li>Time travel back to specific months on Active Licence Graph and Recurring Revenue Graph (same functionality as Client Churn graph)</li>
+              <li>Non Recurring Revenue dashboard build out - use this to analyse sales for each product family</li>
+              <li>Set up Cost of Acquiring Clients Dashboard (CAC) - showing total marketing spend vs converted new leads (by month/qtr/annual)</li>
+              <li>EIQ dashboard build out - Show list of current EIQ licences and show their added value relative to client's EHQ licence</li>
+              <li>LTV dashboard - there are a number of different formulas for calculating this. Create dynamic chart that can show results of different calculation methods</li>
+              <li>Create board report option that automatically runs a set of specific chart combinations in an exportable format</li>
+              <li>Toggle to switch main dashboard to dislpay all figures for current quarter rather than just previous month(current view)</li>
+              <li>Track "Expansion": Increase in revenue when we sell more than just a renewal, or renew clients on higher tier EIQ package</li>
+
+            </ul>
+            <h3 style={{ fontFamily: 'Titillium Web' }}>Non data related site improvements</h3>
+            <ul style={{ fontFamily: 'Titillium Web' }}>
+              <li>Add basic invoice search page. Not as a dashboard</li>
+              <li>Need a "Loading" icon for when toggling options take a while. A lot of number crunching in Client Churn causing some lag</li>
+              <li>Consider changing layout or colour scheme. Maybe make things smaller, or use more width of screen</li>
+              <li>Create funcionality for people to comment</li>
+              <li>Create ability to export tables to a google sheet</li>
+              <li>Templates to create printer/PDF friendly nicely formatted reports</li>
+              <li>code should be refactored to make it more dry</li>
+            </ul>
+          </Segment>
+
+          <Segment color="yellow">
+            <h1 style={{ fontFamily: 'Titillium Web' }}>
+              What's New
+            </h1>
+
+            <h3 style={{ fontFamily: 'Titillium Web' }}>19 October 2019</h3>
+
+            <h3 style={{ fontFamily: 'Titillium Web' }}>Churn</h3>
+            <ul style={{ fontFamily: 'Titillium Web' }}>
+              <li>Display MRR value lost and added<Icon name="check green"></Icon></li>
+              <li>Display forex exchange rates that are being used in current months's calculations<Icon name="check green"></Icon></li>
+              <li>Fix formatting of currencies displayed in subheadings and in table data<Icon name="check green"></Icon></li>
+            </ul>
+            <br />
+            <Button basic
+              compact color='orange' style={{ cursor: 'pointer', size: 11 }} onClick={() => this.setState((prevState) => ({ selected: 'Select Chart' }))}><Icon name="arrow left"></Icon>Back to Dashboard</Button>
+          </Segment>
+
         </div >
       )
     }
   }
 
   render() {
-    // { console.log(this.state.forexData["01/01/2019".substring(3)]["AUD/GBP"]) }
     if (!this.props.auth) {
       return null
     }
 
     return (
-      <div style={{ fontFamily: 'Titillium Web' }}>
+      <div style={{ fontFamily: 'Titillium Web', paddingBottom: 100 }}>
         {this.newDashboard()}
         {this.renderDashboard()}
-
+        {this.displayWhatsNext()}
       </div>
     )
   }

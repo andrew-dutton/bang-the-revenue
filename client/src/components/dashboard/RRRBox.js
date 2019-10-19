@@ -5,9 +5,9 @@ class RRRBox extends Component {
     super(props)
 
     this.state = {
-      thisMonth: "Coming soon...",
-      lastMonth: "Coming soon...",
-      diff: "Coming soon...",
+      thisMonth: "Coming next!",
+      lastMonth: "Coming next!",
+      diff: "Coming next!",
       monthName: "",
       months: []
     }
@@ -71,7 +71,7 @@ class RRRBox extends Component {
     if (this.props.selected === "RRRBox") {
       return (
         <div style={{ height: 150 }}>
-          <h1 style={{ position: 'absolute', left: '50%', top: '75%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>Coming soon...</h1>
+          <h1 style={{ position: 'absolute', left: '50%', top: '75%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>Coming next...</h1>
           <h3 style={{ fontFamily: 'Titillium Web' }}>{this.state.monthName}</h3>
           {/* <h4 style={{ fontFamily: 'Titillium Web' }}>{this.state.diff}</h4> */}
         </div>
@@ -79,7 +79,7 @@ class RRRBox extends Component {
     } else {
       return (
         <div style={{ height: 150 }}>
-          <h1 style={{ position: 'absolute', left: '50%', top: '75%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>Coming soon...</h1>
+          <h1 style={{ position: 'absolute', left: '50%', top: '75%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>Coming next...</h1>
           <h3 style={{ fontFamily: 'Titillium Web' }}>{this.state.monthName}</h3>
           {/* <h4 style={{ fontFamily: 'Titillium Web' }}>{this.state.diff}</h4> */}
         </div>

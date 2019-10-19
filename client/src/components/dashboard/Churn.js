@@ -622,7 +622,7 @@ class Churn extends Component {
   displayChurnTable = () => {
     return (
       <div style={{ paddingTop: 15 }}>
-        <h3 style={{ fontFamily: 'Titillium Web' }}>Lost client details</h3>
+        <h3 style={{ fontFamily: 'Titillium Web' }}>Clients who didn't renew in {this.state.currentMonth}</h3>
         <HotTable
           licenseKey="non-commercial-and-evaluation"
           className={"htCenter"}
@@ -663,7 +663,7 @@ class Churn extends Component {
         <Dimmer active={this.state.dimmer}>
           <Loader>Loading</Loader>
         </Dimmer>
-        <h3 style={{ fontFamily: 'Titillium Web' }}>Added client details</h3>
+        <h3 style={{ fontFamily: 'Titillium Web' }}>New clients with contracts beginning in {this.state.currentMonth}</h3>
         <HotTable
           licenseKey="non-commercial-and-evaluation"
           className={"htCenter"}
@@ -778,26 +778,26 @@ class Churn extends Component {
             </Dimmer>
             <Grid>
               <Grid.Column width={4}>
-                <Segment>
+                <Segment color="blue">
                   <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Total Clients Lost in<br />{this.state.currentMonth}</h3>
                   <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.lost[this.state.selectedMonth].length}</h2>
                 </Segment>
               </Grid.Column>
               <Grid.Column width={4}>
-                <Segment>
+                <Segment color="blue">
                   <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Total Clients Added in<br />{this.state.currentMonth}</h3>
                   <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.new[this.state.selectedMonth].length}</h2>
                 </Segment>
               </Grid.Column>
               <Grid.Column width={4}>
-                <Segment>
+                <Segment color="blue">
                   <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Total Clients At End of<br />{this.state.currentPrevMonth}</h3>
                   <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.forChurnForumla[this.state.selectedMonth][2]}</h2>
                 </Segment>
               </Grid.Column>
               <Grid.Column width={4}>
                 <div>
-                  <Segment>
+                  <Segment color="blue">
                     <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Churn Calculation<br />{this.state.currentMonth} </h3>
                     {/* <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.forChurnForumla[this.state.selectedMonth][0]} ÷ ({this.state.forChurnForumla[this.state.selectedMonth][1]} + {this.state.forChurnForumla[this.state.selectedMonth][2]})</h2> */}
                     {/* <h1 style={{ textAlign: "center" }}>({this.state.forChurnForumla[this.state.forChurnForumla.length - 2][1]} + {this.state.forChurnForumla[this.state.forChurnForumla.length - 4][2]})</h1> */}
@@ -859,26 +859,26 @@ class Churn extends Component {
             </Dimmer>
             <Grid>
               <Grid.Column width={4}>
-                <Segment>
+                <Segment color="blue">
                   <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>MRR Lost</h3>
                   <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>A${this.numberWithCommas(this.state.churnTotalInAud)}</h2>
                 </Segment>
               </Grid.Column>
               <Grid.Column width={4}>
-                <Segment>
+                <Segment color="blue">
                   <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>MRR Added</h3>
                   <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>A${this.numberWithCommas(this.state.addedTotalInAud)}</h2>
                 </Segment>
               </Grid.Column>
               <Grid.Column width={4}>
-                <Segment>
+                <Segment color="blue">
                   <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Net MRR Change</h3>
                   <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}><Icon name={arrow}></Icon>A${displayTotal}<Icon name={arrow}></Icon></h2>
                 </Segment>
               </Grid.Column>
               <Grid.Column width={4}>
                 <div>
-                  <Segment>
+                  <Segment color="blue">
                     {todDisplay}
                   </Segment>
                 </div>
@@ -898,7 +898,7 @@ class Churn extends Component {
     if (this.state.showTable) {
       return (
         <div style={{ textAlign: 'center', paddingTop: 14, fontFamily: 'Titillium Web' }}>
-          <Segment style={{ width: 1079, fontFamily: 'Titillium Web' }}>
+          <Segment color="blue" style={{ width: 1079, fontFamily: 'Titillium Web' }}>
             <h1 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.currentMonth}</h1>
           </Segment>
         </div >
@@ -933,7 +933,7 @@ class Churn extends Component {
       return (
         <Grid columns='equal' style={{ width: 1300, paddingTop: 12, fontFamily: 'Titillium Web' }}>
           <Grid.Column>
-            <Segment style={{ width: 70, height: 513 }}>
+            <Segment color="blue" style={{ width: 70, height: 513 }}>
               <br />
               <br />
               <div>
@@ -975,7 +975,7 @@ class Churn extends Component {
             </Segment>
           </Grid.Column>
           <Grid.Column width={15}>
-            <Segment style={{ width: 1000, fontFamily: 'Titillium Web' }}>
+            <Segment color="blue" style={{ width: 1000, fontFamily: 'Titillium Web' }}>
               <div style={{ fontFamily: 'Titillium Web' }}>
                 <Chart
                   width={'984px'}
@@ -1031,13 +1031,13 @@ class Churn extends Component {
     return (
       <div style={{ paddingTop: 24, fontFamily: 'Titillium Web' }}>
         <div style={{ paddingBottom: 12 }}>
-          <Segment style={{ width: 1079 }}>
+          <Segment color="blue" style={{ width: 1079 }}>
             <h1 style={{ fontSize: 40, textAlign: "center", fontFamily: 'Titillium Web' }}>
               Client Churn
               </h1>
           </Segment>
         </div>
-        <Segment style={{ width: 1079 }} >
+        <Segment color="blue" style={{ width: 1079 }} >
           <div>
             <div style={{ fontFamily: 'Titillium Web', textAlign: 'center' }}>
               <Button basic={this.state.churnTer !== "Global"} primary onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Global</Button>
@@ -1058,7 +1058,7 @@ class Churn extends Component {
 
         {this.displayMRRTable()}
 
-        <Segment style={{ width: 1079 }}>
+        <Segment color="blue" style={{ width: 1079 }}>
           {this.displayChurnTable()}
           {this.displayAddedTable()}
         </Segment>

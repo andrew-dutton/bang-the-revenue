@@ -343,7 +343,7 @@ class ActiveLicencesGraph extends Component {
       return (
         <Grid columns='equal' style={{ width: 1109, paddingBottom: 50, color: 'black' }}>
           <Grid.Column>
-            <Segment>
+            <Segment color={"green"}>
               <h3><strong>Total: {this.displayTotal()}</strong></h3>
               <div id="hot-app">
                 <HotTable
@@ -527,7 +527,7 @@ class ActiveLicencesGraph extends Component {
       <div style={{ paddingTop: 24, paddingBotton: 24 }}>
         <div>
           <div style={{ paddingBottom: 24 }}>
-            <Segment style={{ width: 1079 }}>
+            <Segment color={"green"} style={{ width: 1079 }}>
               <h1 style={{ fontSize: 40, textAlign: "center", fontFamily: 'Titillium Web' }}>
                 Active Licences
               </h1>
@@ -535,7 +535,7 @@ class ActiveLicencesGraph extends Component {
           </div>
           <Grid columns='equal' style={{ width: 1300 }}>
             <Grid.Column>
-              <Segment style={{ width: 70, height: 513 }}>
+              <Segment color={"green"} style={{ width: 70, height: 513 }}>
                 <br />
                 <div>
                   Annual
@@ -581,7 +581,7 @@ class ActiveLicencesGraph extends Component {
               </Segment>
             </Grid.Column>
             <Grid.Column width={15}>
-              <Segment style={{ width: 1000 }}>
+              <Segment color={"green"} style={{ width: 1000 }}>
                 <Line
                   data={data}
                   options={{

@@ -33,12 +33,12 @@ class Header extends Component {
     return (
       <nav>
         <div>
-          <Menu inverted style={{ width: 1079 }}>
+          <Menu compact inverted style={{ width: 1079 }}>
             <Menu.Item to="/dashboard" name="home" active={this.state.activeItem === 'home'} onClick={this.handleItemClick}>
               Bang The Table
             </Menu.Item>
-            <Menu.Item to="/dashboard" name="dashboard" active={this.state.activeItem === 'dashboard'} onClick={this.handleItemClick}>
-              <a href="/dashboard" style={{ color: 'white' }}>Dashboard</a>
+            <Menu.Item style={{ backgroundColor: 'teal' }} to="/dashboard" name="dashboard" active={this.state.activeItem === 'dashboard'} onClick={this.handleItemClick}>
+              <a href="/dashboard" style={{ backgroundColor: 'teal', color: 'white' }}>Dashboard</a>
             </Menu.Item>
             <Menu.Item name="log" position="right">
               <ul>
