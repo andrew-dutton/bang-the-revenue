@@ -18,7 +18,7 @@ import NonRecurringBox from './dashboard/NonRecurringBox'
 import RRRBox from './dashboard/RRRBox'
 import LTVBox from './dashboard/LTVBox'
 
-import { Segment, Grid, Dimmer, Loader, Icon, Button } from 'semantic-ui-react'
+import { Segment, Grid, Dimmer, Loader, Icon, Button, Image } from 'semantic-ui-react'
 
 class Dashboard extends Component {
   state = {
@@ -520,24 +520,25 @@ class Dashboard extends Component {
   newDashboard = () => {
     if (this.state.selected === "Select Chart") {
       return (
-        <div style={{ paddingTop: 24, paddingBotton: 24 }}>
+        <div style={{ paddingTop: 24, paddingBotton: 100 }}>
           <div style={{ paddingBottom: 12 }}>
             <Segment color="black" style={{ width: 1079 }}>
               <Grid verticalAlign={"middle"}>
                 <Grid.Column width={4}>
-                  <Button basic style={{ cursor: 'pointer', fontSize: 12 }} onClick={() => this.triggerWhatsNext()} compact color="orange"><Icon name="cogs"></Icon>What's next?</Button>
+                  <Button basic style={{ cursor: 'pointer', fontSize: 12 }} onClick={() => this.triggerWhatsNext()} compact color="orange"><Icon name="cogs"></Icon>Work In Progress</Button>
                 </Grid.Column>
                 <Grid.Column width={8}>
                   <h1 style={{ fontSize: 40, textAlign: "center", fontFamily: 'Titillium Web' }}>Dashboard</h1>
                 </Grid.Column>
                 <Grid.Column width={4}>
+                  <p style={{ textAlign: "right", size: 10 }}><Icon name="star outline"></Icon>=  Recently Updated</p>
                 </Grid.Column>
               </Grid>
             </Segment>
           </div>
           <Segment style={{ width: 1079, textAlign: "center", backgroundColor: '#F7F7F7' }}>
             <Dimmer active={this.state.rawData.length < 1}>
-              <Loader>Connecting to database....</Loader>
+              <Loader>Syncing data....</Loader>
             </Dimmer>
             <Grid>
               <Grid.Row columns={3}>
@@ -558,8 +559,10 @@ class Dashboard extends Component {
                   </div>
                 </Grid.Column>
                 <Grid.Column>
+                  <Image fluid label={{ as: 'a', color: 'blue', corner: 'right', icon: 'star' }} />
                   <div style={{ cursor: 'pointer' }} id="Churn" onMouseEnter={() => this.onMouseEnterChurn()} onMouseLeave={() => this.onMouseLeaveChurn()} onClick={e => this.handleSelection(e.currentTarget.id)}>
                     <Segment color={"blue"} inverted={this.state.selected === "Churn"} raised={this.state.raised === "Churn"}>
+
                       <h1 style={{ fontFamily: 'Titillium Web' }}>Client Churn</h1>
                       <ChurnBox selected={this.state.selected} rawData={this.state.rawData} />
                     </Segment>
@@ -568,8 +571,8 @@ class Dashboard extends Component {
               </Grid.Row>
               <Grid.Row style={{ color: '#E0E0E0' }} columns={3}>
                 <Grid.Column>
-                  <div style={{ color: '#3996D4' }} id="RRR" onMouseEnter={() => this.onMouseEnterRRR()} onMouseLeave={() => this.onMouseLeaveRRR()}>
-                    <Segment color="grey" inverted={this.state.selected === "RRR"} raised={this.state.raised === "RRR"}>
+                  <div style={{ color: '#A0A0A0' }} id="RRR" onMouseEnter={() => this.onMouseEnterRRR()} onMouseLeave={() => this.onMouseLeaveRRR()}>
+                    <Segment color="yellow" inverted={this.state.selected === "RRR"} raised={this.state.raised === "RRR"}>
                       <h1 style={{ fontFamily: 'Titillium Web' }}>Revenue Run Rate</h1>
                       <RRRBox selected={this.state.selected} rawData={this.state.rawData} />
                     </Segment>
@@ -582,7 +585,6 @@ class Dashboard extends Component {
                       <NonRecurringBox selected={this.state.selected} rawData={this.state.rawData} />
                     </Segment>
                   </div>
-
                 </Grid.Column>
                 <Grid.Column>
                   <div id="EIQ" onMouseEnter={() => this.onMouseEnterEIQ()} onMouseLeave={() => this.onMouseLeaveEIQ()}>
@@ -621,7 +623,6 @@ class Dashboard extends Component {
               </Grid.Row>
             </Grid>
           </Segment>
-
         </div >
       )
     }
@@ -725,7 +726,7 @@ class Dashboard extends Component {
     }
 
     return (
-      <div style={{ fontFamily: 'Titillium Web', paddingBottom: 100 }}>
+      <div style={{ fontFamily: 'Titillium Web', paddingBottom: 200 }}>
         {this.newDashboard()}
         {this.renderDashboard()}
         {this.displayWhatsNext()}

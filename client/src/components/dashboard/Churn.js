@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Dimmer, Loader, Icon, Flag, Grid, Checkbox, Segment, Button } from 'semantic-ui-react'
+import { Dimmer, Loader, Icon, Flag, Grid, Checkbox, Segment, Button, Image } from 'semantic-ui-react'
 import Chart from 'react-google-charts'
 import { HotTable } from '@handsontable/react';
 
@@ -621,80 +621,84 @@ class Churn extends Component {
 
   displayChurnTable = () => {
     return (
-      <div style={{ paddingTop: 15 }}>
-        <h3 style={{ fontFamily: 'Titillium Web' }}>Clients who didn't renew in {this.state.currentMonth}</h3>
-        <HotTable
-          licenseKey="non-commercial-and-evaluation"
-          className={"htCenter"}
-          style={{ fontSize: 10, color: 'black' }}
-          cells={function (row, col) {
-            var cellPrp = {};
-            if (col === 0) {
-              cellPrp.className = 'htLeft'
-            } else if (col === 1) {
-              cellPrp.className = 'htRight'
-            } else if (col === 9) {
-              cellPrp.className = "htRight"
-            } else {
-              cellPrp.className = "htCenter"
-            }
-            return cellPrp
-          }
-          }
-          htDimmed
-          manualColumnResize
-          wordWrap={false}
-          // height={400}
-          editor={false}
-          filters={true}
-          columns={[{}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }, {}, {}, {}, {}, {}, {}, {}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }]}
-          columnSorting={true}
-          colWidths={[350, 70, 55, 55, 75, 75, 78, 75, 75, 70]}
-          rowHeaders={true}
-          colHeaders={this.state.table.colHeaders}
-          data={this.state.lostValues[this.state.selectedMonth]} />
+      <div>
+        <Segment color="blue" style={{ width: 1079 }}>
+          <div style={{ paddingTop: 15 }}>
+            <h3 style={{ fontFamily: 'Titillium Web' }}>Clients who didn't renew in {this.state.currentMonth}</h3>
+            <HotTable
+              licenseKey="non-commercial-and-evaluation"
+              className={"htCenter"}
+              style={{ fontSize: 10, color: 'black' }}
+              cells={function (row, col) {
+                var cellPrp = {};
+                if (col === 0) {
+                  cellPrp.className = 'htLeft'
+                } else if (col === 1) {
+                  cellPrp.className = 'htRight'
+                } else if (col === 9) {
+                  cellPrp.className = "htRight"
+                } else {
+                  cellPrp.className = "htCenter"
+                }
+                return cellPrp
+              }
+              }
+              htDimmed
+              manualColumnResize
+              wordWrap={false}
+              // height={400}
+              editor={false}
+              filters={true}
+              columns={[{}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }, {}, {}, {}, {}, {}, {}, {}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }]}
+              columnSorting={true}
+              colWidths={[350, 70, 55, 55, 75, 75, 78, 75, 75, 70]}
+              rowHeaders={true}
+              colHeaders={this.state.table.colHeaders}
+              data={this.state.lostValues[this.state.selectedMonth]} />
+          </div>
+        </Segment>
       </div>
+
     )
   }
 
   displayAddedTable = () => {
     return (
       <div style={{ paddingTop: 15 }}>
-        <Dimmer active={this.state.dimmer}>
-          <Loader>Loading</Loader>
-        </Dimmer>
-        <h3 style={{ fontFamily: 'Titillium Web' }}>New clients with contracts beginning in {this.state.currentMonth}</h3>
-        <HotTable
-          licenseKey="non-commercial-and-evaluation"
-          className={"htCenter"}
-          style={{ fontSize: 10, color: 'black' }}
-          cells={function (row, col) {
-            var cellPrp = {};
-            if (col === 0) {
-              cellPrp.className = 'htLeft'
-            } else if (col === 1) {
-              cellPrp.className = 'htRight'
-            } else if (col === 9) {
-              cellPrp.className = "htRight"
-            } else {
-              cellPrp.className = "htCenter"
+        <Segment color="blue" style={{ width: 1079 }}>
+          <h3 style={{ fontFamily: 'Titillium Web' }}>New clients with contracts beginning in {this.state.currentMonth}</h3>
+          <HotTable
+            licenseKey="non-commercial-and-evaluation"
+            className={"htCenter"}
+            style={{ fontSize: 10, color: 'black' }}
+            cells={function (row, col) {
+              var cellPrp = {};
+              if (col === 0) {
+                cellPrp.className = 'htLeft'
+              } else if (col === 1) {
+                cellPrp.className = 'htRight'
+              } else if (col === 9) {
+                cellPrp.className = "htRight"
+              } else {
+                cellPrp.className = "htCenter"
+              }
+              return cellPrp
             }
-            return cellPrp
-          }
-          }
-          htDimmed
-          manualColumnResize
-          wordWrap={false}
-          // height={400}
-          editor={false}
-          filters={true}
-          columns={[{}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }, {}, {}, {}, {}, {}, {}, {}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }]}
-          columnSorting={true}
-          colWidths={[350, 70, 55, 55, 75, 75, 78, 75, 75, 70]}
-          rowHeaders={true}
-          colHeaders={this.state.table.colHeaders}
-          data={this.state.newValues[this.state.selectedMonth]} />
-      </div>
+            }
+            htDimmed
+            manualColumnResize
+            wordWrap={false}
+            // height={400}
+            editor={false}
+            filters={true}
+            columns={[{}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }, {}, {}, {}, {}, {}, {}, {}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }]}
+            columnSorting={true}
+            colWidths={[350, 70, 55, 55, 75, 75, 78, 75, 75, 70]}
+            rowHeaders={true}
+            colHeaders={this.state.table.colHeaders}
+            data={this.state.newValues[this.state.selectedMonth]} />
+        </Segment>
+      </div >
     )
   }
 
@@ -859,24 +863,34 @@ class Churn extends Component {
             </Dimmer>
             <Grid>
               <Grid.Column width={4}>
-                <Segment color="blue">
-                  <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>MRR Lost</h3>
-                  <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>A${this.numberWithCommas(this.state.churnTotalInAud)}</h2>
-                </Segment>
+                <Image fluid label={{ as: 'a', color: 'blue', corner: 'right', icon: 'star' }} />
+                <div>
+                  <Segment color="blue">
+                    <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>MRR Lost</h3>
+                    <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>A${this.numberWithCommas(this.state.churnTotalInAud)}</h2>
+                  </Segment>
+                </div>
               </Grid.Column>
               <Grid.Column width={4}>
-                <Segment color="blue">
-                  <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>MRR Added</h3>
-                  <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>A${this.numberWithCommas(this.state.addedTotalInAud)}</h2>
-                </Segment>
+                <Image fluid label={{ as: 'a', color: 'blue', corner: 'right', icon: 'star' }} />
+                <div>
+                  <Segment color="blue">
+                    <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>MRR Added</h3>
+                    <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>A${this.numberWithCommas(this.state.addedTotalInAud)}</h2>
+                  </Segment>
+                </div>
               </Grid.Column>
               <Grid.Column width={4}>
-                <Segment color="blue">
-                  <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Net MRR Change</h3>
-                  <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}><Icon name={arrow}></Icon>A${displayTotal}<Icon name={arrow}></Icon></h2>
-                </Segment>
+                <Image fluid label={{ as: 'a', color: 'blue', corner: 'right', icon: 'star' }} />
+                <div>
+                  <Segment color="blue">
+                    <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Net MRR Change</h3>
+                    <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}><Icon name={arrow}></Icon>A${displayTotal}<Icon name={arrow}></Icon></h2>
+                  </Segment>
+                </div>
               </Grid.Column>
               <Grid.Column width={4}>
+                <Image fluid label={{ as: 'a', color: 'blue', corner: 'right', icon: 'star' }} />
                 <div>
                   <Segment color="blue">
                     {todDisplay}
@@ -1058,13 +1072,13 @@ class Churn extends Component {
 
         {this.displayMRRTable()}
 
-        <Segment color="blue" style={{ width: 1079 }}>
-          {this.displayChurnTable()}
-          {this.displayAddedTable()}
-        </Segment>
+
+        {this.displayChurnTable()}
+        {this.displayAddedTable()}
+
 
         <div style={{ paddingBottom: 100 }}></div>
-      </div>
+      </div >
     )
   }
 

@@ -1,11 +1,17 @@
 import React from 'react'
+import { Image, Grid, Button } from 'semantic-ui-react'
+import btt from './dashboard/btt.png'
 
 const Landing = () => {
   return (
-    <div style={{ textAlign: 'center' }}>
-      <h1>Bang The Table Financial Analysis</h1>
-      <h3>Under Construction</h3>
-      <h5>Jump to <a href="/dashboard">Dashboard</a></h5>
+    <div style={{ textAlign: 'center', paddingBottom: 400 }}>
+
+      <div style={{ textAlign: 'center' }}>
+        <a href="/dashboard">
+          <Image inline verticalAlign size={'huge'} src={btt} />
+        </a>
+        <h1 style={{ fontFamily: 'Titillium Web', fontSize: 75 }}>Financial Analysis</h1>
+      </div>
     </div>
   )
 }
