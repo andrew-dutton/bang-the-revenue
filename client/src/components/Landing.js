@@ -7,10 +7,9 @@ const Landing = () => {
   return (
     <div style={{ textAlign: 'center', paddingBottom: 400, paddingTop: 20 }}>
       <Segment style={{ width: 1079, height: 800 }}>
-        <h1 style={{ fontFamily: 'Titillium Web', fontSize: 75, color: "#5E6468" }}>Financial Analysis</h1>
-        <div style={{ textAlign: 'center', paddingTop: 60 }}>
+        <div style={{ textAlign: 'center', paddingTop: 20 }}>
           <a href="/dashboard">
-            <Image inline verticalAlign size={'large'} src={btt} />
+            <Image inline verticalAlign size={'huge'} src={btt} />
           </a>
         </div>
       </Segment>
