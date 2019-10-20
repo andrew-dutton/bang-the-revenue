@@ -6,7 +6,7 @@ import { Segment } from 'semantic-ui-react'
 const Landing = () => {
   return (
     <div style={{ textAlign: 'center', paddingBottom: 400, paddingTop: 20 }}>
-      <Segment style={{ width: 1079, height: 800 }}>
+      <Segment style={{ width: 1079, height: 900 }}>
         <div style={{ textAlign: 'center', paddingTop: 20 }}>
           <a href="/dashboard">
             <Image inline verticalAlign size={'huge'} src={btt} />

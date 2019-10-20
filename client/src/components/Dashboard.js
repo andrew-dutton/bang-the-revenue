@@ -697,7 +697,7 @@ class Dashboard extends Component {
             </ul>
           </Segment>
 
-          <Segment color="yellow">
+          <Segment color="yellow" style={{ width: 1079, paddingTop: 24, fontFamily: 'Titillium Web' }}>
             <h1 style={{ fontFamily: 'Titillium Web' }}>
               What's New
             </h1>
