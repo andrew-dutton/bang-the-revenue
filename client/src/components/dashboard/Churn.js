@@ -129,8 +129,10 @@ class Churn extends Component {
         }
       }
 
+
       this.state.months.push(new Date(year, month, 0))
-      this.state.monthsText.push(new Date(year, month, 0).toLocaleDateString().split(',')[0])
+
+      this.state.monthsText.push(new Date(year, month, 0).toLocaleDateString("en-GB").split(',')[0])
     }
   }
 
@@ -739,6 +741,7 @@ class Churn extends Component {
 
   getAddedTotalInAud = () => {
     let total = 0
+
     if (typeof this.state.monthsText[this.state.selectedMonth + 1] !== "undefined") {
       let forexMonth = this.state.monthsText[this.state.selectedMonth + 1].substring(3)
       let forex = this.state.forexData
@@ -823,6 +826,7 @@ class Churn extends Component {
 
   displayMRRTable = () => {
     let todDisplay = <p>Cannot fetch Forex data...</p>
+
     if (typeof this.state.monthsText[this.state.selectedMonth + 1] !== "undefined") {
       let forexMonth = this.state.monthsText[this.state.selectedMonth + 1].substring(3)
       let forex = this.state.forexData
