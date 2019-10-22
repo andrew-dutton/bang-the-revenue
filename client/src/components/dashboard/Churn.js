@@ -95,8 +95,6 @@ class Churn extends Component {
     this.updateChurnTer()
   }
 
-
-
   checkTableToggle = () => {
     if (this.state.annualOn === false && this.state.projectOn === false && this.state.staticOn === false && this.state.budgetOn === false) {
       this.setState((prevState) => ({ showTable: false }), this.setStartingMonth)
@@ -128,7 +126,6 @@ class Churn extends Component {
           year -= 1
         }
       }
-
 
       this.state.months.push(new Date(year, month, 0))
 
@@ -490,7 +487,7 @@ class Churn extends Component {
 
   calculateChurn = () => {
     let churn = this.state.forChurnForumla
-    let churnArray = [['TERRITORY', this.state.churnTer]]
+    let churnArray = [['Date', this.state.churnTer]]
 
     for (let k = 0; k < churn.length - 1; k++) {
       churnArray.push([new Date(2015, k + 8, 0), ((churn[k][0] / (churn[k][1] + churn[k][2])) * 100)])
@@ -577,8 +574,6 @@ class Churn extends Component {
     this.setState((prevState) => ({ newValues: holderArray }), this.getAddedTotalInAud)
 
   }
-
-
 
   getLostValue = () => {
     let lostValue = []
@@ -1081,7 +1076,7 @@ class Churn extends Component {
         {this.displayChurnTable()}
         {this.displayAddedTable()}
 
-
+        {console.log(this.state.selectedMonth)}
         <div style={{ paddingBottom: 100 }}></div>
       </div >
     )

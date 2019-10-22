@@ -551,6 +551,7 @@ class Dashboard extends Component {
                   </div>
                 </Grid.Column>
                 <Grid.Column>
+                  <Image fluid label={{ as: 'a', color: 'orange', corner: 'right', icon: 'star' }} />
                   <div style={{ cursor: 'pointer' }} onMouseEnter={() => this.onMouseEnterRecurringRevenue()} onMouseLeave={() => this.onMouseLeaveRecurringRevenue()} id="Recurring Revenue" onClick={e => this.handleSelection(e.currentTarget.id)}>
                     <Segment color={"orange"} inverted={this.state.selected === "Recurring Revenue"} raised={this.state.raised === "Recurring Revenue"}>
                       <h1 style={{ fontFamily: 'Titillium Web' }}>Recurring Revenue</h1>
@@ -643,7 +644,6 @@ class Dashboard extends Component {
 
             <h3 style={{ fontFamily: 'Titillium Web' }}>Recurring Revenue</h3>
             <ol start={1} style={{ fontFamily: 'Titillium Web' }}>
-              <li>Toggle to add non recurring revenue (by invoice date) to MRR and chart results</li>
               <li>Add toggle buttons for territories which update data table below (same style as Churn page)</li>
               <li>Allow any combination of territory data to be displayed on chart at once</li>
               <li>Include toggle to show total revenue line on chart</li>
@@ -651,17 +651,17 @@ class Dashboard extends Component {
             </ol>
 
             <h3 style={{ fontFamily: 'Titillium Web' }}>Main Dashboard</h3>
-            <ol start={6}>
+            <ol start={5}>
               <li>Hook data up to each section. Numbers here are currently hardcoded for September</li>
             </ol>
 
             <h3 style={{ fontFamily: 'Titillium Web' }}>Revenue Run Rate</h3>
-            <ol start={7}>
+            <ol start={6}>
               <li>Build out RRR dashboard</li>
             </ol>
 
             <h3 style={{ fontFamily: 'Titillium Web' }}>Churn</h3>
-            <ol start={8}>
+            <ol start={7}>
               <li>Add option to show churn data quarterly and annually</li>
               <li>Add switch to show Client Number Churn (as is currently displayed) or Churn by dollar value with option to select currency</li>
             </ol>
@@ -701,6 +701,16 @@ class Dashboard extends Component {
             <h1 style={{ fontFamily: 'Titillium Web' }}>
               What's New
             </h1>
+
+            <h3 style={{ fontFamily: 'Titillium Web' }}>22 October 2019</h3>
+
+            <h3 style={{ fontFamily: 'Titillium Web' }}>Recurring Revenue</h3>
+            <ul style={{ fontFamily: 'Titillium Web' }}>
+              <li>Show total of current month in AUD<Icon name="check green"></Icon></li>
+              <li>Display forex exchange rates for current months's calculations<Icon name="check green"></Icon></li>
+              <li>Add toggle for adding non recurring revenue for current month<Icon name="check green"></Icon></li>
+              <li>When include non recurring toggle is selected, table appears below with details of non recurring products invoiced in current month <Icon name="check green"></Icon></li>
+            </ul>
 
             <h3 style={{ fontFamily: 'Titillium Web' }}>19 October 2019</h3>
 

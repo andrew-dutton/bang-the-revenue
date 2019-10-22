@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Line } from 'react-chartjs-2'
-import { Segment, Grid, Form, Radio } from 'semantic-ui-react'
+import { Segment, Grid, Form, Radio, Button, Checkbox, Flag, Icon, Image, GridColumn } from 'semantic-ui-react'
 import { HotTable } from '@handsontable/react';
 
 class RecurringRevenueChart extends Component {
@@ -8,6 +8,22 @@ class RecurringRevenueChart extends Component {
     super(props)
 
     this.state = {
+      toggleActive: false,
+      staticAUD: "873,822",
+      selectedMonth: 0,
+      months: [],
+      monthsText: [],
+      currentMonth: "",
+      ausDataRR: [],
+      canDataRR: [],
+      usaDataRR: [],
+      ukDataRR: [],
+      nzDataRR: [],
+      ausDataNON: [],
+      canDataNON: [],
+      usaDataNON: [],
+      ukDataNON: [],
+      nzDataNON: [],
       ausData: [],
       canData: [],
       usaData: [],
@@ -15,39 +31,61 @@ class RecurringRevenueChart extends Component {
       nzData: [],
       months: [],
       tableData: [],
+      tableDataNON: [],
       table: {
-        colHeaders: ["Client", "MRR Value", "EHQ/EIQ", "Location", "Invoice", "Date", "Licence", "Start", "End", "Value"]
+        colHeaders: ["Client", "MRR Value", "EHQ/EIQ", "Location", "Invoice", "Date", "Product", "Start", "End", "Value"],
+        colHeadersNON: ["Client", "EHQ/EIQ", "Location", "Invoice", "Date", "Product", "Value"],
       }
     }
 
     this.revenueTotals = this.revenueTotals.bind(this)
-    this.revenueTotalsAUD = this.revenueTotalsAUD.bind(this)
     this.revenueTotalsNON = this.revenueTotalsNON.bind(this)
+    this.handleToggle = this.handleToggle.bind(this)
+    this.numberWithCommas = this.numberWithCommas.bind(this)
   }
-
-  handleChange = (e, { value }) => this.setState({ value })
 
   componentDidMount() {
     this.setState(prevState => ({ value: "Local" }))
     this.revenueTotals()
+    this.setStartingMonth()
   }
 
-  getNumberOfMonthsSinceJuly2015 = () => {
-    let today = new Date()
-    let thisMonth = today.getMonth()
-    let thisYear = today.getFullYear()
-    let monthsOfYears = (thisYear - (2015 + 1)) * 12
+  setStartingMonth = () => {
+    let monthsOfYear = [
+      "January", "February", "March", "April", "May", "June", "July",
+      "August", "September", "October", "November", "December"
+    ]
 
-    return monthsOfYears + thisMonth + 7
+    let startingMonthNumber = this.state.months.length - 3
 
+
+    let month = monthsOfYear[this.state.months[this.state.months.length - 2].getMonth()]
+    let year = this.state.months[this.state.months.length - 2].getFullYear()
+
+    let prevMonth = monthsOfYear[this.state.months[this.state.months.length - 3].getMonth()]
+    let prevYear = this.state.months[this.state.months.length - 3].getFullYear()
+
+    let theDate = month + " " + year
+    let thePrevDate = prevMonth + " " + prevYear
+
+    this.setState((prevState) => ({ currentMonth: theDate, currentPrevMonth: thePrevDate, selectedMonth: startingMonthNumber }))
   }
+
+
+  handleToggle = () => {
+    if (this.state.toggleActive === false) {
+      this.revenueTotalsNON()
+      this.setState((prevState) => ({ toggleActive: !prevState.toggleActive, staticAUD: "914,362" }))
+    } else {
+      this.revenueTotals()
+      this.setState((prevState) => ({ toggleActive: !prevState.toggleActive, tableDataNON: [], staticAUD: "873,822" }))
+    }
+  }
+
+  handleChange = (e, { value }) => this.setState({ value })
 
   createMonthsArray = () => {
     const numberOfMonths = this.getNumberOfMonthsSinceJuly2015()
-
-    this.setState(prevState => ({
-      months: []
-    }))
 
     let year = 2015
     let yearStep = 12
@@ -71,7 +109,19 @@ class RecurringRevenueChart extends Component {
       }
 
       this.state.months.push(new Date(year, month, 0))
+
+      this.state.monthsText.push(new Date(year, month, 0).toLocaleDateString("en-GB").split(',')[0])
     }
+  }
+
+  getNumberOfMonthsSinceJuly2015 = () => {
+    let today = new Date()
+    let thisMonth = today.getMonth()
+    let thisYear = today.getFullYear()
+    let monthsOfYears = (thisYear - (2015 + 1)) * 12
+
+    return monthsOfYears + thisMonth + 7
+
   }
 
   revenueTotals() {
@@ -454,23 +504,28 @@ class RecurringRevenueChart extends Component {
     })
 
     this.setState(prevState => ({
-      ausData: [...ausTotal]
+      ausData: [...ausTotal],
+      ausDataRR: [...ausTotal]
     }))
 
     this.setState(prevState => ({
-      canData: [...canTotal]
+      canData: [...canTotal],
+      canDataRR: [...canTotal]
     }))
 
     this.setState(prevState => ({
-      usaData: [...usaTotal]
+      usaData: [...usaTotal],
+      usaDataRR: [...usaTotal]
     }))
 
     this.setState(prevState => ({
-      ukData: [...ukTotal]
+      ukData: [...ukTotal],
+      ukDataRR: [...ukTotal]
     }))
 
     this.setState(prevState => ({
-      nzData: [...nzTotal]
+      nzData: [...nzTotal],
+      nzDataRR: [...nzTotal]
     }))
 
     this.setState((prevState) => ({
@@ -483,11 +538,13 @@ class RecurringRevenueChart extends Component {
   revenueTotalsNON() {
     this.createMonthsArray()
 
-    const ausTotal = []
-    const canTotal = []
-    const usaTotal = []
-    const ukTotal = []
-    const nzTotal = []
+    const ausTotalNON = []
+    const canTotalNON = []
+    const usaTotalNON = []
+    const ukTotalNON = []
+    const nzTotalNON = []
+
+    const detailLogged = []
 
     this.state.months.forEach((month) => {
       let ausCounter = []
@@ -495,6 +552,8 @@ class RecurringRevenueChart extends Component {
       let usaCounter = []
       let ukCounter = []
       let nzCounter = []
+
+      let allDet = []
 
       this.props.rawData.forEach((invoice) => {
         let invDateString = invoice["date"]
@@ -504,181 +563,352 @@ class RecurringRevenueChart extends Component {
 
         if (invoice["start"] === "" && (invDate >= monthStart && invDate <= month) && invoice["territory"] === "AUS") {
           ausCounter.push(invoice["total"])
+          allDet.push([
+            invoice["client"],
+            invoice["ehqveiq"],
+            invoice["territory"],
+            invoice["invoice"],
+            invoice["date"],
+            invoice["product"],
+            invoice["total"]
+          ])
         }
 
         if (invoice["start"] === "" && (invDate >= monthStart && invDate <= month) && invoice["territory"] === "CAN") {
           canCounter.push(invoice["total"])
+          allDet.push([
+            invoice["client"],
+            invoice["ehqveiq"],
+            invoice["territory"],
+            invoice["invoice"],
+            invoice["date"],
+            invoice["product"],
+            invoice["total"]
+          ])
         }
 
         if (invoice["start"] === "" && (invDate >= monthStart && invDate <= month) && invoice["territory"] === "USA") {
           usaCounter.push(invoice["total"])
+          allDet.push([
+            invoice["client"],
+            invoice["ehqveiq"],
+            invoice["territory"],
+            invoice["invoice"],
+            invoice["date"],
+            invoice["product"],
+            invoice["total"]
+          ])
         }
 
         if (invoice["start"] === "" && (invDate >= monthStart && invDate <= month) && invoice["territory"] === "UK") {
           ukCounter.push(invoice["total"])
+          allDet.push([
+            invoice["client"],
+            invoice["ehqveiq"],
+            invoice["territory"],
+            invoice["invoice"],
+            invoice["date"],
+            invoice["product"],
+            invoice["total"]
+          ])
         }
 
         if (invoice["start"] === "" && (invDate >= monthStart && invDate <= month) && invoice["territory"] === "NZ") {
           nzCounter.push(invoice["total"])
+          allDet.push([
+            invoice["client"],
+            invoice["ehqveiq"],
+            invoice["territory"],
+            invoice["invoice"],
+            invoice["date"],
+            invoice["product"],
+            invoice["total"]
+          ])
         }
       })
 
-      ausTotal.push(Math.round(ausCounter.reduce((a, b) => a + b, 0)))
-      canTotal.push(Math.round(canCounter.reduce((a, b) => a + b, 0)))
-      usaTotal.push(Math.round(usaCounter.reduce((a, b) => a + b, 0)))
-      ukTotal.push(Math.round(ukCounter.reduce((a, b) => a + b, 0)))
-      nzTotal.push(Math.round(nzCounter.reduce((a, b) => a + b, 0)))
+      ausTotalNON.push(Math.round(ausCounter.reduce((a, b) => a + b, 0)))
+      canTotalNON.push(Math.round(canCounter.reduce((a, b) => a + b, 0)))
+      usaTotalNON.push(Math.round(usaCounter.reduce((a, b) => a + b, 0)))
+      ukTotalNON.push(Math.round(ukCounter.reduce((a, b) => a + b, 0)))
+      nzTotalNON.push(Math.round(nzCounter.reduce((a, b) => a + b, 0)))
+
+      detailLogged.push(allDet)
     })
 
+    let ausDataToMerge = this.state.ausData
+    let canDataToMerge = this.state.canData
+    let usaDataToMerge = this.state.usaData
+    let ukDataToMerge = this.state.ukData
+    let nzDataToMerge = this.state.nzData
+
+    let newAusArray = []
+    let newCanArray = []
+    let newUsaArray = []
+    let newUkArray = []
+    let newNzArray = []
+
+    for (let i = 0; i < ausDataToMerge.length; i++) {
+      newAusArray.push(ausDataToMerge[i] + ausTotalNON[i])
+    }
+    for (let i = 0; i < canDataToMerge.length; i++) {
+      newCanArray.push(canDataToMerge[i] + canTotalNON[i])
+    }
+
+    for (let i = 0; i < usaDataToMerge.length; i++) {
+      newUsaArray.push(usaDataToMerge[i] + usaTotalNON[i])
+    }
+
+    for (let i = 0; i < ukDataToMerge.length; i++) {
+      newUkArray.push(ukDataToMerge[i] + ukTotalNON[i])
+    }
+
+    for (let i = 0; i < nzDataToMerge.length; i++) {
+      newNzArray.push(nzDataToMerge[i] + nzTotalNON[i])
+    }
+
     this.setState(prevState => ({
-      ausData: [...ausTotal]
+      ausData: [...newAusArray]
     }))
 
     this.setState(prevState => ({
-      canData: [...canTotal]
-    }))
-
-
-    this.setState(prevState => ({
-      usaData: [...usaTotal]
+      canData: [...newCanArray]
     }))
 
     this.setState(prevState => ({
-      ukData: [...ukTotal]
+      usaData: [...newUsaArray]
     }))
 
     this.setState(prevState => ({
-      nzData: [...nzTotal]
+      ukData: [...newUkArray]
+    }))
+
+    this.setState(prevState => ({
+      nzData: [...newNzArray]
+    }))
+
+    this.setState((prevState) => ({
+      tableDataNON: [...detailLogged]
     }))
 
     return null
   }
 
-  revenueTotalsAUD() {
-    this.createMonthsArray()
-
-    const ausTotal = []
-    const canTotal = []
-    const usaTotal = []
-    const ukTotal = []
-    const nzTotal = []
-
-    this.state.months.forEach((month) => {
-      let ausCounter = []
-      let canCounter = []
-      let usaCounter = []
-      let ukCounter = []
-      let nzCounter = []
-
-      this.props.rawData.forEach((invoice) => {
-        let startString = invoice["start"]
-        let startDateParts = startString.split("/")
-        let start = new Date(startDateParts[2], startDateParts[1] - 1, +startDateParts[0])
-        let endString = invoice["end"]
-        let endDateParts = endString.split("/")
-        let end = new Date(endDateParts[2], endDateParts[1] - 1, +endDateParts[0])
-
-        if (start <= month && end >= month && (invoice["territory"] === "AUS")) {
-          ausCounter.push(invoice["valuepermonth"])
-        }
-
-        if (start <= month && end >= month && (invoice["territory"] === "CAN")) {
-          canCounter.push(invoice["valuepermonth"])
-        }
-
-        if (start <= month && end >= month && (invoice["territory"] === "USA")) {
-          usaCounter.push(invoice["valuepermonth"])
-        }
-
-        if (start <= month && end >= month && (invoice["territory"] === "UK")) {
-          ukCounter.push(invoice["valuepermonth"])
-        }
-
-        if (start <= month && end >= month && (invoice["territory"] === "NZ")) {
-          nzCounter.push(invoice["valuepermonth"])
-        }
-      })
-
-      ausTotal.push(Math.round(ausCounter.reduce((a, b) => a + b, 0)))
-      canTotal.push(Math.round(canCounter.reduce((a, b) => a + b, 0) / .9))
-      usaTotal.push(Math.round(usaCounter.reduce((a, b) => a + b, 0) / .6))
-      ukTotal.push(Math.round(ukCounter.reduce((a, b) => a + b, 0) / .45))
-      nzTotal.push(Math.round(nzCounter.reduce((a, b) => a + b, 0) / 1.05))
-    })
-
-    this.setState(prevState => ({
-      ausData: [...ausTotal]
-    }))
-
-    this.setState(prevState => ({
-      canData: [...canTotal]
-    }))
-
-    this.setState(prevState => ({
-      usaData: [...usaTotal]
-    }))
-
-    this.setState(prevState => ({
-      ukData: [...ukTotal]
-    }))
-
-    this.setState(prevState => ({
-      nzData: [...nzTotal]
-    }))
-
-    return null
-  }
 
   displayDetails = () => {
     return (
       <div>
-        <Grid columns='equal' style={{ width: 1109, paddingBottom: 50, color: 'black' }}>
+        <Grid columns='equal' style={{ width: 1109, paddingTop: 12, paddingBottom: 12, color: 'black' }}>
           <Grid.Column>
-            <Segment color="orange">
-              <div id="hot-app">
-                <HotTable
-                  licenseKey="non-commercial-and-evaluation"
-                  className={"htCenter"}
-                  columns={[{}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }, {}, {}, {}, {}, {}, {}, {}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }]}
-                  style={{ fontSize: 10, color: 'black' }}
-                  cells={function (row, col) {
-                    var cellPrp = {};
-                    if (col === 0) {
-                      cellPrp.className = 'htLeft'
-                    } else if (col === 1) {
-                      cellPrp.className = 'htRight'
-                    } else if (col === 9) {
-                      cellPrp.className = "htRight"
-                    } else {
-                      cellPrp.className = "htCenter"
+            <Image fluid label={{ as: 'a', color: 'orange', corner: 'right', icon: 'star' }} />
+            <div>
+              <Segment color="orange">
+                <h3 style={{ fontFamily: 'Titillium Web' }}>Details of Recurring Revenue for {this.state.currentMonth}</h3>
+                <div id="hot-app">
+                  <HotTable
+                    licenseKey="non-commercial-and-evaluation"
+                    className={"htCenter"}
+                    columns={[{}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }, {}, {}, {}, {}, {}, {}, {}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }]}
+                    style={{ fontSize: 10, color: 'black' }}
+                    cells={function (row, col) {
+                      var cellPrp = {};
+                      if (col === 0) {
+                        cellPrp.className = 'htLeft'
+                      } else if (col === 1) {
+                        cellPrp.className = 'htRight'
+                      } else if (col === 9) {
+                        cellPrp.className = "htRight"
+                      } else {
+                        cellPrp.className = "htCenter"
+                      }
+                      return cellPrp
                     }
-                    return cellPrp
-                  }
-                  }
-                  htDimmed
-                  manualColumnResize
-                  wordWrap={false}
-                  height={400}
-                  editor={false}
-                  filters={true}
-                  dropdownMenu={false}
-                  columnSorting={true}
-                  colWidths={[434, 57, 45, 42, 53, 75, 75, 75, 75, 60]}
-                  rowHeaders={true}
-                  colHeaders={this.state.table.colHeaders}
-                  data={this.state.tableData[this.state.tableData.length - 2]} />
-              </div>
-            </Segment>
+                    }
+                    htDimmed
+                    manualColumnResize
+                    wordWrap={false}
+                    height={400}
+                    editor={false}
+                    filters={true}
+                    dropdownMenu={false}
+                    columnSorting={true}
+                    colWidths={[430, 57, 45, 45, 53, 75, 75, 75, 75, 60]}
+                    rowHeaders={true}
+                    colHeaders={this.state.table.colHeaders}
+                    data={this.state.tableData[this.state.tableData.length - 2]} />
+                </div>
+              </Segment>
+            </div>
           </Grid.Column>
         </Grid>
       </div>
     )
   }
 
-  render() {
-    const radioStyle = {
-      textAlign: 'left'
+  displayDetailsNON = () => {
+    if (this.state.tableDataNON.length > 0) {
+      return (
+        <div>
+          <Grid columns='equal' style={{ width: 1109, paddingBottom: 50, color: 'black' }}>
+            <Grid.Column>
+              <Image fluid label={{ as: 'a', color: 'orange', corner: 'right', icon: 'star' }} />
+              <div>
+                <Segment color="orange">
+                  <h3 style={{ fontFamily: 'Titillium Web' }}>Non recurring products invoiced in {this.state.currentMonth}</h3>
+                  <div id="hot-app">
+                    <HotTable
+                      licenseKey="non-commercial-and-evaluation"
+                      className={"htCenter"}
+                      columns={[{}, {}, {}, {}, {}, {}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }]}
+                      style={{ fontSize: 10, color: 'black' }}
+                      cells={function (row, col) {
+                        var cellPrp = {};
+                        if (col === 0) {
+                          cellPrp.className = 'htLeft'
+                        } else if (col === 6) {
+                          cellPrp.className = 'htRight'
+                        } else {
+                          cellPrp.className = "htCenter"
+                        }
+                        return cellPrp
+                      }
+                      }
+                      htDimmed
+                      manualColumnResize
+                      wordWrap={false}
+                      height={400}
+                      editor={false}
+                      filters={true}
+                      dropdownMenu={false}
+                      columnSorting={true}
+                      colWidths={[615, 45, 45, 60, 75, 75, 75, 60]}
+                      rowHeaders={true}
+                      colHeaders={this.state.table.colHeadersNON}
+                      data={this.state.tableDataNON[this.state.tableDataNON.length - 2]} />
+                  </div>
+                </Segment>
+              </div>
+            </Grid.Column>
+          </Grid>
+        </div>
+      )
     }
+  }
+
+  displayMonth = () => {
+    return (
+      <div style={{ textAlign: 'center', paddingTop: 14, paddingBottom: 12, fontFamily: 'Titillium Web' }}>
+        <Segment color="orange" style={{ width: 1079, fontFamily: 'Titillium Web' }}>
+          <h1 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.currentMonth}</h1>
+        </Segment>
+      </div >
+    )
+  }
+
+  numberWithCommas = (x) => {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+  }
+
+  displayTable = () => {
+    if (this.state.ausData.length > 0) {
+      return (
+        <div style={{ paddingTop: 12, paddingBottom: 12, fontFamily: 'Titillium Web' }}>
+          <Segment style={{ width: 1079, backgroundColor: '#F7F7F7' }}>
+            <Grid columns={5}>
+              <Grid.Column>
+                <Image fluid label={{ as: 'a', color: 'orange', corner: 'right', icon: 'star' }} />
+                <div>
+                  <Segment color="orange">
+                    <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Australia<br />{this.state.currentMonth}</h3>
+                    <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>A ${this.numberWithCommas(this.state.ausData[this.state.selectedMonth + 1])}</h2>
+                  </Segment>
+                </div>
+              </Grid.Column>
+              <Grid.Column>
+                <Image fluid label={{ as: 'a', color: 'orange', corner: 'right', icon: 'star' }} />
+                <div>
+                  <Segment color="orange">
+                    <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Canada<br />{this.state.currentMonth}</h3>
+                    <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>C ${this.numberWithCommas(this.state.canData[this.state.selectedMonth + 1])}</h2>
+                  </Segment>
+                </div>
+              </Grid.Column>
+              <Grid.Column>
+                <Image fluid label={{ as: 'a', color: 'orange', corner: 'right', icon: 'star' }} />
+                <div>
+                  <Segment color="orange">
+                    <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>United States<br />{this.state.currentMonth}</h3>
+                    <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>U ${this.numberWithCommas(this.state.usaData[this.state.selectedMonth + 1])}</h2>
+                  </Segment>
+                </div>
+              </Grid.Column>
+              <Grid.Column>
+                <Image fluid label={{ as: 'a', color: 'orange', corner: 'right', icon: 'star' }} />
+                <div>
+                  <Segment color="orange">
+                    <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>U.K.<br />{this.state.currentMonth} </h3>
+                    <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>£{this.numberWithCommas(this.state.ukData[this.state.selectedMonth + 1])}</h2>
+                  </Segment>
+                </div>
+              </Grid.Column>
+              <Grid.Column>
+                <Image fluid label={{ as: 'a', color: 'orange', corner: 'right', icon: 'star' }} />
+                <div>
+                  <Segment color="orange">
+                    <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>New Zealand<br />{this.state.currentMonth} </h3>
+                    <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>N ${this.numberWithCommas(this.state.nzData[this.state.selectedMonth + 1])}</h2>
+                  </Segment>
+                </div>
+              </Grid.Column>
+            </Grid>
+          </Segment>
+        </div >
+      )
+    }
+  }
+
+  displayConvertAusTable = () => {
+    return (
+      <div style={{ width: 1079, paddingTop: 12, paddingBottom: 12, fontFamily: 'Titillium Web' }}>
+        <Segment>
+          <Grid>
+            <Grid.Column width={12}>
+              <Image fluid label={{ as: 'a', color: 'orange', corner: 'right', icon: 'star' }} />
+              <div>
+                <Segment color="orange">
+                  <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Global Recurring Revenue in AUD in {this.state.currentMonth}</h3>
+                  <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>A ${this.state.staticAUD}</h2>
+                </Segment>
+              </div>
+            </Grid.Column>
+            <Grid.Column width={4}>
+              <Segment color="orange">
+                <div style={{ fontSize: 10, textAlign: "center", fontFamily: 'Titillium Web' }}>
+                  <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>AUD Exchange Rates</h3>
+                  <Grid>
+                    <Grid.Column width={8}>
+                      <p><Flag name="ca" />0.9019</p>
+                      <p><Flag name="us" />0.6808</p>
+                    </Grid.Column>
+                    <Grid.Column width={8}>
+                      <p><Flag name="uk" />0.5510</p>
+                      <p><Flag name="nz" />1.0737</p>
+                    </Grid.Column>
+                  </Grid>
+                </div>
+              </Segment>
+            </Grid.Column>
+          </Grid>
+        </Segment>
+      </div>
+    )
+  }
+
+
+  render() {
+
+
+    const { toggleActive } = this.state
 
     const data = {
       labels: [
@@ -798,68 +1028,69 @@ class RecurringRevenueChart extends Component {
     }
 
     return (
-      <div style={{ paddingTop: 24, paddingBotton: 24 }}>
+
+      <div style={{ paddingTop: 24, paddingBotton: 24, width: 1079 }}>
         <div >
-          <Segment color={"orange"} style={{ width: 1079 }}>
+          <Segment color={"orange"}>
             <h1 style={{ fontSize: 40, textAlign: "center", fontFamily: 'Titillium Web' }}>
               Recurring Revenue
-              </h1>
+            </h1>
           </Segment>
         </div>
-        <Grid columns='equal' style={{ width: 1300, paddingTop: 24 }}>
-          <Grid.Column>
-            <Segment color="orange" style={{ width: 1079 }} >
-              <Form style={radioStyle}>
-                <Form.Field >
-                  <Radio
-                    style={{ "paddingRight": "20px" }}
-                    label='Recurring Revenue in Local Currency'
-                    name='radioGroup'
-                    value='Local'
-                    checked={this.state.value === 'Local'}
-                    onChange={this.revenueTotals}
-                    onClick={this.handleChange}
-                  />
-                </Form.Field>
-                {/* <Form.Field>
-                  <Radio
-                    label='Recurring Revenue in AUD'
-                    name='radioGroup'
-                    value='AUD'
-                    checked={this.state.value === 'AUD'}
-                    onChange={this.revenueTotalsAUD}
-                    onClick={this.handleChange}
-                  />
-                </Form.Field> */}
-                <Form.Field>
-                  <Radio
-                    label='Non Recurring Revenue in Local Currency'
-                    name='radioGroup'
-                    value='NON'
-                    checked={this.state.value === 'NON'}
-                    onChange={this.revenueTotalsNON}
-                    onClick={this.handleChange}
-                  />
-                </Form.Field>
-              </Form>
-            </Segment>
-            <Segment color="orange" style={{ width: 1079 }} >
-              <Line
-                data={data}
-                options={{
-                  scales: {
-                    yAxes: [{
-                      ticks: {
-                        min: 0
-                      }
-                    }]
+        <Segment stlye={{ widht: 1079 }}>
+          <Grid width={16}>
+            <GridColumn width={8}>
+              <Image fluid label={{ as: 'a', color: 'orange', corner: 'right', icon: 'star' }} />
+              <div>
+                <Segment color="orange">
+                  Dispaly Matt's <strong>"Total Recurring Accrued Monthly Revenue"</strong> Version
+                  <br />
+                  <br />
+                  <Checkbox toggle active={toggleActive} onClick={this.handleToggle} />
+                </Segment>
+              </div>
+            </GridColumn>
+            <GridColumn width={8}>
+              <Segment color="orange">
+                Convert all figures to AUD (not yet active)
+              <br />
+                <br />
+                <Checkbox disabled toggle active={toggleActive} />
+              </Segment>
+            </GridColumn>
+          </Grid>
+        </Segment>
+        <Segment color="orange" style={{ width: 1079 }} >
+          <Line
+            data={data}
+            options={{
+              scales: {
+                yAxes: [{
+                  ticks: {
+                    suggestedMax: 600000
                   }
-                }} />
-            </Segment>
-          </Grid.Column>
-        </Grid>
+                }]
+              },
+              // 'onClick': (event, item) => {
+              //   this.setState((prevState) => ({ selectedMonth: item[0]["_index"] - 1 }))
+              // }
+            }}
+          />
+        </Segment>
+
+
+        <div>
+          {this.displayMonth()}
+        </div>
+        <div>
+          {this.displayConvertAusTable()}
+          {this.displayTable()}
+        </div>
         <div>
           {this.displayDetails()}
+        </div>
+        <div>
+          {this.displayDetailsNON()}
         </div>
       </div >
     )
