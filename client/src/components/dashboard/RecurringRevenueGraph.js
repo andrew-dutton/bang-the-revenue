@@ -49,7 +49,6 @@ class RecurringRevenueChart extends Component {
     this.setState(prevState => ({ value: "Local" }))
     this.revenueTotals()
     this.setStartingMonth()
-    this.calculateTotalAUD()
   }
 
   setStartingMonth = () => {
@@ -70,7 +69,7 @@ class RecurringRevenueChart extends Component {
     let theDate = month + " " + year
     let thePrevDate = prevMonth + " " + prevYear
 
-    this.setState((prevState) => ({ currentMonth: theDate, currentPrevMonth: thePrevDate, selectedMonth: startingMonthNumber }))
+    this.setState((prevState) => ({ currentMonth: theDate, currentPrevMonth: thePrevDate, selectedMonth: startingMonthNumber }), this.calculateTotalAUD)
   }
 
   setChangedMonth = () => {
@@ -97,26 +96,42 @@ class RecurringRevenueChart extends Component {
 
   calculateTotalAUD = () => {
 
+    let total = 2
+    let totalsArray = []
 
-    // ************************************************
-    // ***  put calcs in here for AUD               ***
-    // ***  all necesary numbers are now available  ***
-    // ************************************************
+    if ((typeof this.state.monthsText[this.state.selectedMonth] === "undefined")) {
+      return null
+    } else {
+      let forexMonth = this.state.monthsText[this.state.selectedMonth].substring(3)
+      let forex = this.state.forexData
+
+      let audcad = forex[forexMonth]["AUD/CAD"]
+      let audusd = forex[forexMonth]["AUD/USD"]
+      let audgbp = forex[forexMonth]["AUD/GBP"]
+      let audnzd = forex[forexMonth]["AUD/NZD"]
+
+      totalsArray.push(this.state.ausData[this.state.selectedMonth])
+      totalsArray.push(this.state.canData[this.state.selectedMonth] * audcad)
+      totalsArray.push(this.state.usaData[this.state.selectedMonth] * audusd)
+      totalsArray.push(this.state.ukData[this.state.selectedMonth] * audgbp)
+      totalsArray.push(this.state.nzData[this.state.selectedMonth] * audnzd)
+
+      total = totalsArray.reduce((a, b) => a + b, 0).toFixed(0)
 
 
 
+    }
 
-
-    this.setState((prevState) => ({ totalAUD: 1 }))
+    this.setState((prevState) => ({ totalAUD: total }))
   }
 
   handleToggle = () => {
     if (this.state.toggleActive === false) {
       this.revenueTotalsNON()
-      this.setState((prevState) => ({ toggleActive: !prevState.toggleActive, staticAUD: "914,362" }))
+      this.setState((prevState) => ({ toggleActive: !prevState.toggleActive }), this.calculateTotalAUD)
     } else {
       this.revenueTotals()
-      this.setState((prevState) => ({ toggleActive: !prevState.toggleActive, tableDataNON: [], staticAUD: "873,822" }))
+      this.setState((prevState) => ({ toggleActive: !prevState.toggleActive, tableDataNON: [] }), this.calculateTotalAUD)
     }
   }
 

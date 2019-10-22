@@ -1041,7 +1041,7 @@ class Churn extends Component {
   }
 
   render() {
-    { console.log('render') }
+
     return (
       <div style={{ paddingTop: 24, fontFamily: 'Titillium Web' }}>
         <div style={{ paddingBottom: 12 }}>
@@ -1076,7 +1076,7 @@ class Churn extends Component {
         {this.displayChurnTable()}
         {this.displayAddedTable()}
 
-        {console.log(this.state.selectedMonth)}
+
         <div style={{ paddingBottom: 100 }}></div>
       </div >
     )

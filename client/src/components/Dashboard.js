@@ -702,9 +702,16 @@ class Dashboard extends Component {
               What's New
             </h1>
 
+            <h3 style={{ fontFamily: 'Titillium Web' }}>23 October 2019</h3>
+
+            <h4 style={{ fontFamily: 'Titillium Web' }}>Recurring Revenue</h4>
+            <ul style={{ fontFamily: 'Titillium Web' }}>
+              <li>Click on any item in graph to show that month's details<Icon name="check green"></Icon></li>
+            </ul>
+
             <h3 style={{ fontFamily: 'Titillium Web' }}>22 October 2019</h3>
 
-            <h3 style={{ fontFamily: 'Titillium Web' }}>Recurring Revenue</h3>
+            <h4 style={{ fontFamily: 'Titillium Web' }}>Recurring Revenue</h4>
             <ul style={{ fontFamily: 'Titillium Web' }}>
               <li>Show total of current month in AUD<Icon name="check green"></Icon></li>
               <li>Display forex exchange rates for current months's calculations<Icon name="check green"></Icon></li>
@@ -714,7 +721,7 @@ class Dashboard extends Component {
 
             <h3 style={{ fontFamily: 'Titillium Web' }}>19 October 2019</h3>
 
-            <h3 style={{ fontFamily: 'Titillium Web' }}>Churn</h3>
+            <h4 style={{ fontFamily: 'Titillium Web' }}>Churn</h4>
             <ul style={{ fontFamily: 'Titillium Web' }}>
               <li>Display MRR value lost and added<Icon name="check green"></Icon></li>
               <li>Display forex exchange rates that are being used in current months's calculations<Icon name="check green"></Icon></li>
