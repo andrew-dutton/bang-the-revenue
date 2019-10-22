@@ -9,7 +9,8 @@ class RecurringRevenueChart extends Component {
 
     this.state = {
       toggleActive: false,
-      staticAUD: "873,822",
+      forexData: this.props.forexData,
+      totalAUD: 873822,
       selectedMonth: 0,
       months: [],
       monthsText: [],
@@ -48,6 +49,7 @@ class RecurringRevenueChart extends Component {
     this.setState(prevState => ({ value: "Local" }))
     this.revenueTotals()
     this.setStartingMonth()
+    this.calculateTotalAUD()
   }
 
   setStartingMonth = () => {
@@ -56,7 +58,7 @@ class RecurringRevenueChart extends Component {
       "August", "September", "October", "November", "December"
     ]
 
-    let startingMonthNumber = this.state.months.length - 3
+    let startingMonthNumber = this.state.months.length - 2
 
 
     let month = monthsOfYear[this.state.months[this.state.months.length - 2].getMonth()]
@@ -71,6 +73,42 @@ class RecurringRevenueChart extends Component {
     this.setState((prevState) => ({ currentMonth: theDate, currentPrevMonth: thePrevDate, selectedMonth: startingMonthNumber }))
   }
 
+  setChangedMonth = () => {
+    let monthsOfYear = [
+      "January", "February", "March", "April", "May", "June", "July",
+      "August", "September", "October", "November", "December"
+    ]
+
+    let month = this.state.selectedMonth - 1
+    let year = this.state.months[this.state.selectedMonth].getFullYear()
+
+    let monthDisp
+
+    if (this.state.selectedMonth > -1) {
+      monthDisp = monthsOfYear[this.state.months[month + 1].getMonth()]
+    }
+
+
+    let theDate = monthDisp + " " + year
+
+
+    this.setState((prevState) => ({ currentMonth: theDate }), this.calculateTotalAUD)
+  }
+
+  calculateTotalAUD = () => {
+
+
+    // ************************************************
+    // ***  put calcs in here for AUD               ***
+    // ***  all necesary numbers are now available  ***
+    // ************************************************
+
+
+
+
+
+    this.setState((prevState) => ({ totalAUD: 1 }))
+  }
 
   handleToggle = () => {
     if (this.state.toggleActive === false) {
@@ -735,7 +773,7 @@ class RecurringRevenueChart extends Component {
                     colWidths={[430, 57, 45, 45, 53, 75, 75, 75, 75, 60]}
                     rowHeaders={true}
                     colHeaders={this.state.table.colHeaders}
-                    data={this.state.tableData[this.state.tableData.length - 2]} />
+                    data={this.state.tableData[this.state.selectedMonth]} />
                 </div>
               </Segment>
             </div>
@@ -784,7 +822,7 @@ class RecurringRevenueChart extends Component {
                       colWidths={[615, 45, 45, 60, 75, 75, 75, 60]}
                       rowHeaders={true}
                       colHeaders={this.state.table.colHeadersNON}
-                      data={this.state.tableDataNON[this.state.tableDataNON.length - 2]} />
+                      data={this.state.tableDataNON[this.state.selectedMonth]} />
                   </div>
                 </Segment>
               </div>
@@ -820,7 +858,7 @@ class RecurringRevenueChart extends Component {
                 <div>
                   <Segment color="orange">
                     <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Australia<br />{this.state.currentMonth}</h3>
-                    <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>A ${this.numberWithCommas(this.state.ausData[this.state.selectedMonth + 1])}</h2>
+                    <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>A ${this.numberWithCommas(this.state.ausData[this.state.selectedMonth])}</h2>
                   </Segment>
                 </div>
               </Grid.Column>
@@ -829,7 +867,7 @@ class RecurringRevenueChart extends Component {
                 <div>
                   <Segment color="orange">
                     <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Canada<br />{this.state.currentMonth}</h3>
-                    <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>C ${this.numberWithCommas(this.state.canData[this.state.selectedMonth + 1])}</h2>
+                    <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>C ${this.numberWithCommas(this.state.canData[this.state.selectedMonth])}</h2>
                   </Segment>
                 </div>
               </Grid.Column>
@@ -838,7 +876,7 @@ class RecurringRevenueChart extends Component {
                 <div>
                   <Segment color="orange">
                     <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>United States<br />{this.state.currentMonth}</h3>
-                    <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>U ${this.numberWithCommas(this.state.usaData[this.state.selectedMonth + 1])}</h2>
+                    <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>U ${this.numberWithCommas(this.state.usaData[this.state.selectedMonth])}</h2>
                   </Segment>
                 </div>
               </Grid.Column>
@@ -847,7 +885,7 @@ class RecurringRevenueChart extends Component {
                 <div>
                   <Segment color="orange">
                     <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>U.K.<br />{this.state.currentMonth} </h3>
-                    <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>£{this.numberWithCommas(this.state.ukData[this.state.selectedMonth + 1])}</h2>
+                    <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>£{this.numberWithCommas(this.state.ukData[this.state.selectedMonth])}</h2>
                   </Segment>
                 </div>
               </Grid.Column>
@@ -856,7 +894,7 @@ class RecurringRevenueChart extends Component {
                 <div>
                   <Segment color="orange">
                     <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>New Zealand<br />{this.state.currentMonth} </h3>
-                    <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>N ${this.numberWithCommas(this.state.nzData[this.state.selectedMonth + 1])}</h2>
+                    <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>N ${this.numberWithCommas(this.state.nzData[this.state.selectedMonth])}</h2>
                   </Segment>
                 </div>
               </Grid.Column>
@@ -868,6 +906,36 @@ class RecurringRevenueChart extends Component {
   }
 
   displayConvertAusTable = () => {
+    let toDisplay = <p>Cannot fetch Forex data...</p>
+
+    if ((typeof this.state.monthsText[this.state.selectedMonth] === "undefined")) {
+      return null
+    } else {
+      let forexMonth = this.state.monthsText[this.state.selectedMonth].substring(3)
+      let forex = this.state.forexData
+
+      if (typeof this.state.monthsText[this.state.selectedMonth] !== "undefined") {
+        let forexMonth = this.state.monthsText[this.state.selectedMonth].substring(3)
+        let forex = this.state.forexData
+
+        toDisplay = (
+          <div style={{ fontSize: 10, textAlign: "center", fontFamily: 'Titillium Web' }}>
+            <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>AUD Exchange Rates</h3>
+            <Grid>
+              <Grid.Column width={8}>
+                <p><Flag name="ca" />{(1 / (forex[forexMonth]["AUD/CAD"])).toFixed(4)}</p>
+                <p><Flag name="us" />{(1 / (forex[forexMonth]["AUD/USD"])).toFixed(4)}</p>
+              </Grid.Column>
+              <Grid.Column width={8}>
+                <p><Flag name="uk" />{(1 / (forex[forexMonth]["AUD/GBP"])).toFixed(4)}</p>
+                <p><Flag name="nz" />{(1 / (forex[forexMonth]["AUD/NZD"])).toFixed(4)}</p>
+              </Grid.Column>
+            </Grid>
+          </div>
+        )
+      }
+    }
+
     return (
       <div style={{ width: 1079, paddingTop: 12, paddingBottom: 12, fontFamily: 'Titillium Web' }}>
         <Segment>
@@ -877,25 +945,13 @@ class RecurringRevenueChart extends Component {
               <div>
                 <Segment color="orange">
                   <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Global Recurring Revenue in AUD in {this.state.currentMonth}</h3>
-                  <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>A ${this.state.staticAUD}</h2>
+                  <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>A ${this.numberWithCommas(this.state.totalAUD)}</h2>
                 </Segment>
               </div>
             </Grid.Column>
             <Grid.Column width={4}>
               <Segment color="orange">
-                <div style={{ fontSize: 10, textAlign: "center", fontFamily: 'Titillium Web' }}>
-                  <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>AUD Exchange Rates</h3>
-                  <Grid>
-                    <Grid.Column width={8}>
-                      <p><Flag name="ca" />0.9019</p>
-                      <p><Flag name="us" />0.6808</p>
-                    </Grid.Column>
-                    <Grid.Column width={8}>
-                      <p><Flag name="uk" />0.5510</p>
-                      <p><Flag name="nz" />1.0737</p>
-                    </Grid.Column>
-                  </Grid>
-                </div>
+                {toDisplay}
               </Segment>
             </Grid.Column>
           </Grid>
@@ -906,7 +962,6 @@ class RecurringRevenueChart extends Component {
 
 
   render() {
-
 
     const { toggleActive } = this.state
 
@@ -1071,14 +1126,14 @@ class RecurringRevenueChart extends Component {
                   }
                 }]
               },
-              // 'onClick': (event, item) => {
-              //   this.setState((prevState) => ({ selectedMonth: item[0]["_index"] - 1 }))
-              // }
+              'onClick': (event, item) => {
+                if (item.length > 0) {
+                  this.setState((prevState) => ({ selectedMonth: item[0]["_index"] }), this.setChangedMonth)
+                }
+              }
             }}
           />
         </Segment>
-
-
         <div>
           {this.displayMonth()}
         </div>

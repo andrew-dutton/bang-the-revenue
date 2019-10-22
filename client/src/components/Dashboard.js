@@ -460,7 +460,7 @@ class Dashboard extends Component {
     }
 
     if (this.state.selected === "Recurring Revenue") {
-      toDisplay = <RecurringRevenueGraph rawData={this.state.rawData} charts={this.state} />
+      toDisplay = <RecurringRevenueGraph forexData={this.state.forexData} rawData={this.state.rawData} charts={this.state} />
     }
 
     if (this.state.selected === "Churn") {
