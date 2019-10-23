@@ -45,6 +45,8 @@ class ActiveLicencesGraph extends Component {
     }
 
     this.totalClients = this.totalClients.bind(this)
+    this.setStartingMonth = this.setStartingMonth.bind(this)
+    this.setChangedMonth = this.setChangedMonth.bind(this)
     this.handleClickAnnual = this.handleClickAnnual.bind(this)
     this.handleClickProject = this.handleClickProject.bind(this)
     this.handleClickStatic = this.handleClickStatic.bind(this)
@@ -52,14 +54,55 @@ class ActiveLicencesGraph extends Component {
   }
 
   componentDidMount() {
+    this.createMonthsArray()
     this.totalClients()
+    this.setStartingMonth()
   }
 
-  autoScroll = () => {
-    window.scrollTo({
-      top: 1000,
-      behavior: 'smooth',
-    })
+  setStartingMonth = () => {
+    let monthsOfYear = [
+      "January", "February", "March", "April", "May", "June", "July",
+      "August", "September", "October", "November", "December"
+    ]
+
+    let startingMonthNumber = this.state.months.length - 2
+
+
+    let month = monthsOfYear[this.state.months[this.state.months.length - 2].getMonth()]
+    let year = this.state.months[this.state.months.length - 2].getFullYear()
+
+    let prevMonth = monthsOfYear[this.state.months[this.state.months.length - 3].getMonth()]
+    let prevYear = this.state.months[this.state.months.length - 3].getFullYear()
+
+    let theDate = month + " " + year
+    let thePrevDate = prevMonth + " " + prevYear
+
+    this.setState((prevState) => ({ currentMonth: theDate, currentPrevMonth: thePrevDate, selectedMonth: startingMonthNumber }), this.calculateTotalAUD)
+  }
+
+  setChangedMonth = () => {
+    let monthsOfYear = [
+      "January", "February", "March", "April", "May", "June", "July",
+      "August", "September", "October", "November", "December"
+    ]
+
+    let month = this.state.selectedMonth - 1
+
+    if (this.state.months.length > 0) {
+      let year = this.state.months[this.state.selectedMonth].getFullYear()
+
+      let monthDisp
+
+      if (this.state.selectedMonth > -1) {
+        monthDisp = monthsOfYear[this.state.months[month + 1].getMonth()]
+      }
+
+
+      let theDate = monthDisp + " " + year
+
+
+      this.setState((prevState) => ({ currentMonth: theDate }))
+    }
   }
 
 
@@ -110,7 +153,6 @@ class ActiveLicencesGraph extends Component {
   createMonthsArray = () => {
     const numberOfMonths = this.getNumberOfMonthsSinceJuly2015()
 
-
     let year = 2015
     let yearStep = 12
 
@@ -134,13 +176,9 @@ class ActiveLicencesGraph extends Component {
 
       this.state.months.push(new Date(year, month, 0))
     }
-
   }
 
   totalClients() {
-    this.setState(prevState => ({ months: [] }))
-    this.createMonthsArray()
-
     const ausTotal = []
     const canTotal = []
     const usaTotal = []
@@ -331,7 +369,13 @@ class ActiveLicencesGraph extends Component {
 
   displayTotal = () => {
     if (this.state.loadButtonActive === false) {
-      return (this.state.currentAus + this.state.currentCan + this.state.currentUsa + this.state.currentUk + this.state.currentNz)
+      return (
+        this.state.ausData[this.state.selectedMonth] +
+        this.state.canData[this.state.selectedMonth] +
+        this.state.usaData[this.state.selectedMonth] +
+        this.state.ukData[this.state.selectedMonth] +
+        this.state.nzData[this.state.selectedMonth]
+      )
     } else {
       return ("...")
     }
@@ -353,11 +397,11 @@ class ActiveLicencesGraph extends Component {
                   cells={function (row, col) {
                     var cellPrp = {};
                     if (col === 0) {
-                      if (col % 2 === 0) {
-                        cellPrp.className = 'htLeft'
-                      } else if (col === 1) {
-                        cellPrp.className = 'htCenter'
-                      }
+                      cellPrp.className = 'htLeft'
+                    } else if (col === 1) {
+                      cellPrp.className = 'htCenter'
+                    } else if (col === 7) {
+                      cellPrp.className = 'htRight'
                     } else {
                       cellPrp.className = 'htCenter htMiddle'
                     }
@@ -369,18 +413,28 @@ class ActiveLicencesGraph extends Component {
                   wordWrap={false}
                   height={400}
                   editor={false}
-                  columns={[{}, {}, {}, {}, {}, {}, {}, { type: "numeric", numericFormat: { pattern: "0,00" } }]}
+                  columns={[{}, {}, {}, {}, {}, {}, {}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }]}
                   columnSorting={true}
                   colWidths={[522, 50, 59, 75, 75, 75, 75, 60]}
                   rowHeaders={true}
                   colHeaders={this.state.table.colHeaders}
-                  data={this.state.ausDetail[this.state.ausDetail.length - 2]} />
+                  data={this.state.ausDetail[this.state.selectedMonth]} />
               </div>
             </Segment>
           </Grid.Column>
         </Grid>
       )
     }
+  }
+
+  displayMonth = () => {
+    return (
+      <div style={{ textAlign: 'center', paddingTop: 14, paddingBottom: 12, fontFamily: 'Titillium Web' }}>
+        <Segment color="green" style={{ width: 1079, fontFamily: 'Titillium Web' }}>
+          <h1 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.currentMonth}</h1>
+        </Segment>
+      </div >
+    )
   }
 
   render() {
@@ -573,11 +627,6 @@ class ActiveLicencesGraph extends Component {
                   <br />
                   <br />
                 </div>
-                {/* <div>
-  <Button primary disabled={!this.state.loadButtonActive} onClick={this.totalClients}>
-    Load Chart
-  </Button>
-</div> */}
               </Segment>
             </Grid.Column>
             <Grid.Column width={15}>
@@ -587,15 +636,22 @@ class ActiveLicencesGraph extends Component {
                   options={{
                     scales: {
                       yAxes: [{
-                        ticks: {
-                          min: 0
-                        }
+
                       }]
+                    },
+                    'onClick': (event, item) => {
+                      if (item.length > 0) {
+                        this.setState((prevState) => ({ selectedMonth: item[0]["_index"] }), this.setChangedMonth)
+                      }
                     }
-                  }} />
+                  }}
+                />
               </Segment>
             </Grid.Column>
           </Grid>
+        </div>
+        <div>
+          {this.displayMonth()}
         </div>
         <div>
           {this.displayDetails()}

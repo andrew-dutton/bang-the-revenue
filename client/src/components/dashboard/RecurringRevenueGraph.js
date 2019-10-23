@@ -46,6 +46,7 @@ class RecurringRevenueChart extends Component {
   }
 
   componentDidMount() {
+    this.createMonthsArray()
     this.setState(prevState => ({ value: "Local" }))
     this.revenueTotals()
     this.setStartingMonth()
@@ -178,8 +179,6 @@ class RecurringRevenueChart extends Component {
   }
 
   revenueTotals() {
-    this.createMonthsArray()
-
     const ausTotal = []
     const canTotal = []
     const usaTotal = []
@@ -589,8 +588,6 @@ class RecurringRevenueChart extends Component {
   }
 
   revenueTotalsNON() {
-    this.createMonthsArray()
-
     const ausTotalNON = []
     const canTotalNON = []
     const usaTotalNON = []
@@ -975,7 +972,7 @@ class RecurringRevenueChart extends Component {
 
 
   render() {
-
+    console.log(this.state.months.length)
     const { toggleActive } = this.state
 
     const data = {

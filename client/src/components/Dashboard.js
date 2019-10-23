@@ -20,6 +20,7 @@ import { Segment, Grid, Dimmer, Loader, Icon, Button, Image } from 'semantic-ui-
 class Dashboard extends Component {
   state = {
     rawData: [],
+    users: [],
     whatsNext: false,
     forexData:
     {
@@ -431,8 +432,6 @@ class Dashboard extends Component {
     this.db.collection("invoice-lines").find({}).asArray().then(rawData => { this.setState({ rawData }) })
   }
 
-
-
   handleSelection = (event, data) => {
     if (this.state.rawData.length < 1) {
       return null
@@ -623,6 +622,8 @@ class Dashboard extends Component {
 
             <h3 style={{ fontFamily: 'Titillium Web' }}>Other tasks, not ordered by priority</h3>
             <ul style={{ fontFamily: 'Titillium Web' }}>
+              <li>Add EIQ/EHQ columns in tables</li>
+              <li>Add Global toggles to all graphs</li>
               <li>Build out remaining dashboards</li>
               <li>Create a privacy concious report of spending data that is meaningful and easy to report against revenue numbers. (This one is a big job)</li>
               <li>Add mini graphs to each dashboard square for figures that could be better presented visually than just with text</li>
@@ -637,7 +638,6 @@ class Dashboard extends Component {
               <li>Add a toggle button on main dashboard that switches the dislpay of all figures to show current quarter rather than just previous month(current view)</li>
               <li>Track "Expansion": Increase in revenue when when a client renews, we sell more than their previous licence, or if renew clients on to a higher EIQ package</li>
               <li>Toggle to switch main dashboard to dislpay all figures in any chosen currency</li>
-
             </ul>
             <h3 style={{ fontFamily: 'Titillium Web' }}>Non data related site improvements</h3>
             <ul style={{ fontFamily: 'Titillium Web' }}>
@@ -660,6 +660,11 @@ class Dashboard extends Component {
             <h3 style={{ fontFamily: 'Titillium Web' }}>23 October 2019</h3>
 
             <h4 style={{ fontFamily: 'Titillium Web' }}>Recurring Revenue</h4>
+            <ul style={{ fontFamily: 'Titillium Web' }}>
+              <li>Time travel back to any month by clicking it in graph to show that month's details below<Icon name="check green"></Icon></li>
+            </ul>
+
+            <h4 style={{ fontFamily: 'Titillium Web' }}>Active Licences</h4>
             <ul style={{ fontFamily: 'Titillium Web' }}>
               <li>Time travel back to any month by clicking it in graph to show that month's details below<Icon name="check green"></Icon></li>
             </ul>
@@ -697,6 +702,7 @@ class Dashboard extends Component {
     if (!this.props.auth) {
       return null
     }
+
 
     return (
       <div style={{ fontFamily: 'Titillium Web', paddingBottom: 200 }}>
