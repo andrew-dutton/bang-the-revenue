@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Line } from 'react-chartjs-2'
-import { Segment, Grid, Form, Radio, Button, Checkbox, Flag, Icon, Image, GridColumn } from 'semantic-ui-react'
+import { Segment, Grid, Checkbox, Flag, Image, GridColumn } from 'semantic-ui-react'
 import { HotTable } from '@handsontable/react';
 
 class RecurringRevenueChart extends Component {
@@ -926,30 +926,28 @@ class RecurringRevenueChart extends Component {
     if ((typeof this.state.monthsText[this.state.selectedMonth] === "undefined")) {
       return null
     } else {
+
       let forexMonth = this.state.monthsText[this.state.selectedMonth].substring(3)
       let forex = this.state.forexData
 
-      if (typeof this.state.monthsText[this.state.selectedMonth] !== "undefined") {
-        let forexMonth = this.state.monthsText[this.state.selectedMonth].substring(3)
-        let forex = this.state.forexData
-
-        toDisplay = (
-          <div style={{ fontSize: 10, textAlign: "center", fontFamily: 'Titillium Web' }}>
-            <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>AUD Exchange Rates</h3>
-            <Grid>
-              <Grid.Column width={8}>
-                <p><Flag name="ca" />{(1 / (forex[forexMonth]["AUD/CAD"])).toFixed(4)}</p>
-                <p><Flag name="us" />{(1 / (forex[forexMonth]["AUD/USD"])).toFixed(4)}</p>
-              </Grid.Column>
-              <Grid.Column width={8}>
-                <p><Flag name="uk" />{(1 / (forex[forexMonth]["AUD/GBP"])).toFixed(4)}</p>
-                <p><Flag name="nz" />{(1 / (forex[forexMonth]["AUD/NZD"])).toFixed(4)}</p>
-              </Grid.Column>
-            </Grid>
-          </div>
-        )
-      }
+      toDisplay = (
+        <div style={{ fontSize: 10, textAlign: "center", fontFamily: 'Titillium Web' }}>
+          <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>AUD Exchange Rates</h3>
+          <Grid>
+            <Grid.Column width={8}>
+              <p><Flag name="ca" />{(1 / (forex[forexMonth]["AUD/CAD"])).toFixed(4)}</p>
+              <p><Flag name="us" />{(1 / (forex[forexMonth]["AUD/USD"])).toFixed(4)}</p>
+            </Grid.Column>
+            <Grid.Column width={8}>
+              <p><Flag name="uk" />{(1 / (forex[forexMonth]["AUD/GBP"])).toFixed(4)}</p>
+              <p><Flag name="nz" />{(1 / (forex[forexMonth]["AUD/NZD"])).toFixed(4)}</p>
+            </Grid.Column>
+          </Grid>
+        </div>
+      )
     }
+
+
 
     return (
       <div style={{ width: 1079, paddingTop: 12, paddingBottom: 12, fontFamily: 'Titillium Web' }}>
@@ -971,7 +969,7 @@ class RecurringRevenueChart extends Component {
             </Grid.Column>
           </Grid>
         </Segment>
-      </div>
+      </div >
     )
   }
 

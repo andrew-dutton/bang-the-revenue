@@ -2,9 +2,6 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Stitch, AnonymousCredential, RemoteMongoClient } from 'mongodb-stitch-browser-sdk'
 import RecurringRevenueGraph from './dashboard/RecurringRevenueGraph'
-// import NumberOfInvoices from './dashboard/NumberOfInvoices'
-// import TotalValue from './dashboard/TotalValue'
-// import RevenueBreakdown from "./dashboard/RevenueBreakdown"
 import ActiveLicencesGraph from './dashboard/ActiveLicencesGraph'
 import Churn from './dashboard/Churn'
 import InvoiceSearch from './dashboard/InvoiceSearch'
@@ -334,15 +331,6 @@ class Dashboard extends Component {
       }
     },
     name: "",
-    authorised: [
-      'andrew@bangthetable.com',
-      'johannes.kresling@bangthetable.com',
-      'matt@bangthetable.com',
-      'crispin@bangthetable.com',
-      'anna@bangthetable.com',
-      'nathan@bangthetable.com',
-      'nathan.connors@bangthetable.com'
-    ],
     recurringRevenueChart: false,
     selected: "Select Chart",
     raised: ""
@@ -443,6 +431,8 @@ class Dashboard extends Component {
     this.db.collection("invoice-lines").find({}).asArray().then(rawData => { this.setState({ rawData }) })
   }
 
+
+
   handleSelection = (event, data) => {
     if (this.state.rawData.length < 1) {
       return null
@@ -475,44 +465,9 @@ class Dashboard extends Component {
       this.displayWhatsNext()
     }
 
-    // if (this.state.selected === "Revenue Breakdown") {
-    //   toDisplay = (
-    //     <div>
-    //       <h1>Dashboard</h1>
-
-    //       <h3>Check console..</h3>
-    //       <div>
-    //         {/* <RevenueBreakdown rawData={this.state.rawData} />
-    //         <TotalValue rawData={this.state.rawData} />
-    //         <NumberOfInvoices rawData={this.state.rawData} /> */}
-    //         {/* <RecRevChart rawData={this.state.rawData} /> */}
-    //       </div>
-
-
-
-
-    //       <Grid stackable divided="vertically">
-    //         <Grid.Row columns={2}>
-    //           <Grid.Column>
-    //             <h2>Active Licences</h2>
-    //             <ActiveLicencesGraph rawData={this.state.rawData} />
-    //           </Grid.Column>
-    //           <Grid.Column>
-    //             <h1>Monthly Recurring Revenue</h1>
-    //             <RecurringRevenueGraph rawData={this.state.rawData} charts={this.state} />
-    //           </Grid.Column>
-    //         </Grid.Row>
-    //       </Grid>
-    //     </div>
-    //   )
-    // }
-
-
     return (
       <div style={{ fontFamily: 'Titillium Web' }}>
-        {/* < Dropdown placeholder="Select Chart" selection onChange={this.handleSelection} options={this.state.graphsOptions} value={value} /> */}
         {toDisplay}
-
       </div >
     )
   }
@@ -673,7 +628,7 @@ class Dashboard extends Component {
               <li>Add mini graphs to each dashboard square for figures that could be better presented visually than just with text</li>
               <li>Add ability to change currency being displayed when currency flags are clicked (On Client Churn page only for now, but could be used on any dashboard)</li>
               <li>Add functionality to display all data related to a specific client when their name is clicked on any table in which they appear</li>
-              <li>Time travel back to specific months on Active Licence and Recurring Revenue Graphs (same as currently available on Client Churn Graph)</li>
+              <li>Time travel back to specific months on Active Licence</li>
               <li>Non Recurring Revenue dashboard build - use this to analyse sales for each product family</li>
               <li>Set up Cost of Acquiring Clients Dashboard (CAC) - showing total marketing spend vs converted new leads (by month/qtr/annual)</li>
               <li>EIQ dashboard build - Display list of current EIQ licences and show their added value relative to client's EHQ licence</li>
@@ -706,7 +661,7 @@ class Dashboard extends Component {
 
             <h4 style={{ fontFamily: 'Titillium Web' }}>Recurring Revenue</h4>
             <ul style={{ fontFamily: 'Titillium Web' }}>
-              <li>Click on any item in graph to show that month's details<Icon name="check green"></Icon></li>
+              <li>Time travel back to any month by clicking it in graph to show that month's details below<Icon name="check green"></Icon></li>
             </ul>
 
             <h3 style={{ fontFamily: 'Titillium Web' }}>22 October 2019</h3>
@@ -738,6 +693,7 @@ class Dashboard extends Component {
   }
 
   render() {
+
     if (!this.props.auth) {
       return null
     }

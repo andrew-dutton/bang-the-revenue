@@ -620,7 +620,7 @@ class Churn extends Component {
     return (
       <div>
         <Segment color="blue" style={{ width: 1079 }}>
-          <div style={{ paddingTop: 15 }}>
+          <div>
             <h3 style={{ fontFamily: 'Titillium Web' }}>Clients who didn't renew in {this.state.currentMonth}</h3>
             <HotTable
               licenseKey="non-commercial-and-evaluation"
