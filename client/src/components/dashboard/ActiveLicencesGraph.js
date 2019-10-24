@@ -417,6 +417,7 @@ class ActiveLicencesGraph extends Component {
                   columnSorting={true}
                   colWidths={[522, 50, 59, 75, 75, 75, 75, 60]}
                   rowHeaders={true}
+                  dateFormat={'DD/MM/YYYY'}
                   colHeaders={this.state.table.colHeaders}
                   data={this.state.ausDetail[this.state.selectedMonth]} />
               </div>
@@ -438,6 +439,7 @@ class ActiveLicencesGraph extends Component {
   }
 
   render() {
+    console.log('render')
     const headingStyle = {
       textAlign: 'center',
       width: 1300

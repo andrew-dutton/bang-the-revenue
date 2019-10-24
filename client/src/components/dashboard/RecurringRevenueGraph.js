@@ -972,7 +972,7 @@ class RecurringRevenueChart extends Component {
 
 
   render() {
-    console.log(this.state.months.length)
+    console.log('render')
     const { toggleActive } = this.state
 
     const data = {

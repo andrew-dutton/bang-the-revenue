@@ -9,6 +9,7 @@ class Churn extends Component {
 
     this.state = {
       clients: [],
+      renderSwitch: true,
       dimmer: false,
       amounts: [],
       newValues: [],
@@ -95,11 +96,17 @@ class Churn extends Component {
     this.updateChurnTer()
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextState.renderSwitch != this.state.renderSwitch)
+      return true
+    return false
+  }
+
   checkTableToggle = () => {
     if (this.state.annualOn === false && this.state.projectOn === false && this.state.staticOn === false && this.state.budgetOn === false) {
-      this.setState((prevState) => ({ showTable: false }), this.setStartingMonth)
+      this.setState((prevState) => ({ showTable: false, renderSwitch: !prevState.renderSwitch }), this.setStartingMonth)
     } else {
-      this.setState((prevState) => ({ showTable: true }))
+      this.setState((prevState) => ({ showTable: true, renderSwitch: !prevState.renderSwitch }))
     }
   }
 
@@ -1041,7 +1048,7 @@ class Churn extends Component {
   }
 
   render() {
-    console.log(this.state.months.length)
+    console.log('render')
     return (
       <div style={{ paddingTop: 24, fontFamily: 'Titillium Web' }}>
         <div style={{ paddingBottom: 12 }}>
