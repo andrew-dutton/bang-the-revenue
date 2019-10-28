@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
-import { Line } from 'react-chartjs-2'
-import { Grid, Segment } from 'semantic-ui-react'
+import { Grid } from 'semantic-ui-react'
 import DisplayMonth from '../DisplayMonth'
 import DisplayDetails from './DisplayDetails'
 import LicenceToggles from '../LicenceToggles'
 import DashboardHeading from '../DashboardHeading'
+import ActiveLicencesChart from './ActiveLicencesChart'
 
-class ActiveLicencesGraph extends Component {
+class ActiveLicences extends Component {
   constructor(props) {
     super(props)
 
@@ -334,203 +334,66 @@ class ActiveLicencesGraph extends Component {
     this.setState(prevState => ({
       ausData: ausTotal,
       currentAus: ausTotal[ausTotal.length - 2],
-    }))
-
-    this.setState(prevState => ({
       canData: [...canTotal],
       currentCan: canTotal[canTotal.length - 2],
-    }))
-
-    this.setState(prevState => ({
       usaData: [...usaTotal],
       currentUsa: usaTotal[usaTotal.length - 2],
-    }))
-
-    this.setState(prevState => ({
       ukData: [...ukTotal],
       currentUk: ukTotal[ukTotal.length - 2],
-    }))
-
-    this.setState(prevState => ({
       nzData: [...nzTotal],
       currentNz: nzTotal[nzTotal.length - 2],
-    }))
-
-    this.setState((prevState) => ({
-      loadButtonActive: false
-    }))
-
-    this.setState(prevState => ({
+      loadButtonActive: false,
       ausDetail: ausDetLogged
     }))
 
     return null
   }
 
-  render() {
-    const data = {
-      labels: [
-        'Jul-15', 'Aug-15', 'Sep-15', 'Oct-15', 'Nov-15', 'Dec-15', 'Jan-16', 'Feb-16', 'Mar-16', 'Apr-16', 'May-16', 'Jun-16',
-        'Jul-16', 'Aug-16', 'Sep-16', 'Oct-16', 'Nov-16', 'Dec-16', 'Jan-17', 'Feb-17', 'Mar-17', 'Apr-17', 'May-17', 'Jun-17',
-        'Jul-17', 'Aug-17', 'Sep-17', 'Oct-17', 'Nov-17', 'Dec-17', 'Jan-18', 'Feb-18', 'Mar-18', 'Apr-18', 'May-18', 'Jun-18',
-        'Jul-18', 'Aug-18', 'Sep-18', 'Oct-18', 'Nov-18', 'Dec-18', 'Jan-19', 'Feb-19', 'Mar-19', 'Apr-19', 'May-19', 'Jun-19',
-        'Jul-19', 'Aug-19', 'Sep-19'
-      ],
-      datasets: [
-        {
-          label: 'Australia',
-          fill: false,
-          lineTension: 0.1,
-          backgroundColor: 'rgba(75,192,1,0.4)',
-          borderColor: 'rgba(75,192,1,0.4)',
-          borderCapStyle: 'butt',
-          borderDash: [],
-          borderDashOffset: 0.0,
-          borderJoinStyle: 'miter',
-          pointBorderColor: 'rgba(75,192,192,1)',
-          pointBackgroundColor: '#fff',
-          pointBorderWidth: 1,
-          pointHoverRadius: 5,
-          pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-          pointHoverBorderColor: 'rgba(220,220,220,1)',
-          pointHoverBorderWidth: 2,
-          pointRadius: 3,
-          pointHitRadius: 10,
-          data: this.state.ausData
-        },
-        {
-          label: 'Canada',
-          fill: false,
-          lineTension: 0.1,
-          backgroundColor: 'rgba(222,213,42,0.4)',
-          borderColor: 'rgba(222,213,42,0.4)',
-          borderCapStyle: 'butt',
-          borderDash: [],
-          borderDashOffset: 0.0,
-          borderJoinStyle: 'miter',
-          pointBorderColor: 'rgba(75,192,192,1)',
-          pointBackgroundColor: '#fff',
-          pointBorderWidth: 1,
-          pointHoverRadius: 5,
-          pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-          pointHoverBorderColor: 'rgba(220,220,220,1)',
-          pointHoverBorderWidth: 2,
-          pointRadius: 3,
-          pointHitRadius: 10,
-          data: this.state.canData
-        },
-        {
-          label: 'USA',
-          fill: false,
-          lineTension: 0.1,
-          backgroundColor: 'rgba(234,77,49,0.4)',
-          borderColor: 'rgba(234,77,49,0.4)',
-          borderCapStyle: 'butt',
-          borderDash: [],
-          borderDashOffset: 0.0,
-          borderJoinStyle: 'miter',
-          pointBorderColor: 'rgba(75,192,192,1)',
-          pointBackgroundColor: '#fff',
-          pointBorderWidth: 1,
-          pointHoverRadius: 5,
-          pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-          pointHoverBorderColor: 'rgba(220,220,220,1)',
-          pointHoverBorderWidth: 2,
-          pointRadius: 3,
-          pointHitRadius: 10,
-          data: this.state.usaData
-        },
-        {
-          label: 'UK',
-          fill: false,
-          lineTension: 0.1,
-          backgroundColor: 'rgba(49,234,212,0.4)',
-          borderColor: 'rgba(49,234,212,0.4)',
-          borderCapStyle: 'butt',
-          borderDash: [],
-          borderDashOffset: 0.0,
-          borderJoinStyle: 'miter',
-          pointBorderColor: 'rgba(75,192,192,1)',
-          pointBackgroundColor: '#fff',
-          pointBorderWidth: 1,
-          pointHoverRadius: 5,
-          pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-          pointHoverBorderColor: 'rgba(220,220,220,1)',
-          pointHoverBorderWidth: 2,
-          pointRadius: 3,
-          pointHitRadius: 10,
-          data: this.state.ukData
-        },
-        {
-          label: 'New Zealand',
-          fill: false,
-          lineTension: 0.1,
-          backgroundColor: 'rgba(234,49,223,0.4)',
-          borderColor: 'rgba(234,49,223,0.4)',
-          borderCapStyle: 'butt',
-          borderDash: [],
-          borderDashOffset: 0.0,
-          borderJoinStyle: 'miter',
-          pointBorderColor: 'rgba(75,192,192,1)',
-          pointBackgroundColor: '#fff',
-          pointBorderWidth: 1,
-          pointHoverRadius: 5,
-          pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-          pointHoverBorderColor: 'rgba(220,220,220,1)',
-          pointHoverBorderWidth: 2,
-          pointRadius: 3,
-          pointHitRadius: 10,
-          data: this.state.nzData
-        }
-      ]
-    }
+  updateCurrentMonth = (month) => {
+    this.setState(prevState => ({ selectedMonth: month }), this.setChangedMonth)
+  }
 
+
+
+
+  render() {
     return (
       <div style={{ paddingTop: 24, paddingBotton: 24 }}>
-        <div>
-
-          <DashboardHeading currentColor={this.state.currentColor} />
-
-          <Grid columns='equal' style={{ width: 1300 }}>
-            <Grid.Column>
-
-              <LicenceToggles
-                currentColor={this.state.currentColor}
-                defaultChecked={this.state.defaultChecked}
-                annualActive={this.state.annualActive}
-                projectActive={this.state.projectActive}
-                staticActive={this.state.staticActive}
-                budgetActive={this.state.budgetActive}
-                handleClickAnnual={this.handleClickAnnual}
-                handleClickProject={this.handleClickProject}
-                handleClickBudget={this.handleClickBudget}
-                handleClickStatic={this.handleClickStatic}
-                headingStyle={this.headingStyle}
-              />
-
-            </Grid.Column>
-            <Grid.Column width={15}>
-              <Segment color={"green"} style={{ width: 1000 }}>
-                <Line
-                  data={data}
-                  options={{
-                    'onClick': (event, item) => {
-                      if (item.length > 0) {
-                        this.setState((prevState) => ({ selectedMonth: item[0]["_index"] }), this.setChangedMonth)
-                      }
-                    }
-                  }}
-                />
-              </Segment>
-            </Grid.Column>
-          </Grid>
-        </div>
-
+        <DashboardHeading currentColor={this.state.currentColor} />
+        <Grid columns='equal' style={{ width: 1300 }}>
+          <Grid.Column width={1}>
+            <LicenceToggles
+              currentColor={this.state.currentColor}
+              defaultChecked={this.state.defaultChecked}
+              annualActive={this.state.annualActive}
+              projectActive={this.state.projectActive}
+              staticActive={this.state.staticActive}
+              budgetActive={this.state.budgetActive}
+              handleClickAnnual={this.handleClickAnnual}
+              handleClickProject={this.handleClickProject}
+              handleClickBudget={this.handleClickBudget}
+              handleClickStatic={this.handleClickStatic}
+              headingStyle={this.headingStyle}
+            />
+          </Grid.Column>
+          <Grid.Column width={15}>
+            <ActiveLicencesChart
+              currentColor={this.state.currentColor}
+              selectedMonth={this.state.selecteMonth}
+              setChangedMonth={this.setChangedMonth}
+              ausData={this.state.ausData}
+              canData={this.state.canData}
+              usaData={this.state.usaData}
+              ukData={this.state.ukData}
+              nzData={this.state.nzData}
+              updateCurrentMonth={this.updateCurrentMonth}
+            />
+          </Grid.Column>
+        </Grid>
         <DisplayMonth
           currentMonth={this.state.currentMonth}
           currentColor={this.state.currentColor}
         />
-
         <DisplayDetails
           currentColor={this.state.currentColor}
           currentAus={this.state.currentAus}
@@ -549,10 +412,9 @@ class ActiveLicencesGraph extends Component {
           ukData={this.state.ukData}
           nzData={this.state.nzData}
         />
-
       </div>
     )
   }
 }
 
-export default ActiveLicencesGraph
+export default ActiveLicences

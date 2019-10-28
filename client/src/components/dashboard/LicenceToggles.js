@@ -1,5 +1,5 @@
 import React from 'react'
-import { Segment, Checkbox } from 'semantic-ui-react'
+import { Segment, Checkbox, Grid } from 'semantic-ui-react'
 
 const licenceToggles = props => {
   return (

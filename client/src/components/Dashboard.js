@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Stitch, AnonymousCredential, RemoteMongoClient } from 'mongodb-stitch-browser-sdk'
 import RecurringRevenueGraph from './dashboard/RecurringRevenue/RecurringRevenueGraph'
-import ActiveLicencesGraph from './dashboard/ActiveLicences/ActiveLicencesGraph'
+import ActiveLicences from './dashboard/ActiveLicences/ActiveLicences'
 import Churn from './dashboard/Churn/Churn'
 import InvoiceSearch from './dashboard/InvoiceSearch'
 import ActiveLicencesBox from './dashboard/ActiveLicences/ActiveLicencesBox'
@@ -444,7 +444,7 @@ class Dashboard extends Component {
     let toDisplay;
 
     if (this.state.selected === "Active Licences") {
-      toDisplay = <ActiveLicencesGraph rawData={this.state.rawData} />
+      toDisplay = <ActiveLicences rawData={this.state.rawData} />
 
     }
 
