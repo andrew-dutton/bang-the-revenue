@@ -3,12 +3,15 @@ import { Line } from 'react-chartjs-2'
 import { Segment, Grid, Checkbox, Flag, Image, GridColumn } from 'semantic-ui-react'
 import { HotTable } from '@handsontable/react';
 
+import DisplayMonth from '../DisplayMonth'
+
 class RecurringRevenueChart extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
       toggleActive: false,
+      currentColor: "orange",
       forexData: this.props.forexData,
       totalAUD: 873822,
       selectedMonth: 0,
@@ -30,7 +33,6 @@ class RecurringRevenueChart extends Component {
       usaData: [],
       ukData: [],
       nzData: [],
-      months: [],
       tableData: [],
       tableDataNON: [],
       table: {
@@ -845,16 +847,6 @@ class RecurringRevenueChart extends Component {
     }
   }
 
-  displayMonth = () => {
-    return (
-      <div style={{ textAlign: 'center', paddingTop: 14, paddingBottom: 12, fontFamily: 'Titillium Web' }}>
-        <Segment color="orange" style={{ width: 1079, fontFamily: 'Titillium Web' }}>
-          <h1 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.currentMonth}</h1>
-        </Segment>
-      </div >
-    )
-  }
-
   numberWithCommas = (x) => {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
   }
@@ -972,7 +964,6 @@ class RecurringRevenueChart extends Component {
 
 
   render() {
-    console.log('render')
     const { toggleActive } = this.state
 
     const data = {
@@ -1145,7 +1136,7 @@ class RecurringRevenueChart extends Component {
           />
         </Segment>
         <div>
-          {this.displayMonth()}
+          <DisplayMonth currentMonth={this.state.currentMonth} currentColor={this.state.currentColor} />
         </div>
         <div>
           {this.displayConvertAusTable()}

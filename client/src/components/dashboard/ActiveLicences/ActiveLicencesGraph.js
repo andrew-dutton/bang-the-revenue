@@ -1,13 +1,17 @@
 import React, { Component } from 'react'
 import { Line } from 'react-chartjs-2'
-import { Grid, Segment, Checkbox } from 'semantic-ui-react'
-import { HotTable } from '@handsontable/react';
+import { Grid, Segment } from 'semantic-ui-react'
+import DisplayMonth from '../DisplayMonth'
+import DisplayDetails from './DisplayDetails'
+import LicenceToggles from '../LicenceToggles'
+import DashboardHeading from '../DashboardHeading'
 
 class ActiveLicencesGraph extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
+      currentColor: 'green',
       ausData: [],
       canData: [],
       usaData: [],
@@ -67,7 +71,6 @@ class ActiveLicencesGraph extends Component {
 
     let startingMonthNumber = this.state.months.length - 2
 
-
     let month = monthsOfYear[this.state.months[this.state.months.length - 2].getMonth()]
     let year = this.state.months[this.state.months.length - 2].getFullYear()
 
@@ -97,14 +100,11 @@ class ActiveLicencesGraph extends Component {
         monthDisp = monthsOfYear[this.state.months[month + 1].getMonth()]
       }
 
-
       let theDate = monthDisp + " " + year
-
 
       this.setState((prevState) => ({ currentMonth: theDate }))
     }
   }
-
 
   handleClickAnnual = () => {
     if (this.state.annualOn) {
@@ -367,85 +367,7 @@ class ActiveLicencesGraph extends Component {
     return null
   }
 
-  displayTotal = () => {
-    if (this.state.loadButtonActive === false) {
-      return (
-        this.state.ausData[this.state.selectedMonth] +
-        this.state.canData[this.state.selectedMonth] +
-        this.state.usaData[this.state.selectedMonth] +
-        this.state.ukData[this.state.selectedMonth] +
-        this.state.nzData[this.state.selectedMonth]
-      )
-    } else {
-      return ("...")
-    }
-
-  }
-
-  displayDetails = () => {
-    if ((this.state.currentAus + this.state.currentCan + this.state.currentUsa + this.state.currentUk + this.state.currentNz) > 0) {
-      return (
-        <Grid columns='equal' style={{ width: 1109, paddingBottom: 50, color: 'black' }}>
-          <Grid.Column>
-            <Segment color={"green"}>
-              <h3><strong>Total: {this.displayTotal()}</strong></h3>
-              <div id="hot-app">
-                <HotTable
-                  licenseKey="non-commercial-and-evaluation"
-                  className={"htCenter"}
-                  style={{ fontSize: 10, color: 'black' }}
-                  cells={function (row, col) {
-                    var cellPrp = {};
-                    if (col === 0) {
-                      cellPrp.className = 'htLeft'
-                    } else if (col === 1) {
-                      cellPrp.className = 'htCenter'
-                    } else if (col === 7) {
-                      cellPrp.className = 'htRight'
-                    } else {
-                      cellPrp.className = 'htCenter htMiddle'
-                    }
-                    return cellPrp
-                  }
-                  }
-                  htDimmed
-                  manualColumnResize
-                  wordWrap={false}
-                  height={400}
-                  editor={false}
-                  columns={[{}, {}, {}, {}, {}, {}, {}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }]}
-                  columnSorting={true}
-                  colWidths={[522, 50, 59, 75, 75, 75, 75, 60]}
-                  rowHeaders={true}
-                  dateFormat={'DD/MM/YYYY'}
-                  colHeaders={this.state.table.colHeaders}
-                  data={this.state.ausDetail[this.state.selectedMonth]} />
-              </div>
-            </Segment>
-          </Grid.Column>
-        </Grid>
-      )
-    }
-  }
-
-  displayMonth = () => {
-    return (
-      <div style={{ textAlign: 'center', paddingTop: 14, paddingBottom: 12, fontFamily: 'Titillium Web' }}>
-        <Segment color="green" style={{ width: 1079, fontFamily: 'Titillium Web' }}>
-          <h1 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.currentMonth}</h1>
-        </Segment>
-      </div >
-    )
-  }
-
   render() {
-    console.log('render')
-    const headingStyle = {
-      textAlign: 'center',
-      width: 1300
-
-    }
-    const { annualActive, projectActive, staticActive, budgetActive } = this.state
     const data = {
       labels: [
         'Jul-15', 'Aug-15', 'Sep-15', 'Oct-15', 'Nov-15', 'Dec-15', 'Jan-16', 'Feb-16', 'Mar-16', 'Apr-16', 'May-16', 'Jun-16',
@@ -474,18 +396,7 @@ class ActiveLicencesGraph extends Component {
           pointHoverBorderWidth: 2,
           pointRadius: 3,
           pointHitRadius: 10,
-          data: this.state.ausData,
-          options: {
-            trendlines: {
-              type: 'polynomial',
-              degree: 3
-
-            },
-            callbacks: {
-              label: "Test"
-            }
-
-          }
+          data: this.state.ausData
         },
         {
           label: 'Canada',
@@ -506,12 +417,7 @@ class ActiveLicencesGraph extends Component {
           pointHoverBorderWidth: 2,
           pointRadius: 3,
           pointHitRadius: 10,
-          data: this.state.canData,
-          trendlineLinear: {
-            style: "rgba(255,105,180, .8)",
-            lineStyle: "dotted|solid",
-            width: 2
-          }
+          data: this.state.canData
         },
         {
           label: 'USA',
@@ -582,65 +488,32 @@ class ActiveLicencesGraph extends Component {
     return (
       <div style={{ paddingTop: 24, paddingBotton: 24 }}>
         <div>
-          <div style={{ paddingBottom: 24 }}>
-            <Segment color={"green"} style={{ width: 1079 }}>
-              <h1 style={{ fontSize: 40, textAlign: "center", fontFamily: 'Titillium Web' }}>
-                Active Licences
-              </h1>
-            </Segment>
-          </div>
+
+          <DashboardHeading currentColor={this.state.currentColor} />
+
           <Grid columns='equal' style={{ width: 1300 }}>
             <Grid.Column>
-              <Segment color={"green"} style={{ width: 70, height: 513 }}>
-                <br />
-                <div>
-                  Annual
-                <br />
-                  <br />
-                  <Checkbox defaultChecked toggle active={annualActive} onClick={this.handleClickAnnual} />
-                </div>
 
-                <br />
-                <div>
-                  Project
-                <br />
-                  <br />
-                  <Checkbox defaultChecked toggle active={projectActive} onClick={this.handleClickProject} />
-                </div>
+              <LicenceToggles
+                currentColor={this.state.currentColor}
+                defaultChecked={this.state.defaultChecked}
+                annualActive={this.state.annualActive}
+                projectActive={this.state.projectActive}
+                staticActive={this.state.staticActive}
+                budgetActive={this.state.budgetActive}
+                handleClickAnnual={this.handleClickAnnual}
+                handleClickProject={this.handleClickProject}
+                handleClickBudget={this.handleClickBudget}
+                handleClickStatic={this.handleClickStatic}
+                headingStyle={this.headingStyle}
+              />
 
-                <br />
-                <div>
-                  Static
-                <br />
-                  <br />
-                  <Checkbox defaultChecked toggle active={staticActive} onClick={this.handleClickStatic} />
-                </div>
-                <br />
-
-                <div>
-                  Budget
-                <br />
-                  <br />
-                  <Checkbox defaultChecked toggle active={budgetActive} onClick={this.handleClickBudget} />
-                </div>
-                <br />
-                <br />
-                <div style={headingStyle}>
-                  <br />
-                  <br />
-                </div>
-              </Segment>
             </Grid.Column>
             <Grid.Column width={15}>
               <Segment color={"green"} style={{ width: 1000 }}>
                 <Line
                   data={data}
                   options={{
-                    scales: {
-                      yAxes: [{
-
-                      }]
-                    },
                     'onClick': (event, item) => {
                       if (item.length > 0) {
                         this.setState((prevState) => ({ selectedMonth: item[0]["_index"] }), this.setChangedMonth)
@@ -652,12 +525,31 @@ class ActiveLicencesGraph extends Component {
             </Grid.Column>
           </Grid>
         </div>
-        <div>
-          {this.displayMonth()}
-        </div>
-        <div>
-          {this.displayDetails()}
-        </div>
+
+        <DisplayMonth
+          currentMonth={this.state.currentMonth}
+          currentColor={this.state.currentColor}
+        />
+
+        <DisplayDetails
+          currentColor={this.state.currentColor}
+          currentAus={this.state.currentAus}
+          currentCan={this.state.currentCan}
+          currentUsa={this.state.currentUsa}
+          currentUk={this.state.currentUk}
+          currentNz={this.state.currentNz}
+          displayTotal={this.displayTotal}
+          table={this.state.table}
+          selectedMonth={this.state.selectedMonth}
+          ausDetail={this.state.ausDetail}
+          loadButtonActive={this.state.loadButtonActive}
+          ausData={this.state.ausData}
+          canData={this.state.canData}
+          usaData={this.state.usaData}
+          ukData={this.state.ukData}
+          nzData={this.state.nzData}
+        />
+
       </div>
     )
   }

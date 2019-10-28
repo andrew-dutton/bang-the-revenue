@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Menu } from 'semantic-ui-react'
 
-
 class Header extends Component {
   state = {
     activeItem: 'home'

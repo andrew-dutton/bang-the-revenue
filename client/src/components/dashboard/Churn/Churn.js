@@ -3,12 +3,15 @@ import { Dimmer, Loader, Icon, Flag, Grid, Checkbox, Segment, Button, Image } fr
 import Chart from 'react-google-charts'
 import { HotTable } from '@handsontable/react';
 
+import DisplayMonth from '../DisplayMonth'
+
 class Churn extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
       clients: [],
+      currentColor: "blue",
       renderSwitch: true,
       dimmer: false,
       amounts: [],
@@ -914,18 +917,6 @@ class Churn extends Component {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
   }
 
-  displayMonth = () => {
-    if (this.state.showTable) {
-      return (
-        <div style={{ textAlign: 'center', paddingTop: 14, fontFamily: 'Titillium Web' }}>
-          <Segment color="blue" style={{ width: 1079, fontFamily: 'Titillium Web' }}>
-            <h1 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.currentMonth}</h1>
-          </Segment>
-        </div >
-      )
-    }
-  }
-
   displayChart = () => {
     const headingStyle = {
       textAlign: 'center'
@@ -1073,7 +1064,7 @@ class Churn extends Component {
 
         {this.displayChart()}
 
-        {this.displayMonth()}
+        <DisplayMonth currentMonth={this.state.currentMonth} currentColor={this.state.currentColor} />
 
         {this.displayTable()}
 
