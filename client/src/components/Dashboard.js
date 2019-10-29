@@ -19,6 +19,17 @@ import { Segment, Grid, Dimmer, Loader, Icon, Button, Image } from 'semantic-ui-
 
 class Dashboard extends Component {
   state = {
+    authUsers: [
+      'andrew@bangthetable.com',
+      'matt@bangthetable.com',
+      'sally@bangthetable.com',
+      'joe@bangthetable.com',
+      'mel.hagedorn@bangthetable.com',
+      'crispin@bangthetable.com',
+      'karthik@bangthetable.com',
+      'frana.tatkovich@gmail.com',
+      'vikkie@bangthetable.com'
+    ],
     rawData: [],
     users: [],
     whatsNext: false,
@@ -697,10 +708,23 @@ class Dashboard extends Component {
     }
   }
 
-  render() {
 
+  render() {
     if (!this.props.auth) {
       return null
+    }
+
+
+    if (!this.state.authUsers.includes(this.props.auth.email)) {
+      return (
+        <div style={{ textAlign: 'center', fontFamily: 'Titillium Web' }}>
+          <Segment style={{ width: 1079, height: 900 }}>
+            <div style={{ textAlign: 'center', paddingTop: 20 }}>
+              <h1>You are not authorised to view this page</h1>
+            </div>
+          </Segment>
+        </div>
+      )
     }
 
 

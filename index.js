@@ -19,10 +19,12 @@ app.use(
     keys: [keys.cookieKey]
   })
 )
+
 app.use(passport.initialize())
 app.use(passport.session())
 
 require('./routes/authroutes')(app)
+
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/build'))
