@@ -3,7 +3,7 @@ import { Segment, Grid, Button, Dimmer, Loader, Icon, Image } from 'semantic-ui-
 import ActiveLicencesBox from '../ActiveLicences/ActiveLicencesBox'
 import RecurringRevenueBox from '../RecurringRevenue/RecurringRevenueBox'
 import ChurnBox from '../Churn/ChurnBox'
-import RRRBox from '../RecurringRevenue/RecurringRevenueBox'
+import RRRBox from '../RevenueRunRate/RRRBox'
 import NonRecurringBox from '../NonRecurringRevenue/NonRecurringBox'
 import EIQBox from '../EIQ/EIQBox'
 import CACBox from '../CAC/CACBox'
