@@ -126,7 +126,9 @@ const activeLicencesChart = props => {
         data={data}
         options={{
           'onClick': (event, item) => {
-            props.updateCurrentMonth(item[0]["_index"])
+            if (item.length > 0) {
+              props.updateCurrentMonth(item[0]["_index"])
+            }
           }
         }}
       />
