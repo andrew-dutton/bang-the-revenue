@@ -59,8 +59,6 @@ class ActiveLicences extends Component {
 
   componentDidMount() {
     this.createMonthsArray()
-    this.totalClients()
-    this.setStartingMonth()
   }
 
   setStartingMonth = () => {
@@ -155,6 +153,7 @@ class ActiveLicences extends Component {
 
     let year = 2015
     let yearStep = 12
+    let months = []
 
     for (let step = 0; step < numberOfMonths; step++) {
       let month = 7
@@ -174,8 +173,10 @@ class ActiveLicences extends Component {
         }
       }
 
-      this.state.months.push(new Date(year, month, 0))
+      months.push(new Date(year, month, 0))
     }
+
+    this.setState({ months }, this.totalClients)
   }
 
   totalClients() {
@@ -344,7 +345,8 @@ class ActiveLicences extends Component {
       currentNz: nzTotal[nzTotal.length - 2],
       loadButtonActive: false,
       ausDetail: ausDetLogged
-    }))
+    }), this.setStartingMonth)
+
 
     return null
   }

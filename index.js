@@ -7,7 +7,7 @@ const sslRedirect = require('heroku-ssl-redirect');
 require('./models/user')
 require('./services/passport')
 
-mongoose.connect(keys.mongoURI, { useNewUrlParser: true })
+mongoose.connect(keys.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
 
 const app = express()
 

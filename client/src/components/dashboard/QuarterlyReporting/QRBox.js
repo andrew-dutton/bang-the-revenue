@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-class RRRBox extends Component {
+class QRBox extends Component {
   constructor(props) {
     super(props)
 
@@ -73,7 +73,6 @@ class RRRBox extends Component {
         <div style={{ height: 150 }}>
           <h1 style={{ position: 'absolute', left: '50%', top: '75%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>Coming next...</h1>
           <h3 style={{ fontFamily: 'Titillium Web' }}>{this.state.monthName}</h3>
-          {/* <h4 style={{ fontFamily: 'Titillium Web' }}>{this.state.diff}</h4> */}
         </div>
       )
     } else {
@@ -81,7 +80,6 @@ class RRRBox extends Component {
         <div style={{ height: 150 }}>
           <h1 style={{ position: 'absolute', left: '50%', top: '75%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>Coming next...</h1>
           <h3 style={{ fontFamily: 'Titillium Web' }}>{this.state.monthName}</h3>
-          {/* <h4 style={{ fontFamily: 'Titillium Web' }}>{this.state.diff}</h4> */}
         </div>
       )
     }
@@ -96,4 +94,4 @@ class RRRBox extends Component {
   }
 }
 
-export default RRRBox
+export default QRBox

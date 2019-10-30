@@ -107,11 +107,11 @@ class Dashboard extends Component {
     this.setState((prevState) => ({ raised: '' }))
   }
 
-  onMouseEnterRRR = () => {
-    this.setState((prevState) => ({ raised: "RRR" }))
+  onMouseEnterQR = () => {
+    this.setState((prevState) => ({ raised: "QR" }))
   }
 
-  onMouseLeaveRRR = () => {
+  onMouseLeaveQR = () => {
     this.setState((prevState) => ({ raised: '' }))
   }
 
@@ -136,7 +136,19 @@ class Dashboard extends Component {
       return null
     }
 
-    if (!this.state.authUsers.includes(this.props.auth.email)) {
+    let loginEmail = this.props.auth.email
+    let authorised = false
+
+    if (this.state.authUsers.includes(loginEmail)) {
+      authorised = true
+    } else {
+      let domain = loginEmail.slice(loginEmail.indexOf("@") + 1)
+      if (domain = "bangthetable.com") {
+        authorised = true
+      }
+    }
+
+    if (!authorised) {
       return (
         <div style={{ textAlign: 'center', fontFamily: 'Titillium Web' }}>
           <Segment style={{ width: 1079, height: 900 }}>
@@ -169,8 +181,8 @@ class Dashboard extends Component {
           onMouseLeaveLTV={this.onMouseLeaveLTV}
           onMouseEnterNonRecurring={this.onMouseEnterNonRecurring}
           onMouseLeaveNonRecurring={this.onMouseLeaveNonRecurring}
-          onMouseEnterRRR={this.onMouseEnterRRR}
-          onMouseLeaveRRR={this.onMouseLeaveRRR}
+          onMouseEnterQR={this.onMouseEnterQR}
+          onMouseLeaveQR={this.onMouseLeaveQR}
           onMouseEnterRecurringRevenue={this.onMouseEnterRecurringRevenue}
           onMouseLeaveRecurringRevenue={this.onMouseEnterRecurringRevenue}
           handleSelection={this.handleSelection}

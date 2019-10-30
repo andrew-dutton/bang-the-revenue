@@ -18,6 +18,7 @@ class RecurringRevenueChart extends Component {
       months: [],
       monthsText: [],
       currentMonth: "",
+      value: "Local",
       ausDataRR: [],
       canDataRR: [],
       usaDataRR: [],
@@ -49,9 +50,40 @@ class RecurringRevenueChart extends Component {
 
   componentDidMount() {
     this.createMonthsArray()
-    this.setState(prevState => ({ value: "Local" }))
-    this.revenueTotals()
-    this.setStartingMonth()
+  }
+
+  createMonthsArray = () => {
+    const numberOfMonths = this.getNumberOfMonthsSinceJuly2015()
+
+    let year = 2015
+    let yearStep = 12
+    let months = []
+    let monthsText = []
+
+    for (let step = 0; step < numberOfMonths; step++) {
+      let month = 7
+      month += step
+
+      if ((month % 12) === 0) {
+        month = 12
+      } else {
+        month = month % 12
+      }
+
+      if (step >= 6) {
+        yearStep++
+        year = Math.floor(yearStep / 12) + 2015
+        if (yearStep % 12 === 0) {
+          year -= 1
+        }
+      }
+
+      months.push(new Date(year, month, 0))
+
+      monthsText.push(new Date(year, month, 0).toLocaleDateString("en-GB").split(',')[0])
+    }
+
+    this.setState({ months, monthsText }, this.revenueTotals)
   }
 
   setStartingMonth = () => {
@@ -140,35 +172,7 @@ class RecurringRevenueChart extends Component {
 
   handleChange = (e, { value }) => this.setState({ value })
 
-  createMonthsArray = () => {
-    const numberOfMonths = this.getNumberOfMonthsSinceJuly2015()
 
-    let year = 2015
-    let yearStep = 12
-
-    for (let step = 0; step < numberOfMonths; step++) {
-      let month = 7
-      month += step
-
-      if ((month % 12) === 0) {
-        month = 12
-      } else {
-        month = month % 12
-      }
-
-      if (step >= 6) {
-        yearStep++
-        year = Math.floor(yearStep / 12) + 2015
-        if (yearStep % 12 === 0) {
-          year -= 1
-        }
-      }
-
-      this.state.months.push(new Date(year, month, 0))
-
-      this.state.monthsText.push(new Date(year, month, 0).toLocaleDateString("en-GB").split(',')[0])
-    }
-  }
 
   getNumberOfMonthsSinceJuly2015 = () => {
     let today = new Date()
@@ -584,7 +588,7 @@ class RecurringRevenueChart extends Component {
 
     this.setState((prevState) => ({
       tableData: [...detailLogged]
-    }))
+    }), this.setStartingMonth)
 
     return null
   }

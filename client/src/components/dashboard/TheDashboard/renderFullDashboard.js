@@ -3,7 +3,7 @@ import { Segment, Grid, Button, Dimmer, Loader, Icon, Image } from 'semantic-ui-
 import ActiveLicencesBox from '../ActiveLicences/ActiveLicencesBox'
 import RecurringRevenueBox from '../RecurringRevenue/RecurringRevenueBox'
 import ChurnBox from '../Churn/ChurnBox'
-import RRRBox from '../RevenueRunRate/RRRBox'
+import QRBox from '../QuarterlyReporting/QRBox'
 import NonRecurringBox from '../NonRecurringRevenue/NonRecurringBox'
 import EIQBox from '../EIQ/EIQBox'
 import CACBox from '../CAC/CACBox'
@@ -45,7 +45,7 @@ const renderFullDashboard = props => {
               </Grid.Column>
               <Grid.Column>
                 <Image fluid label={{ as: 'a', color: 'orange', corner: 'right', icon: 'star' }} />
-                <div style={{ cursor: 'pointer' }} onMouseEnter={() => props.onMouseEnterRecurringRevenue()} onMouseLeave={() => props.onMouseLeaveRecurringRevenue()} id="Recurring Revenue" onClick={e => props.handleSelection(e.currentTarget.id)}>
+                <div style={{ cursor: 'pointer' }} id="Recurring Revenue" onMouseEnter={() => props.onMouseEnterRecurringRevenue()} onMouseLeave={() => props.onMouseLeaveRecurringRevenue()} id="Recurring Revenue" onClick={e => props.handleSelection(e.currentTarget.id)}>
                   <Segment color={"orange"} inverted={props.selected === "Recurring Revenue"} raised={props.raised === "Recurring Revenue"}>
                     <h1 style={{ fontFamily: 'Titillium Web' }}>Recurring Revenue</h1>
                     <RecurringRevenueBox selected={props.selected} rawData={props.rawData} />
@@ -56,7 +56,6 @@ const renderFullDashboard = props => {
                 <Image fluid label={{ as: 'a', color: 'blue', corner: 'right', icon: 'star' }} />
                 <div style={{ cursor: 'pointer' }} id="Churn" onMouseEnter={() => props.onMouseEnterChurn()} onMouseLeave={() => props.onMouseLeaveChurn()} onClick={e => props.handleSelection(e.currentTarget.id)}>
                   <Segment color={"blue"} inverted={props.selected === "Churn"} raised={props.raised === "Churn"}>
-
                     <h1 style={{ fontFamily: 'Titillium Web' }}>Client Churn</h1>
                     <ChurnBox selected={props.selected} rawData={props.rawData} />
                   </Segment>
@@ -65,10 +64,10 @@ const renderFullDashboard = props => {
             </Grid.Row>
             <Grid.Row style={{ color: '#E0E0E0' }} columns={3}>
               <Grid.Column>
-                <div style={{ color: '#A0A0A0' }} id="RRR" onMouseEnter={() => props.onMouseEnterRRR()} onMouseLeave={() => props.onMouseLeaveRRR()}>
-                  <Segment color="yellow" inverted={props.selected === "RRR"} raised={props.raised === "RRR"}>
-                    <h1 style={{ fontFamily: 'Titillium Web' }}>Revenue Run Rate</h1>
-                    <RRRBox selected={props.selected} rawData={props.rawData} />
+                <div style={{ color: '#A0A0A0' }} id="QR" onMouseEnter={() => props.onMouseEnterQR()} onMouseLeave={() => props.onMouseLeaveQR()} onClick={e => props.handleSelection(e.currentTarget.id)}>
+                  <Segment color="yellow" inverted={props.selected === "QR"} raised={props.raised === "QR"}>
+                    <h1 style={{ fontFamily: 'Titillium Web' }}>Quarterly Reporting</h1>
+                    <QRBox selected={props.selected} rawData={props.rawData} />
                   </Segment>
                 </div>
               </Grid.Column>

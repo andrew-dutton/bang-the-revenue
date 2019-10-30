@@ -95,7 +95,6 @@ class Churn extends Component {
 
   componentDidMount() {
     this.createMonthsArray()
-    this.setStartingMonth()
     this.updateChurnTer()
   }
 
@@ -118,6 +117,8 @@ class Churn extends Component {
 
     let year = 2015
     let yearStep = 12
+    let months = []
+    let monthsText = []
 
     for (let step = 0; step < numberOfMonths; step++) {
       let month = 7
@@ -137,10 +138,12 @@ class Churn extends Component {
         }
       }
 
-      this.state.months.push(new Date(year, month, 0))
+      months.push(new Date(year, month, 0))
 
-      this.state.monthsText.push(new Date(year, month, 0).toLocaleDateString("en-GB").split(',')[0])
+      monthsText.push(new Date(year, month, 0).toLocaleDateString("en-GB").split(',')[0])
     }
+
+    this.setState({ months, monthsText }, this.setStartingMonth)
   }
 
   getNumberOfMonthsSinceJuly2015 = () => {
