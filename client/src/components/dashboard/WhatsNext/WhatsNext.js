@@ -75,31 +75,31 @@ const whatsNext = props => {
 
           <h4 style={{ fontFamily: 'Titillium Web' }}>Recurring Revenue</h4>
           <ul style={{ fontFamily: 'Titillium Web' }}>
-            <li>Time travel back to any month by clicking it in graph to show that month's details below<Icon name="check green"></Icon></li>
+            <li>Time travel back to any month by clicking it in graph to show that month's details below<Icon color="green" name="check"></Icon></li>
           </ul>
 
           <h4 style={{ fontFamily: 'Titillium Web' }}>Active Licences</h4>
           <ul style={{ fontFamily: 'Titillium Web' }}>
-            <li>Time travel back to any month by clicking it in graph to show that month's details below<Icon name="check green"></Icon></li>
+            <li>Time travel back to any month by clicking it in graph to show that month's details below<Icon color="green" name="check"></Icon></li>
           </ul>
 
           <h3 style={{ fontFamily: 'Titillium Web' }}>22 October 2019</h3>
 
           <h4 style={{ fontFamily: 'Titillium Web' }}>Recurring Revenue</h4>
           <ul style={{ fontFamily: 'Titillium Web' }}>
-            <li>Show total of current month in AUD<Icon name="check green"></Icon></li>
-            <li>Display forex exchange rates for current months's calculations<Icon name="check green"></Icon></li>
-            <li>Add toggle for adding non recurring revenue for current month<Icon name="check green"></Icon></li>
-            <li>When include non recurring toggle is selected, table appears below with details of non recurring products invoiced in current month <Icon name="check green"></Icon></li>
+            <li>Show total of current month in AUD<Icon color="green" name="check"></Icon></li>
+            <li>Display forex exchange rates for current months's calculations<Icon color="green" name="check"></Icon></li>
+            <li>Add toggle for adding non recurring revenue for current month<Icon color="green" name="check"></Icon></li>
+            <li>When include non recurring toggle is selected, table appears below with details of non recurring products invoiced in current month <Icon color="green" name="check"></Icon></li>
           </ul>
 
           <h3 style={{ fontFamily: 'Titillium Web' }}>19 October 2019</h3>
 
           <h4 style={{ fontFamily: 'Titillium Web' }}>Churn</h4>
           <ul style={{ fontFamily: 'Titillium Web' }}>
-            <li>Display MRR value lost and added<Icon name="check green"></Icon></li>
-            <li>Display forex exchange rates that are being used in current months's calculations<Icon name="check green"></Icon></li>
-            <li>Fix formatting of currencies displayed in subheadings and in table data<Icon name="check green"></Icon></li>
+            <li>Display MRR value lost and added<Icon color="green" name="check"></Icon></li>
+            <li>Display forex exchange rates that are being used in current months's calculations<Icon color="green" name="check"></Icon></li>
+            <li>Fix formatting of currencies displayed in subheadings and in table data<Icon color="green" name="check"></Icon></li>
           </ul>
           <br />
           <Button

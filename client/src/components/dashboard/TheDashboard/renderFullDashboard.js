@@ -45,7 +45,7 @@ const renderFullDashboard = props => {
               </Grid.Column>
               <Grid.Column>
                 <Image fluid label={{ as: 'a', color: 'orange', corner: 'right', icon: 'star' }} />
-                <div style={{ cursor: 'pointer' }} id="Recurring Revenue" onMouseEnter={() => props.onMouseEnterRecurringRevenue()} onMouseLeave={() => props.onMouseLeaveRecurringRevenue()} id="Recurring Revenue" onClick={e => props.handleSelection(e.currentTarget.id)}>
+                <div style={{ cursor: 'pointer' }} id="Recurring Revenue" onMouseEnter={() => props.onMouseEnterRecurringRevenue()} onMouseLeave={() => props.onMouseLeaveRecurringRevenue()} onClick={e => props.handleSelection(e.currentTarget.id)}>
                   <Segment color={"orange"} inverted={props.selected === "Recurring Revenue"} raised={props.raised === "Recurring Revenue"}>
                     <h1 style={{ fontFamily: 'Titillium Web' }}>Recurring Revenue</h1>
                     <RecurringRevenueBox selected={props.selected} rawData={props.rawData} />
@@ -64,7 +64,7 @@ const renderFullDashboard = props => {
             </Grid.Row>
             <Grid.Row style={{ color: '#E0E0E0' }} columns={3}>
               <Grid.Column>
-                <div style={{ color: '#A0A0A0' }} id="QR" onMouseEnter={() => props.onMouseEnterQR()} onMouseLeave={() => props.onMouseLeaveQR()}>
+                <div style={{ color: '#A0A0A0' }} id="QR" onMouseEnter={() => props.onMouseEnterQR()} onMouseLeave={() => props.onMouseLeaveQR()} onClick={e => props.handleSelection(e.currentTarget.id)}>
                   <Segment color="yellow" inverted={props.selected === "QR"} raised={props.raised === "QR"}>
                     <h1 style={{ fontFamily: 'Titillium Web' }}>Quarterly Reporting</h1>
                     <QRBox selected={props.selected} rawData={props.rawData} />

@@ -143,7 +143,7 @@ class Dashboard extends Component {
       authorised = true
     } else {
       let domain = loginEmail.slice(loginEmail.indexOf("@") + 1)
-      if (domain = "bangthetable.com") {
+      if (domain === "bangthetable.com") {
         authorised = true
       }
     }

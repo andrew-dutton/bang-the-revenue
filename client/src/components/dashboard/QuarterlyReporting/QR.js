@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
+import DataIn from '../DataIn'
+import ActiveLicences from '../../dashboard/ActiveLicences/ActiveLicences'
 
 class QR extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
+      dataIn: DataIn.DataIn,
       data: props.rawData,
       forex: props.forex,
       months: []
@@ -17,11 +20,17 @@ class QR extends Component {
 
   getNumberOfMonthsSinceJuly2015 = () => {
     let today = new Date()
+
+    if (!this.state.dataIn) {
+      today.setMonth(today.getMonth() - 1)
+    }
+
     let thisMonth = today.getMonth()
     let thisYear = today.getFullYear()
     let monthsOfYears = (thisYear - (2015 + 1)) * 12
     return monthsOfYears + thisMonth + 7
   }
+
 
   createMonthsArray = () => {
     const numberOfMonths = this.getNumberOfMonthsSinceJuly2015()
@@ -100,14 +109,42 @@ class QR extends Component {
       currentFinYear = lastYear + "/" + currentYear
     }
 
-    this.setState(prevState => ({ currentQuarter, currentFinYear }))
+    this.setState(prevState => ({ currentQuarter, currentFinYear }), this.getCurrentActiveLicences)
   }
 
+  renderForQR = () => {
+    this.setState({ render: "QR" })
+  }
+
+  getDataFromAL = (dataFromAL) => {
+    this.setState({ stateAL: dataFromAL })
+  }
+
+
   render() {
+    if (typeof (this.state.stateAL) !== "undefined") {
+      let aus = this.state.stateAL.ausData[this.state.selectedMonth]
+      let can = this.state.stateAL.canData[this.state.selectedMonth]
+      let usa = this.state.stateAL.usaData[this.state.selectedMonth]
+      let uk = this.state.stateAL.ukData[this.state.selectedMonth]
+      let nz = this.state.stateAL.nzData[this.state.selectedMonth]
+      let ausPrev = this.state.stateAL.ausData[this.state.selectedMonth - 1]
+      let canPrev = this.state.stateAL.canData[this.state.selectedMonth - 1]
+      let usaPrev = this.state.stateAL.usaData[this.state.selectedMonth - 1]
+      let ukPrev = this.state.stateAL.ukData[this.state.selectedMonth - 1]
+      let nzPrev = this.state.stateAL.nzData[this.state.selectedMonth - 1]
+      let thisMonth = aus + can + usa + uk + nz
+      let prevMonth = ausPrev + canPrev + usaPrev + ukPrev + nzPrev
+      console.log(thisMonth)
+      console.log(prevMonth)
+      console.log(thisMonth - prevMonth)
+    }
     if (this.state.months.length > 1) {
       return (
         <div>
           <h1 style={{ textAlign: 'center', fontFamily: "Titillium Web", paddingTop: 20 }}>{this.state.currentQuarter} {this.state.currentFinYear}</h1>
+          <ActiveLicences getDataFromAL={this.getDataFromAL} toRender={"QR"} rawData={this.state.data} />
+
         </div>
       )
     }

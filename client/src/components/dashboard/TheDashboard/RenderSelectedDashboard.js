@@ -7,8 +7,9 @@ import QR from '../../dashboard/QuarterlyReporting/QR'
 const renderSelectedDashboard = props => {
   let toDisplay;
 
+
   if (props.selected === "Active Licences") {
-    toDisplay = <ActiveLicences rawData={props.rawData} />
+    toDisplay = <ActiveLicences toRender={"AL"} rawData={props.rawData} />
   }
 
   if (props.selected === "Recurring Revenue") {

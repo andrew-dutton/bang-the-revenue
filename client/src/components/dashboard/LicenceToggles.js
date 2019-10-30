@@ -1,5 +1,5 @@
 import React from 'react'
-import { Segment, Checkbox, Grid } from 'semantic-ui-react'
+import { Segment, Checkbox } from 'semantic-ui-react'
 
 const licenceToggles = props => {
   return (
@@ -10,28 +10,28 @@ const licenceToggles = props => {
           Annual
         <br />
           <br />
-          <Checkbox defaultChecked toggle active={props.annualActive} onClick={props.handleClickAnnual} />
+          <Checkbox defaultChecked toggle active={props.annualActive.toString()} onClick={props.handleClickAnnual} />
         </div>
         <br />
         <div>
           Project
         <br />
           <br />
-          <Checkbox defaultChecked toggle active={props.projectActive} onClick={props.handleClickProject} />
+          <Checkbox defaultChecked toggle active={props.projectActive.toString()} onClick={props.handleClickProject} />
         </div>
         <br />
         <div>
           Static
         <br />
           <br />
-          <Checkbox defaultChecked toggle active={props.staticActive} onClick={props.handleClickStatic} />
+          <Checkbox defaultChecked toggle active={props.staticActive.toString()} onClick={props.handleClickStatic} />
         </div>
         <br />
         <div>
           Budget
         <br />
           <br />
-          <Checkbox defaultChecked toggle active={props.budgetActive} onClick={props.handleClickBudget} />
+          <Checkbox defaultChecked toggle active={props.budgetActive.toString()} onClick={props.handleClickBudget} />
         </div>
         <br />
         <br />

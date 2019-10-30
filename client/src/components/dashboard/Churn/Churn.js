@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Dimmer, Loader, Icon, Flag, Grid, Checkbox, Segment, Button, Image } from 'semantic-ui-react'
 import Chart from 'react-google-charts'
 import { HotTable } from '@handsontable/react';
+import DataIn from '../DataIn'
 
 import DisplayMonth from '../DisplayMonth'
 
@@ -10,6 +11,7 @@ class Churn extends Component {
     super(props)
 
     this.state = {
+      dataIn: DataIn.DataIn,
       clients: [],
       currentColor: "blue",
       renderSwitch: true,
@@ -39,6 +41,10 @@ class Churn extends Component {
       project: "Project",
       static: "Static",
       budget: "Budget Allocator",
+      annualActive: true,
+      projectActive: true,
+      budgetActive: true,
+      staticActive: true,
       annualOn: true,
       projectOn: true,
       staticOn: true,
@@ -99,7 +105,7 @@ class Churn extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    if (nextState.renderSwitch != this.state.renderSwitch)
+    if (nextState.renderSwitch !== this.state.renderSwitch)
       return true
     return false
   }
@@ -148,11 +154,17 @@ class Churn extends Component {
 
   getNumberOfMonthsSinceJuly2015 = () => {
     let today = new Date()
+
+    if (!this.state.dataIn) {
+      today.setMonth(today.getMonth() - 1)
+    }
+
     let thisMonth = today.getMonth()
     let thisYear = today.getFullYear()
     let monthsOfYears = (thisYear - (2015 + 1)) * 12
     return monthsOfYears + thisMonth + 7
   }
+
 
   setStartingMonth = () => {
     let monthsOfYear = [
@@ -861,10 +873,13 @@ class Churn extends Component {
       let net = (added - churn).toFixed(2)
       let displayTotal = this.numberWithCommas(net)
       let arrow = ""
+      let color = ""
       if ((added - churn) < 0) {
-        arrow = "caret down red"
+        arrow = "caret down"
+        color = "red"
       } else {
-        arrow = "caret up green"
+        arrow = "caret up"
+        color = "green"
       }
 
       return (
@@ -897,7 +912,7 @@ class Churn extends Component {
                 <div>
                   <Segment color="blue">
                     <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Net MRR Change</h3>
-                    <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}><Icon name={arrow}></Icon>A${displayTotal}<Icon name={arrow}></Icon></h2>
+                    <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}><Icon color={color} name={arrow}></Icon>A${displayTotal}<Icon color={color} name={arrow}></Icon></h2>
                   </Segment>
                 </div>
               </Grid.Column>
@@ -954,7 +969,7 @@ class Churn extends Component {
                 Annual
                 <br />
                 <br />
-                <Checkbox toggle defaultChecked active={annualActive} onClick={this.handleClickAnnual} />
+                <Checkbox toggle defaultChecked active={annualActive.toString()} onClick={this.handleClickAnnual} />
               </div>
 
               <br />
@@ -962,7 +977,7 @@ class Churn extends Component {
                 Project
                 <br />
                 <br />
-                <Checkbox toggle defaultChecked active={projectActive} onClick={this.handleClickProject} />
+                <Checkbox toggle defaultChecked active={projectActive.toString()} onClick={this.handleClickProject} />
               </div>
 
               <br />
@@ -970,7 +985,7 @@ class Churn extends Component {
                 Static
                 <br />
                 <br />
-                <Checkbox toggle defaultChecked active={staticActive} onClick={this.handleClickStatic} />
+                <Checkbox toggle defaultChecked active={staticActive.toString()} onClick={this.handleClickStatic} />
               </div>
               <br />
 
@@ -978,7 +993,7 @@ class Churn extends Component {
                 Budget
                 <br />
                 <br />
-                <Checkbox toggle defaultChecked active={budgetActive} onClick={this.handleClickBudget} />
+                <Checkbox toggle defaultChecked active={budgetActive.toString()} onClick={this.handleClickBudget} />
               </div>
               <br />
               <br />
@@ -1042,7 +1057,6 @@ class Churn extends Component {
   }
 
   render() {
-    console.log('render')
     return (
       <div style={{ paddingTop: 24, fontFamily: 'Titillium Web' }}>
         <div style={{ paddingBottom: 12 }}>

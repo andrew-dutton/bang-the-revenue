@@ -9,7 +9,7 @@ const Landing = () => {
       <Segment style={{ width: 1079, height: 900 }}>
         <div style={{ textAlign: 'center', paddingTop: 20 }}>
           <a href="/dashboard">
-            <Image inline verticalAlign size={'huge'} src={btt} />
+            <Image inline size={'huge'} src={btt} />
           </a>
         </div>
       </Segment>

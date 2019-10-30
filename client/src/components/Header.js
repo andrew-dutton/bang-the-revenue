@@ -16,13 +16,17 @@ class Header extends Component {
       case false:
         return (
           <div>
-            <a href="/auth/google" style={{ color: 'white' }}>Login with Google</a>
+            <Menu.Item href="/auth/google" name="log" style={{ backgroundColor: "#3DA4D4", paddingRight: 20, paddingLeft: 20, color: 'white' }}>
+              Login with Google
+            </Menu.Item>
           </div>
         )
       default:
         return (
           <div>
-            <a href="/api/logout" style={{ color: 'white' }}>Logout</a>
+            <Menu.Item href="/api/logout" name="log" style={{ backgroundColor: "#3DA4D4", paddingRight: 20, paddingLeft: 20, color: 'white' }}>
+              Logout
+            </Menu.Item>
           </div>
         )
     }
@@ -47,20 +51,16 @@ class Header extends Component {
       <nav>
         <div>
           <Menu borderless compact inverted style={{ width: 1079, backgroundColor: '#00597A' }}>
-            <Menu.Item to="/" name="home" active={this.state.activeItem === 'home'} onClick={this.handleItemClick}>
-              <a href="/">Bang The Table</a>
+            <Menu.Item to="/" name="home" active={this.state.activeItem === 'home'} href="/" onClick={this.handleItemClick}>
+              Bang The Table
             </Menu.Item>
-            <Menu.Item fitted style={{ backgroundColor: '#EA961C' }} to="/dashboard" name="dashboard" active={this.state.activeItem === 'dashboard'} onClick={this.handleItemClick}>
-              <a href="/dashboard" style={{ backgroundColor: '#EA961C', color: 'white', paddingLeft: 20, paddingRight: 20 }}>Dashboard</a>
+            <Menu.Item fitted style={{ backgroundColor: '#EA961C', paddingLeft: 20, paddingRight: 20 }} href="/dashboard" name="dashboard" active={this.state.activeItem === 'dashboard'} onClick={this.handleItemClick}>
+              Dashboard
             </Menu.Item>
             <Menu.Item position="right" fitted style={{ backgroundColor: '#1BAA8F' }} >
               {this.renderName()}
             </Menu.Item>
-            <Menu.Item fitted name="log" style={{ backgroundColor: "#3DA4D4", paddingRight: 20, paddingLeft: 20 }}>
-              <p>
-                {this.renderContent()}
-              </p>
-            </Menu.Item>
+            {this.renderContent()}
           </Menu>
         </div>
       </nav >

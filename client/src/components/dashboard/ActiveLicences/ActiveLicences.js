@@ -1,16 +1,19 @@
 import React, { Component } from 'react'
-import { Grid } from 'semantic-ui-react'
+import { Grid, Button } from 'semantic-ui-react'
 import DisplayMonth from '../DisplayMonth'
 import DisplayDetails from './DisplayDetails'
 import LicenceToggles from '../LicenceToggles'
 import DashboardHeading from '../DashboardHeading'
 import ActiveLicencesChart from './ActiveLicencesChart'
+import DataIn from '../DataIn'
 
 class ActiveLicences extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
+      dataIn: DataIn.DataIn,
+      test: 555,
       currentColor: 'green',
       ausData: [],
       canData: [],
@@ -59,7 +62,9 @@ class ActiveLicences extends Component {
 
   componentDidMount() {
     this.createMonthsArray()
+
   }
+
 
   setStartingMonth = () => {
     let monthsOfYear = [
@@ -78,7 +83,7 @@ class ActiveLicences extends Component {
     let theDate = month + " " + year
     let thePrevDate = prevMonth + " " + prevYear
 
-    this.setState((prevState) => ({ currentMonth: theDate, currentPrevMonth: thePrevDate, selectedMonth: startingMonthNumber }), this.calculateTotalAUD)
+    this.setState((prevState) => ({ currentMonth: theDate, currentPrevMonth: thePrevDate, selectedMonth: startingMonthNumber }), this.getData())
   }
 
   setChangedMonth = () => {
@@ -142,6 +147,11 @@ class ActiveLicences extends Component {
 
   getNumberOfMonthsSinceJuly2015 = () => {
     let today = new Date()
+
+    if (!this.state.dataIn) {
+      today.setMonth(today.getMonth() - 1)
+    }
+
     let thisMonth = today.getMonth()
     let thisYear = today.getFullYear()
     let monthsOfYears = (thisYear - (2015 + 1)) * 12
@@ -355,67 +365,75 @@ class ActiveLicences extends Component {
     this.setState(prevState => ({ selectedMonth: month }), this.setChangedMonth)
   }
 
+  getData = () => {
+    if (this.props.toRender === "QR") {
+      this.props.getDataFromAL(this.state)
+    }
+  }
 
 
-
-  render() {
-    return (
-      <div style={{ paddingTop: 24, paddingBotton: 24 }}>
-        <DashboardHeading currentColor={this.state.currentColor} />
-        <Grid columns='equal' style={{ width: 1300 }}>
-          <Grid.Column width={1}>
-            <LicenceToggles
-              currentColor={this.state.currentColor}
-              defaultChecked={this.state.defaultChecked}
-              annualActive={this.state.annualActive}
-              projectActive={this.state.projectActive}
-              staticActive={this.state.staticActive}
-              budgetActive={this.state.budgetActive}
-              handleClickAnnual={this.handleClickAnnual}
-              handleClickProject={this.handleClickProject}
-              handleClickBudget={this.handleClickBudget}
-              handleClickStatic={this.handleClickStatic}
-              headingStyle={this.headingStyle}
-            />
-          </Grid.Column>
-          <Grid.Column width={15}>
-            <ActiveLicencesChart
-              currentColor={this.state.currentColor}
-              selectedMonth={this.state.selecteMonth}
-              setChangedMonth={this.setChangedMonth}
-              ausData={this.state.ausData}
-              canData={this.state.canData}
-              usaData={this.state.usaData}
-              ukData={this.state.ukData}
-              nzData={this.state.nzData}
-              updateCurrentMonth={this.updateCurrentMonth}
-            />
-          </Grid.Column>
-        </Grid>
-        <DisplayMonth
-          currentMonth={this.state.currentMonth}
-          currentColor={this.state.currentColor}
-        />
-        <DisplayDetails
-          currentColor={this.state.currentColor}
-          currentAus={this.state.currentAus}
-          currentCan={this.state.currentCan}
-          currentUsa={this.state.currentUsa}
-          currentUk={this.state.currentUk}
-          currentNz={this.state.currentNz}
-          displayTotal={this.displayTotal}
-          table={this.state.table}
-          selectedMonth={this.state.selectedMonth}
-          ausDetail={this.state.ausDetail}
-          loadButtonActive={this.state.loadButtonActive}
-          ausData={this.state.ausData}
-          canData={this.state.canData}
-          usaData={this.state.usaData}
-          ukData={this.state.ukData}
-          nzData={this.state.nzData}
-        />
-      </div>
-    )
+  render(props) {
+    if (this.props.toRender === "QR") {
+      return null
+    } else {
+      return (
+        <div style={{ paddingTop: 24, paddingBotton: 24 }}>
+          <DashboardHeading currentColor={this.state.currentColor} />
+          <Grid columns='equal' style={{ width: 1300 }}>
+            <Grid.Column width={1}>
+              <LicenceToggles
+                currentColor={this.state.currentColor}
+                defaultChecked={this.state.defaultChecked}
+                annualActive={this.state.annualActive}
+                projectActive={this.state.projectActive}
+                staticActive={this.state.staticActive}
+                budgetActive={this.state.budgetActive}
+                handleClickAnnual={this.handleClickAnnual}
+                handleClickProject={this.handleClickProject}
+                handleClickBudget={this.handleClickBudget}
+                handleClickStatic={this.handleClickStatic}
+                headingStyle={this.headingStyle}
+              />
+            </Grid.Column>
+            <Grid.Column width={15}>
+              <ActiveLicencesChart
+                currentColor={this.state.currentColor}
+                selectedMonth={this.state.selecteMonth}
+                setChangedMonth={this.setChangedMonth}
+                ausData={this.state.ausData}
+                canData={this.state.canData}
+                usaData={this.state.usaData}
+                ukData={this.state.ukData}
+                nzData={this.state.nzData}
+                updateCurrentMonth={this.updateCurrentMonth}
+              />
+            </Grid.Column>
+          </Grid>
+          <DisplayMonth
+            currentMonth={this.state.currentMonth}
+            currentColor={this.state.currentColor}
+          />
+          <DisplayDetails
+            currentColor={this.state.currentColor}
+            currentAus={this.state.currentAus}
+            currentCan={this.state.currentCan}
+            currentUsa={this.state.currentUsa}
+            currentUk={this.state.currentUk}
+            currentNz={this.state.currentNz}
+            displayTotal={this.displayTotal}
+            table={this.state.table}
+            selectedMonth={this.state.selectedMonth}
+            ausDetail={this.state.ausDetail}
+            loadButtonActive={this.state.loadButtonActive}
+            ausData={this.state.ausData}
+            canData={this.state.canData}
+            usaData={this.state.usaData}
+            ukData={this.state.ukData}
+            nzData={this.state.nzData}
+          />
+        </div>
+      )
+    }
   }
 }
 

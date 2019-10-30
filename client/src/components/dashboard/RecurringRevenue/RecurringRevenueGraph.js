@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { Line } from 'react-chartjs-2'
 import { Segment, Grid, Checkbox, Flag, Image, GridColumn } from 'semantic-ui-react'
 import { HotTable } from '@handsontable/react';
-
+import DataIn from '../DataIn'
+import Labels from '../Labels'
 import DisplayMonth from '../DisplayMonth'
 
 class RecurringRevenueChart extends Component {
@@ -10,6 +11,7 @@ class RecurringRevenueChart extends Component {
     super(props)
 
     this.state = {
+      dataIn: DataIn.DataIn,
       toggleActive: false,
       currentColor: "orange",
       forexData: this.props.forexData,
@@ -122,9 +124,7 @@ class RecurringRevenueChart extends Component {
       monthDisp = monthsOfYear[this.state.months[month + 1].getMonth()]
     }
 
-
     let theDate = monthDisp + " " + year
-
 
     this.setState((prevState) => ({ currentMonth: theDate }), this.calculateTotalAUD)
   }
@@ -152,9 +152,6 @@ class RecurringRevenueChart extends Component {
       totalsArray.push(this.state.nzData[this.state.selectedMonth] * audnzd)
 
       total = totalsArray.reduce((a, b) => a + b, 0).toFixed(0)
-
-
-
     }
 
     this.setState((prevState) => ({ totalAUD: total }))
@@ -172,16 +169,17 @@ class RecurringRevenueChart extends Component {
 
   handleChange = (e, { value }) => this.setState({ value })
 
-
-
   getNumberOfMonthsSinceJuly2015 = () => {
     let today = new Date()
+
+    if (!this.state.dataIn) {
+      today.setMonth(today.getMonth() - 1)
+    }
+
     let thisMonth = today.getMonth()
     let thisYear = today.getFullYear()
     let monthsOfYears = (thisYear - (2015 + 1)) * 12
-
     return monthsOfYears + thisMonth + 7
-
   }
 
   revenueTotals() {
@@ -971,13 +969,7 @@ class RecurringRevenueChart extends Component {
     const { toggleActive } = this.state
 
     const data = {
-      labels: [
-        'Jul-15', 'Aug-15', 'Sep-15', 'Oct-15', 'Nov-15', 'Dec-15', 'Jan-16', 'Feb-16', 'Mar-16', 'Apr-16', 'May-16', 'Jun-16',
-        'Jul-16', 'Aug-16', 'Sep-16', 'Oct-16', 'Nov-16', 'Dec-16', 'Jan-17', 'Feb-17', 'Mar-17', 'Apr-17', 'May-17', 'Jun-17',
-        'Jul-17', 'Aug-17', 'Sep-17', 'Oct-17', 'Nov-17', 'Dec-17', 'Jan-18', 'Feb-18', 'Mar-18', 'Apr-18', 'May-18', 'Jun-18',
-        'Jul-18', 'Aug-18', 'Sep-18', 'Oct-18', 'Nov-18', 'Dec-18', 'Jan-19', 'Feb-19', 'Mar-19', 'Apr-19', 'May-19', 'Jun-19',
-        'Jul-19', 'Aug-19', 'Sept-19'
-      ],
+      labels: Labels.Labels,
       datasets: [
         {
           label: 'Australia',
@@ -1106,7 +1098,7 @@ class RecurringRevenueChart extends Component {
                   Dispaly Matt's <strong>"Total Recurring Accrued Monthly Revenue"</strong> Version
                   <br />
                   <br />
-                  <Checkbox toggle active={toggleActive} onClick={this.handleToggle} />
+                  <Checkbox toggle active={toggleActive.toString()} onClick={this.handleToggle} />
                 </Segment>
               </div>
             </GridColumn>
@@ -1115,7 +1107,7 @@ class RecurringRevenueChart extends Component {
                 Convert all figures to AUD (not yet active)
               <br />
                 <br />
-                <Checkbox disabled toggle active={toggleActive} />
+                <Checkbox disabled toggle active={toggleActive.toString()} />
               </Segment>
             </GridColumn>
           </Grid>
