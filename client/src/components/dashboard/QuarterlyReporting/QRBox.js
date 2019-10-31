@@ -6,7 +6,6 @@ class QRBox extends Component {
     super(props)
 
     this.state = {
-      dataIn: DataIn.DataIn,
       thisMonth: "Coming next!",
       lastMonth: "Coming next!",
       diff: "Coming next!",
@@ -20,16 +19,7 @@ class QRBox extends Component {
   }
 
   getNumberOfMonthsSinceJuly2015 = () => {
-    let today = new Date()
-
-    if (!this.state.dataIn) {
-      today.setMonth(today.getMonth() - 1)
-    }
-
-    let thisMonth = today.getMonth()
-    let thisYear = today.getFullYear()
-    let monthsOfYears = (thisYear - (2015 + 1)) * 12
-    return monthsOfYears + thisMonth + 7
+    return DataIn.MonthNumber
   }
 
 

@@ -12,7 +12,6 @@ class ActiveLicences extends Component {
     super(props)
 
     this.state = {
-      dataIn: DataIn.DataIn,
       currentColor: 'green',
       ausData: [],
       canData: [],
@@ -144,16 +143,24 @@ class ActiveLicences extends Component {
   }
 
   getNumberOfMonthsSinceJuly2015 = () => {
-    let today = new Date()
+    // let today = new Date()
 
-    if (!this.state.dataIn) {
-      today.setMonth(today.getMonth() - 1)
-    }
+    // if (!this.state.dataIn) {
+    //   today.setMonth(today.getMonth() - 1)
+    // }
 
-    let thisMonth = today.getMonth()
-    let thisYear = today.getFullYear()
-    let monthsOfYears = (thisYear - (2015 + 1)) * 12
-    return monthsOfYears + thisMonth + 7
+    // let thisMonth = today.getMonth()
+    // let thisYear = today.getFullYear()
+    // let monthsOfYears = (thisYear - (2015 + 1)) * 12
+
+    // console.log(DataIn.MonthNumber)
+    return DataIn.MonthNumber
+
+    // return monthsOfYears + thisMonth + 7
+
+    // let thisMonthNumber = DataIn.MonthNumber
+
+
   }
 
   createMonthsArray = () => {
