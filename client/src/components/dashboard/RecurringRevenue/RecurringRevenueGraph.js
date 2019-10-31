@@ -6,7 +6,7 @@ import DataIn from '../DataIn'
 import Labels from '../Labels'
 import DisplayMonth from '../DisplayMonth'
 
-class RecurringRevenueChart extends Component {
+class RecurringRevenueGraph extends Component {
   constructor(props) {
     super(props)
 
@@ -14,7 +14,7 @@ class RecurringRevenueChart extends Component {
       dataIn: DataIn.DataIn,
       toggleActive: false,
       currentColor: "orange",
-      forexData: this.props.forexData,
+      forexData: props.forexData,
       totalAUD: 873822,
       selectedMonth: 0,
       months: [],
@@ -154,7 +154,7 @@ class RecurringRevenueChart extends Component {
       total = totalsArray.reduce((a, b) => a + b, 0).toFixed(0)
     }
 
-    this.setState((prevState) => ({ totalAUD: total }))
+    this.setState((prevState) => ({ totalAUD: total }), this.getData)
   }
 
   handleToggle = () => {
@@ -938,8 +938,6 @@ class RecurringRevenueChart extends Component {
       )
     }
 
-
-
     return (
       <div style={{ width: 1079, paddingTop: 12, paddingBottom: 12, fontFamily: 'Titillium Web' }}>
         <Segment>
@@ -964,189 +962,201 @@ class RecurringRevenueChart extends Component {
     )
   }
 
-
-  render() {
-    const { toggleActive } = this.state
-
-    const data = {
-      labels: Labels.Labels,
-      datasets: [
-        {
-          label: 'Australia',
-          fill: false,
-          lineTension: 0.1,
-          backgroundColor: 'rgba(75,192,1,0.4)',
-          borderColor: 'rgba(75,192,1,0.4)',
-          borderCapStyle: 'butt',
-          borderDash: [],
-          borderDashOffset: 0.0,
-          borderJoinStyle: 'miter',
-          pointBorderColor: 'rgba(75,192,192,1)',
-          pointBackgroundColor: '#fff',
-          pointBorderWidth: 1,
-          pointHoverRadius: 5,
-          pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-          pointHoverBorderColor: 'rgba(220,220,220,1)',
-          pointHoverBorderWidth: 2,
-          pointRadius: 3,
-          pointHitRadius: 10,
-          data: this.state.ausData
-        },
-        {
-          label: 'Canada',
-          fill: false,
-          lineTension: 0.1,
-          backgroundColor: 'rgba(222,213,42,0.4)',
-          borderColor: 'rgba(222,213,42,0.4)',
-          borderCapStyle: 'butt',
-          borderDash: [],
-          borderDashOffset: 0.0,
-          borderJoinStyle: 'miter',
-          pointBorderColor: 'rgba(75,192,192,1)',
-          pointBackgroundColor: '#fff',
-          pointBorderWidth: 1,
-          pointHoverRadius: 5,
-          pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-          pointHoverBorderColor: 'rgba(220,220,220,1)',
-          pointHoverBorderWidth: 2,
-          pointRadius: 3,
-          pointHitRadius: 10,
-          data: this.state.canData
-        },
-        {
-          label: 'USA',
-          fill: false,
-          lineTension: 0.1,
-          backgroundColor: 'rgba(234,77,49,0.4)',
-          borderColor: 'rgba(234,77,49,0.4)',
-          borderCapStyle: 'butt',
-          borderDash: [],
-          borderDashOffset: 0.0,
-          borderJoinStyle: 'miter',
-          pointBorderColor: 'rgba(75,192,192,1)',
-          pointBackgroundColor: '#fff',
-          pointBorderWidth: 1,
-          pointHoverRadius: 5,
-          pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-          pointHoverBorderColor: 'rgba(220,220,220,1)',
-          pointHoverBorderWidth: 2,
-          pointRadius: 3,
-          pointHitRadius: 10,
-          data: this.state.usaData
-        },
-        {
-          label: 'UK',
-          fill: false,
-          lineTension: 0.1,
-          backgroundColor: 'rgba(49,234,212,0.4)',
-          borderColor: 'rgba(49,234,212,0.4)',
-          borderCapStyle: 'butt',
-          borderDash: [],
-          borderDashOffset: 0.0,
-          borderJoinStyle: 'miter',
-          pointBorderColor: 'rgba(75,192,192,1)',
-          pointBackgroundColor: '#fff',
-          pointBorderWidth: 1,
-          pointHoverRadius: 5,
-          pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-          pointHoverBorderColor: 'rgba(220,220,220,1)',
-          pointHoverBorderWidth: 2,
-          pointRadius: 3,
-          pointHitRadius: 10,
-          data: this.state.ukData
-        },
-        {
-          label: 'New Zealand',
-          fill: false,
-          lineTension: 0.1,
-          backgroundColor: 'rgba(234,49,223,0.4)',
-          borderColor: 'rgba(234,49,223,0.4)',
-          borderCapStyle: 'butt',
-          borderDash: [],
-          borderDashOffset: 0.0,
-          borderJoinStyle: 'miter',
-          pointBorderColor: 'rgba(75,192,192,1)',
-          pointBackgroundColor: '#fff',
-          pointBorderWidth: 1,
-          pointHoverRadius: 5,
-          pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-          pointHoverBorderColor: 'rgba(220,220,220,1)',
-          pointHoverBorderWidth: 2,
-          pointRadius: 3,
-          pointHitRadius: 10,
-          data: this.state.nzData
-        }
-      ]
+  getData = () => {
+    if (this.props.toRender === "QR") {
+      this.props.getDataFromRR(this.state)
     }
+  }
 
-    return (
 
-      <div style={{ paddingTop: 24, paddingBotton: 24, width: 1079 }}>
-        <div >
-          <Segment color={"orange"}>
-            <h1 style={{ fontSize: 40, textAlign: "center", fontFamily: 'Titillium Web' }}>
-              Recurring Revenue
+  render(props) {
+    if (this.props.toRender === "QR") {
+      return null
+    } else {
+
+
+      const { toggleActive } = this.state
+
+      const data = {
+        labels: Labels.Labels,
+        datasets: [
+          {
+            label: 'Australia',
+            fill: false,
+            lineTension: 0.1,
+            backgroundColor: 'rgba(75,192,1,0.4)',
+            borderColor: 'rgba(75,192,1,0.4)',
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: 'rgba(75,192,192,1)',
+            pointBackgroundColor: '#fff',
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+            pointHoverBorderColor: 'rgba(220,220,220,1)',
+            pointHoverBorderWidth: 2,
+            pointRadius: 3,
+            pointHitRadius: 10,
+            data: this.state.ausData
+          },
+          {
+            label: 'Canada',
+            fill: false,
+            lineTension: 0.1,
+            backgroundColor: 'rgba(222,213,42,0.4)',
+            borderColor: 'rgba(222,213,42,0.4)',
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: 'rgba(75,192,192,1)',
+            pointBackgroundColor: '#fff',
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+            pointHoverBorderColor: 'rgba(220,220,220,1)',
+            pointHoverBorderWidth: 2,
+            pointRadius: 3,
+            pointHitRadius: 10,
+            data: this.state.canData
+          },
+          {
+            label: 'USA',
+            fill: false,
+            lineTension: 0.1,
+            backgroundColor: 'rgba(234,77,49,0.4)',
+            borderColor: 'rgba(234,77,49,0.4)',
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: 'rgba(75,192,192,1)',
+            pointBackgroundColor: '#fff',
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+            pointHoverBorderColor: 'rgba(220,220,220,1)',
+            pointHoverBorderWidth: 2,
+            pointRadius: 3,
+            pointHitRadius: 10,
+            data: this.state.usaData
+          },
+          {
+            label: 'UK',
+            fill: false,
+            lineTension: 0.1,
+            backgroundColor: 'rgba(49,234,212,0.4)',
+            borderColor: 'rgba(49,234,212,0.4)',
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: 'rgba(75,192,192,1)',
+            pointBackgroundColor: '#fff',
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+            pointHoverBorderColor: 'rgba(220,220,220,1)',
+            pointHoverBorderWidth: 2,
+            pointRadius: 3,
+            pointHitRadius: 10,
+            data: this.state.ukData
+          },
+          {
+            label: 'New Zealand',
+            fill: false,
+            lineTension: 0.1,
+            backgroundColor: 'rgba(234,49,223,0.4)',
+            borderColor: 'rgba(234,49,223,0.4)',
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: 'rgba(75,192,192,1)',
+            pointBackgroundColor: '#fff',
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+            pointHoverBorderColor: 'rgba(220,220,220,1)',
+            pointHoverBorderWidth: 2,
+            pointRadius: 3,
+            pointHitRadius: 10,
+            data: this.state.nzData
+          }
+        ]
+      }
+
+      return (
+
+        <div style={{ paddingTop: 24, paddingBotton: 24, width: 1079 }}>
+          <div >
+            <Segment color={"orange"}>
+              <h1 style={{ fontSize: 40, textAlign: "center", fontFamily: 'Titillium Web' }}>
+                Recurring Revenue
             </h1>
-          </Segment>
-        </div>
-        <Segment stlye={{ widht: 1079 }}>
-          <Grid width={16}>
-            <GridColumn width={8}>
-              <Image fluid label={{ as: 'a', color: 'orange', corner: 'right', icon: 'star' }} />
-              <div>
+            </Segment>
+          </div>
+          <Segment stlye={{ widht: 1079 }}>
+            <Grid width={16}>
+              <GridColumn width={8}>
+                <Image fluid label={{ as: 'a', color: 'orange', corner: 'right', icon: 'star' }} />
+                <div>
+                  <Segment color="orange">
+                    Dispaly Matt's <strong>"Total Recurring Accrued Monthly Revenue"</strong> Version
+                  <br />
+                    <br />
+                    <Checkbox toggle active={toggleActive.toString()} onClick={this.handleToggle} />
+                  </Segment>
+                </div>
+              </GridColumn>
+              <GridColumn width={8}>
                 <Segment color="orange">
-                  Dispaly Matt's <strong>"Total Recurring Accrued Monthly Revenue"</strong> Version
-                  <br />
-                  <br />
-                  <Checkbox toggle active={toggleActive.toString()} onClick={this.handleToggle} />
-                </Segment>
-              </div>
-            </GridColumn>
-            <GridColumn width={8}>
-              <Segment color="orange">
-                Convert all figures to AUD (not yet active)
+                  Convert all figures to AUD (not yet active)
               <br />
-                <br />
-                <Checkbox disabled toggle active={toggleActive.toString()} />
-              </Segment>
-            </GridColumn>
-          </Grid>
-        </Segment>
-        <Segment color="orange" style={{ width: 1079 }} >
-          <Line
-            data={data}
-            options={{
-              scales: {
-                yAxes: [{
-                  ticks: {
-                    suggestedMax: 600000
+                  <br />
+                  <Checkbox disabled toggle active={toggleActive.toString()} />
+                </Segment>
+              </GridColumn>
+            </Grid>
+          </Segment>
+          <Segment color="orange" style={{ width: 1079 }} >
+            <Line
+              data={data}
+              options={{
+                scales: {
+                  yAxes: [{
+                    ticks: {
+                      suggestedMax: 600000
+                    }
+                  }]
+                },
+                'onClick': (event, item) => {
+                  if (item.length > 0) {
+                    this.setState((prevState) => ({ selectedMonth: item[0]["_index"] }), this.setChangedMonth)
                   }
-                }]
-              },
-              'onClick': (event, item) => {
-                if (item.length > 0) {
-                  this.setState((prevState) => ({ selectedMonth: item[0]["_index"] }), this.setChangedMonth)
                 }
-              }
-            }}
-          />
-        </Segment>
-        <div>
-          <DisplayMonth currentMonth={this.state.currentMonth} currentColor={this.state.currentColor} />
-        </div>
-        <div>
-          {this.displayConvertAusTable()}
-          {this.displayTable()}
-        </div>
-        <div>
-          {this.displayDetails()}
-        </div>
-        <div>
-          {this.displayDetailsNON()}
-        </div>
-      </div >
-    )
+              }}
+            />
+          </Segment>
+          <div>
+            <DisplayMonth currentMonth={this.state.currentMonth} currentColor={this.state.currentColor} />
+          </div>
+          <div>
+            {this.displayConvertAusTable()}
+            {this.displayTable()}
+          </div>
+          <div>
+            {this.displayDetails()}
+          </div>
+          <div>
+            {this.displayDetailsNON()}
+          </div>
+        </div >
+      )
+    }
   }
 }
 
-export default RecurringRevenueChart
+export default RecurringRevenueGraph

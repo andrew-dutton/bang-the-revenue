@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Grid, Button } from 'semantic-ui-react'
+import { Grid } from 'semantic-ui-react'
 import DisplayMonth from '../DisplayMonth'
 import DisplayDetails from './DisplayDetails'
 import LicenceToggles from '../LicenceToggles'
@@ -13,7 +13,6 @@ class ActiveLicences extends Component {
 
     this.state = {
       dataIn: DataIn.DataIn,
-      test: 555,
       currentColor: 'green',
       ausData: [],
       canData: [],
@@ -62,7 +61,6 @@ class ActiveLicences extends Component {
 
   componentDidMount() {
     this.createMonthsArray()
-
   }
 
 
@@ -378,7 +376,7 @@ class ActiveLicences extends Component {
     } else {
       return (
         <div style={{ paddingTop: 24, paddingBotton: 24 }}>
-          <DashboardHeading currentColor={this.state.currentColor} />
+          <DashboardHeading title={"Active Licences"} currentColor={this.state.currentColor} />
           <Grid columns='equal' style={{ width: 1300 }}>
             <Grid.Column width={1}>
               <LicenceToggles

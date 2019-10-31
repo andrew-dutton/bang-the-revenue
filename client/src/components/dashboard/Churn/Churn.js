@@ -114,7 +114,7 @@ class Churn extends Component {
     if (this.state.annualOn === false && this.state.projectOn === false && this.state.staticOn === false && this.state.budgetOn === false) {
       this.setState((prevState) => ({ showTable: false, renderSwitch: !prevState.renderSwitch }), this.setStartingMonth)
     } else {
-      this.setState((prevState) => ({ showTable: true, renderSwitch: !prevState.renderSwitch }))
+      this.setState((prevState) => ({ showTable: true, renderSwitch: !prevState.renderSwitch }), this.getData)
     }
   }
 
@@ -183,7 +183,7 @@ class Churn extends Component {
     let theDate = month + " " + year
     let thePrevDate = prevMonth + " " + prevYear
 
-    this.setState((prevState) => ({ currentMonth: theDate, currentPrevMonth: thePrevDate, selectedMonth: startingMonthNumber }))
+    this.setState((prevState) => ({ currentMonth: theDate, currentPrevMonth: thePrevDate, selectedMonth: startingMonthNumber }), this.getData)
   }
 
   setChangedMonth = () => {
@@ -1056,47 +1056,56 @@ class Churn extends Component {
     }
   }
 
-  render() {
-    return (
-      <div style={{ paddingTop: 24, fontFamily: 'Titillium Web' }}>
-        <div style={{ paddingBottom: 12 }}>
-          <Segment color="blue" style={{ width: 1079 }}>
-            <h1 style={{ fontSize: 40, textAlign: "center", fontFamily: 'Titillium Web' }}>
-              Client Churn
-              </h1>
-          </Segment>
-        </div>
-        <Segment color="blue" style={{ width: 1079 }} >
-          <div>
-            <div style={{ fontFamily: 'Titillium Web', textAlign: 'center' }}>
-              <Button basic={this.state.churnTer !== "Global"} primary onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Global</Button>
-              <Button basic={this.state.churnTer !== "AUS"} color="green" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Australia</Button>
-              <Button basic={this.state.churnTer !== "CAN"} color="yellow" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Canada</Button>
-              <Button basic={this.state.churnTer !== "USA"} color="red" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>United States</Button>
-              <Button basic={this.state.churnTer !== "UK"} color="teal" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>United Kingdom</Button>
-              <Button basic={this.state.churnTer !== "NZ"} color="purple" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>New Zealand</Button>
-            </div>
-          </div>
-        </Segment>
-
-        {this.displayChart()}
-
-        <DisplayMonth currentMonth={this.state.currentMonth} currentColor={this.state.currentColor} />
-
-        {this.displayTable()}
-
-        {this.displayMRRTable()}
-
-
-        {this.displayChurnTable()}
-        {this.displayAddedTable()}
-
-
-        <div style={{ paddingBottom: 100 }}></div>
-      </div >
-    )
+  getData = () => {
+    if (this.props.toRender === "QR") {
+      this.props.getDataFromChurn(this.state)
+    }
   }
 
+  render() {
+    if (this.props.toRender === "QR") {
+      return null
+    } else {
+      return (
+        <div style={{ paddingTop: 24, fontFamily: 'Titillium Web' }}>
+          <div style={{ paddingBottom: 12 }}>
+            <Segment color="blue" style={{ width: 1079 }}>
+              <h1 style={{ fontSize: 40, textAlign: "center", fontFamily: 'Titillium Web' }}>
+                Client Churn
+              </h1>
+            </Segment>
+          </div>
+          <Segment color="blue" style={{ width: 1079 }} >
+            <div>
+              <div style={{ fontFamily: 'Titillium Web', textAlign: 'center' }}>
+                <Button basic={this.state.churnTer !== "Global"} primary onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Global</Button>
+                <Button basic={this.state.churnTer !== "AUS"} color="green" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Australia</Button>
+                <Button basic={this.state.churnTer !== "CAN"} color="yellow" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Canada</Button>
+                <Button basic={this.state.churnTer !== "USA"} color="red" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>United States</Button>
+                <Button basic={this.state.churnTer !== "UK"} color="teal" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>United Kingdom</Button>
+                <Button basic={this.state.churnTer !== "NZ"} color="purple" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>New Zealand</Button>
+              </div>
+            </div>
+          </Segment>
+
+          {this.displayChart()}
+
+          <DisplayMonth currentMonth={this.state.currentMonth} currentColor={this.state.currentColor} />
+
+          {this.displayTable()}
+
+          {this.displayMRRTable()}
+
+
+          {this.displayChurnTable()}
+          {this.displayAddedTable()}
+
+
+          <div style={{ paddingBottom: 100 }}></div>
+        </div >
+      )
+    }
+  }
 }
 
 export default Churn

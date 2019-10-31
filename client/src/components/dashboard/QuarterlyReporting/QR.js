@@ -1,6 +1,11 @@
 import React, { Component } from 'react'
+import { Dropdown, Segment } from 'semantic-ui-react'
 import DataIn from '../DataIn'
 import ActiveLicences from '../../dashboard/ActiveLicences/ActiveLicences'
+import RecurringRevenueGraph from '../RecurringRevenue/RecurringRevenueGraph'
+import Churn from '../Churn/Churn'
+import Forex from '../../dashboard/Forex'
+import DashboardHeading from '../../dashboard/DashboardHeading'
 
 class QR extends Component {
   constructor(props) {
@@ -9,9 +14,120 @@ class QR extends Component {
     this.state = {
       dataIn: DataIn.DataIn,
       data: props.rawData,
-      forex: props.forex,
-      months: []
+      forex: Forex.rates,
+      currentColor: 'yellow',
+      months: [],
+      quarters: [
+        {
+          key: "Q1 2020",
+          text: "Q1 2020",
+          value: "Q1 2020",
+        },
+        {
+          key: "Q4 2019",
+          text: "Q4 2019",
+          value: "Q4 2019",
+        },
+        {
+          key: "Q3 2019",
+          text: "Q3 2019",
+          value: "Q3 2019",
+        },
+        {
+          key: "Q2 2019",
+          text: "Q2 2019",
+          value: "Q2 2019",
+        },
+        {
+          key: "Q1 2019",
+          text: "Q1 2019",
+          value: "Q1 2019",
+        },
+        {
+          key: "Q4 2018",
+          text: "Q4 2018",
+          value: "Q4 2018",
+        },
+        {
+          key: "Q3 2018",
+          text: "Q3 2018",
+          value: "Q3 2018",
+        },
+        {
+          key: "Q2 2018",
+          text: "Q2 2018",
+          value: "Q2 2018",
+        },
+        {
+          key: "Q1 2018",
+          text: "Q1 2018",
+          value: "Q1 2018",
+        },
+        {
+          key: "Q4 2017",
+          text: "Q4 2017",
+          value: "Q4 2017",
+        },
+        {
+          key: "Q3 2017",
+          text: "Q3 2017",
+          value: "Q3 2017",
+        },
+        {
+          key: "Q2 2017",
+          text: "Q2 2017",
+          value: "Q2 2017",
+        },
+        {
+          key: "Q1 2017",
+          text: "Q1 2017",
+          value: "Q1 2017",
+        },
+        {
+          key: "Q4 2016",
+          text: "Q4 2016",
+          value: "Q4 2016",
+        },
+        {
+          key: "Q3 2016",
+          text: "Q3 2016",
+          value: "Q3 2016",
+        },
+        {
+          key: "Q2 2016",
+          text: "Q2 2016",
+          value: "Q2 2016",
+        },
+        {
+          key: "Q1 2016",
+          text: "Q1 2016",
+          value: "Q1 2016",
+        },
+        {
+          key: "Q4 2015",
+          text: "Q4 201,5",
+          value: "Q4 201,5",
+        },
+        {
+          key: "Q3 2015",
+          text: "Q3 2015",
+          value: "Q3 2015",
+        },
+        {
+          key: "Q2 2015",
+          text: "Q2 2015",
+          value: "Q2 2015",
+        },
+        {
+          key: "Q1 2015",
+          text: "Q1 2015",
+          value: "Q1 2015",
+        }
+      ]
     }
+
+    this.displayLicenceData = this.displayLicenceData.bind(this)
+    this.selecteQuarter = this.selecteQuarter.bind(this)
   }
 
   componentDidMount() {
@@ -103,48 +219,74 @@ class QR extends Component {
 
     if (currentQuarter === "Q1" || currentQuarter === "Q2") {
       let nextYear = parseInt(currentYear) + 1
-      currentFinYear = currentYear + "/" + nextYear
+      currentFinYear = nextYear
     } else {
       let lastYear = parseInt(currentYear) - 1
-      currentFinYear = lastYear + "/" + currentYear
+      currentFinYear = currentYear
     }
 
-    this.setState(prevState => ({ currentQuarter, currentFinYear }), this.getCurrentActiveLicences)
+    this.setState(prevState => ({ currentQuarter, currentFinYear, selectedQuarter: currentQuarter }), this.getCurrentActiveLicences)
   }
 
   renderForQR = () => {
     this.setState({ render: "QR" })
   }
 
-  getDataFromAL = (dataFromAL) => {
-    this.setState({ stateAL: dataFromAL })
+  getDataFromAL = (stateAL) => {
+    this.setState({ stateAL })
+  }
+
+  getDataFromRR = (stateRR) => {
+    this.setState({ stateRR })
+  }
+
+  getDataFromChurn = (stateChurn) => {
+    this.setState({ stateChurn })
+  }
+
+  selecteQuarter = () => {
+
+  }
+
+  displayLicenceData = () => {
+    if (this.state.currentQuarter === "Q1") {
+      let { currentQuarter, currentFinYear, stateAL, quarters } = this.state
+      let endOfQ1Total = 0
+
+      console.log(this.state.selectedQuarter)
+
+      return (
+        <div>
+          <Segment color="yellow" style={{ height: 1000, width: 1079 }}>
+            <h4 style={{ display: 'inline' }}>
+              Select Quarter to display:
+            <h2 style={{ display: 'inline' }}>{"   "}
+                <Dropdown
+                  inline
+                  options={quarters}
+                  defaultValue={quarters[0]['text']}
+
+                  onChange={(event, data) => this.setState({ selectedQuarter: data.value })}
+                />
+              </h2>
+            </h4>
+          </Segment>
+        </div>
+      )
+    }
   }
 
 
   render() {
-    if (typeof (this.state.stateAL) !== "undefined") {
-      let aus = this.state.stateAL.ausData[this.state.selectedMonth]
-      let can = this.state.stateAL.canData[this.state.selectedMonth]
-      let usa = this.state.stateAL.usaData[this.state.selectedMonth]
-      let uk = this.state.stateAL.ukData[this.state.selectedMonth]
-      let nz = this.state.stateAL.nzData[this.state.selectedMonth]
-      let ausPrev = this.state.stateAL.ausData[this.state.selectedMonth - 1]
-      let canPrev = this.state.stateAL.canData[this.state.selectedMonth - 1]
-      let usaPrev = this.state.stateAL.usaData[this.state.selectedMonth - 1]
-      let ukPrev = this.state.stateAL.ukData[this.state.selectedMonth - 1]
-      let nzPrev = this.state.stateAL.nzData[this.state.selectedMonth - 1]
-      let thisMonth = aus + can + usa + uk + nz
-      let prevMonth = ausPrev + canPrev + usaPrev + ukPrev + nzPrev
-      console.log(thisMonth)
-      console.log(prevMonth)
-      console.log(thisMonth - prevMonth)
-    }
     if (this.state.months.length > 1) {
       return (
-        <div>
-          <h1 style={{ textAlign: 'center', fontFamily: "Titillium Web", paddingTop: 20 }}>{this.state.currentQuarter} {this.state.currentFinYear}</h1>
+        <div style={{ paddingTop: 24, paddingBotton: 24 }}>
+          <DashboardHeading title={"Quarterly Reporting"} currentColor={this.state.currentColor} />
           <ActiveLicences getDataFromAL={this.getDataFromAL} toRender={"QR"} rawData={this.state.data} />
-
+          <RecurringRevenueGraph getDataFromRR={this.getDataFromRR} toRender={"QR"} forexData={this.state.forex} rawData={this.state.data} />
+          <Churn getDataFromChurn={this.getDataFromChurn} toRender={"QR"} forexData={this.state.forex} rawData={this.state.data} />
+          {this.selecteQuarter()}
+          {this.displayLicenceData()}
         </div>
       )
     }
@@ -155,3 +297,20 @@ class QR extends Component {
 }
 
 export default QR
+
+
+
+
+
+
+    // if (typeof (this.state.stateAL) !== "undefined") {
+    //   console.log(this.state.stateAL)
+    // }
+
+    // if (typeof (this.state.stateRR) !== "undefined") {
+    //   console.log(this.state.stateRR)
+    // }
+
+    // if (typeof (this.state.stateChurn) !== "undefined") {
+    //   console.log(this.state.stateChurn)
+    // }

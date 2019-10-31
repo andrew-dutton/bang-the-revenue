@@ -6,8 +6,8 @@ const dashboardHeading = props => {
     <div style={{ paddingBottom: 24 }}>
       <Segment color={props.currentColor} style={{ width: 1079 }}>
         <h1 style={{ fontSize: 40, textAlign: "center", fontFamily: 'Titillium Web' }}>
-          Active Licences
-      </h1>
+          {props.title}
+        </h1>
       </Segment>
     </div>
   )
