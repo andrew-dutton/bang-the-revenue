@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Dropdown, Segment } from 'semantic-ui-react'
+import { Dropdown, Segment, Table } from 'semantic-ui-react'
 import DataIn from '../DataIn'
 import ActiveLicences from '../../dashboard/ActiveLicences/ActiveLicences'
 import RecurringRevenueGraph from '../RecurringRevenue/RecurringRevenueGraph'
@@ -17,117 +17,103 @@ class QR extends Component {
       forex: Forex.rates,
       currentColor: 'yellow',
       months: [],
+      quarterMonths: {
+        Q1: ["July", "August", "September"],
+        Q2: ["October", "November", "December"],
+        Q3: ["January", "Febraury", "March"],
+        Q4: ["April", "May", "June"]
+      },
       quarters: [
         {
-          key: "Q1 2020",
+          key: 48,
           text: "Q1 2020",
           value: "Q1 2020",
         },
         {
-          key: "Q4 2019",
+          key: 45,
           text: "Q4 2019",
           value: "Q4 2019",
         },
         {
-          key: "Q3 2019",
+          key: 42,
           text: "Q3 2019",
           value: "Q3 2019",
         },
         {
-          key: "Q2 2019",
+          key: 39,
           text: "Q2 2019",
           value: "Q2 2019",
         },
         {
-          key: "Q1 2019",
+          key: 36,
           text: "Q1 2019",
           value: "Q1 2019",
         },
         {
-          key: "Q4 2018",
+          key: 33,
           text: "Q4 2018",
           value: "Q4 2018",
         },
         {
-          key: "Q3 2018",
+          key: 30,
           text: "Q3 2018",
           value: "Q3 2018",
         },
         {
-          key: "Q2 2018",
+          key: 27,
           text: "Q2 2018",
           value: "Q2 2018",
         },
         {
-          key: "Q1 2018",
+          key: 24,
           text: "Q1 2018",
           value: "Q1 2018",
         },
         {
-          key: "Q4 2017",
+          key: 21,
           text: "Q4 2017",
           value: "Q4 2017",
         },
         {
-          key: "Q3 2017",
+          key: 18,
           text: "Q3 2017",
           value: "Q3 2017",
         },
         {
-          key: "Q2 2017",
+          key: 15,
           text: "Q2 2017",
           value: "Q2 2017",
         },
         {
-          key: "Q1 2017",
+          key: 12,
           text: "Q1 2017",
           value: "Q1 2017",
         },
         {
-          key: "Q4 2016",
+          key: 9,
           text: "Q4 2016",
           value: "Q4 2016",
         },
         {
-          key: "Q3 2016",
+          key: 6,
           text: "Q3 2016",
           value: "Q3 2016",
         },
         {
-          key: "Q2 2016",
+          key: 3,
           text: "Q2 2016",
           value: "Q2 2016",
         },
         {
-          key: "Q1 2016",
+          key: 0,
           text: "Q1 2016",
           value: "Q1 2016",
-        },
-        {
-          key: "Q4 2015",
-          text: "Q4 201,5",
-          value: "Q4 201,5",
-        },
-        {
-          key: "Q3 2015",
-          text: "Q3 2015",
-          value: "Q3 2015",
-        },
-        {
-          key: "Q2 2015",
-          text: "Q2 2015",
-          value: "Q2 2015",
-        },
-        {
-          key: "Q1 2015",
-          text: "Q1 2015",
-          value: "Q1 2015",
         }
       ]
     }
 
-    this.displayLicenceData = this.displayLicenceData.bind(this)
-    this.selecteQuarter = this.selecteQuarter.bind(this)
+    this.displayQtrSelector = this.displayQtrSelector.bind(this)
+
   }
 
   componentDidMount() {
@@ -225,7 +211,7 @@ class QR extends Component {
       currentFinYear = currentYear
     }
 
-    this.setState(prevState => ({ currentQuarter, currentFinYear, selectedQuarter: currentQuarter }), this.getCurrentActiveLicences)
+    this.setState(prevState => ({ currentQuarter, currentFinYear, selectedQuarter: currentQuarter + " " + currentFinYear }))
   }
 
   renderForQR = () => {
@@ -241,40 +227,257 @@ class QR extends Component {
   }
 
   getDataFromChurn = (stateChurn) => {
-    this.setState({ stateChurn })
+    this.setState({ stateChurn }, this.getCurrentQuarterAL)
   }
 
-  selecteQuarter = () => {
+  getCurrentQuarterAL = () => {
+    let { selectedQuarter, stateAL, quarters } = this.state
+    let { ausData, canData, usaData, ukData, nzData } = stateAL
+
+
+
+    quarters.forEach(qtr => {
+      if (qtr.value === selectedQuarter) {
+        let firstMonth = qtr.key
+        let aus = ausData[firstMonth + 2]
+        let can = canData[firstMonth + 2]
+        let usa = usaData[firstMonth + 2]
+        let uk = ukData[firstMonth + 2]
+        let nz = nzData[firstMonth + 2]
+
+        let ausPrev = ausData[firstMonth - 1]
+        let canPrev = canData[firstMonth - 1]
+        let usaPrev = usaData[firstMonth - 1]
+        let ukPrev = ukData[firstMonth - 1]
+        let nzPrev = nzData[firstMonth - 1]
+
+        let totalALForSelectedQtr = aus + can + usa + uk + nz
+        let totalALForPrevQtr = ausPrev + canPrev + usaPrev + ukPrev + nzPrev
+        this.setState({ totalALForSelectedQtr, totalALForPrevQtr })
+      }
+    })
 
   }
 
-  displayLicenceData = () => {
+
+  displayQtrSelector = () => {
     if (this.state.currentQuarter === "Q1") {
       let { currentQuarter, currentFinYear, stateAL, quarters } = this.state
       let endOfQ1Total = 0
 
-      console.log(this.state.selectedQuarter)
 
       return (
         <div>
-          <Segment color="yellow" style={{ height: 1000, width: 1079 }}>
-            <h4 style={{ display: 'inline' }}>
-              Select Quarter to display:
-            <h2 style={{ display: 'inline' }}>{"   "}
-                <Dropdown
-                  inline
-                  options={quarters}
-                  defaultValue={quarters[0]['text']}
-
-                  onChange={(event, data) => this.setState({ selectedQuarter: data.value })}
-                />
-              </h2>
-            </h4>
+          <Segment color="yellow" style={{ width: 1079 }}>
+            <h2 style={{ textAlign: "center" }}>{"   "}
+              <Dropdown
+                inline
+                options={quarters}
+                defaultValue={quarters[0]['text']}
+                onChange={(e, data) => this.setState(({ selectedQuarter: data.value }), this.getCurrentQuarterAL)}
+              />
+            </h2>
           </Segment>
         </div>
       )
     }
   }
+
+  displayReport = () => {
+    return (
+      <div>
+        <Segment color="yellow" style={{ width: 1079, height: 950, marginTop: 12 }}>
+          <Table width={16} compact textAlign={'center'} definition>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell width={4} />
+                <Table.HeaderCell>This Quarter</Table.HeaderCell>
+                <Table.HeaderCell>Previous Quarter</Table.HeaderCell>
+                <Table.HeaderCell>Change</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              <Table.Row>
+                <Table.Cell>Total Clients</Table.Cell>
+                <Table.Cell>{this.state.totalALForSelectedQtr}</Table.Cell>
+                <Table.Cell>{this.state.totalALForPrevQtr}</Table.Cell>
+                <Table.Cell>{this.state.totalALForSelectedQtr - this.state.totalALForPrevQtr}</Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>Lost Clients</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>New Clients</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>Churn Rate</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell></Table.Cell>
+                <Table.Cell></Table.Cell>
+                <Table.Cell></Table.Cell>
+                <Table.Cell></Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>eHQ MMR</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>eIQ MMR</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>Total MMR</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell></Table.Cell>
+                <Table.Cell></Table.Cell>
+                <Table.Cell></Table.Cell>
+                <Table.Cell></Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>eHQ Non-MMR</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>eIQ Non-MR</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>Total Non-MMR</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell></Table.Cell>
+                <Table.Cell></Table.Cell>
+                <Table.Cell></Table.Cell>
+                <Table.Cell></Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>eHQ Avg Monthly NON-RR</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>eHQ Avg Monthly NON-RR</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell></Table.Cell>
+                <Table.Cell></Table.Cell>
+                <Table.Cell></Table.Cell>
+                <Table.Cell></Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>eHQ Accrued Revenue</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>eIQ Accrued Revenue</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>Total Accrued Revenue</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell></Table.Cell>
+                <Table.Cell></Table.Cell>
+                <Table.Cell></Table.Cell>
+                <Table.Cell></Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>Revenue Run Rate</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell></Table.Cell>
+                <Table.Cell></Table.Cell>
+                <Table.Cell></Table.Cell>
+                <Table.Cell></Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>Total Invoiced</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>Total Spent</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>Net Cashflow</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell></Table.Cell>
+                <Table.Cell></Table.Cell>
+                <Table.Cell></Table.Cell>
+                <Table.Cell></Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>Budgeted Global Spend</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>Actual Global Spend</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>Global Variance</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+                <Table.Cell>...</Table.Cell>
+              </Table.Row>
+            </Table.Body>
+          </Table>
+        </Segment>
+      </div>
+    )
+  }
+
 
 
   render() {
@@ -285,8 +488,8 @@ class QR extends Component {
           <ActiveLicences getDataFromAL={this.getDataFromAL} toRender={"QR"} rawData={this.state.data} />
           <RecurringRevenueGraph getDataFromRR={this.getDataFromRR} toRender={"QR"} forexData={this.state.forex} rawData={this.state.data} />
           <Churn getDataFromChurn={this.getDataFromChurn} toRender={"QR"} forexData={this.state.forex} rawData={this.state.data} />
-          {this.selecteQuarter()}
-          {this.displayLicenceData()}
+          {this.displayQtrSelector()}
+          {this.displayReport()}
         </div>
       )
     }
