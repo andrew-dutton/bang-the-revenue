@@ -4,7 +4,6 @@ import DataIn from '../DataIn'
 import ActiveLicences from '../../dashboard/ActiveLicences/ActiveLicences'
 import RecurringRevenueGraph from '../RecurringRevenue/RecurringRevenueGraph'
 import Churn from '../Churn/Churn'
-import Forex from '../../dashboard/Forex'
 import DashboardHeading from '../../dashboard/DashboardHeading'
 
 class QR extends Component {
@@ -13,7 +12,7 @@ class QR extends Component {
 
     this.state = {
       data: props.rawData,
-      forex: Forex.rates,
+      forex: DataIn.rates,
       currentColor: 'yellow',
       months: [],
       quarterMonths: {
@@ -22,93 +21,7 @@ class QR extends Component {
         Q3: ["January", "Febraury", "March"],
         Q4: ["April", "May", "June"]
       },
-      quarters: [
-        {
-          key: 48,
-          text: "Q1 2020",
-          value: "Q1 2020",
-        },
-        {
-          key: 45,
-          text: "Q4 2019",
-          value: "Q4 2019",
-        },
-        {
-          key: 42,
-          text: "Q3 2019",
-          value: "Q3 2019",
-        },
-        {
-          key: 39,
-          text: "Q2 2019",
-          value: "Q2 2019",
-        },
-        {
-          key: 36,
-          text: "Q1 2019",
-          value: "Q1 2019",
-        },
-        {
-          key: 33,
-          text: "Q4 2018",
-          value: "Q4 2018",
-        },
-        {
-          key: 30,
-          text: "Q3 2018",
-          value: "Q3 2018",
-        },
-        {
-          key: 27,
-          text: "Q2 2018",
-          value: "Q2 2018",
-        },
-        {
-          key: 24,
-          text: "Q1 2018",
-          value: "Q1 2018",
-        },
-        {
-          key: 21,
-          text: "Q4 2017",
-          value: "Q4 2017",
-        },
-        {
-          key: 18,
-          text: "Q3 2017",
-          value: "Q3 2017",
-        },
-        {
-          key: 15,
-          text: "Q2 2017",
-          value: "Q2 2017",
-        },
-        {
-          key: 12,
-          text: "Q1 2017",
-          value: "Q1 2017",
-        },
-        {
-          key: 9,
-          text: "Q4 2016",
-          value: "Q4 2016",
-        },
-        {
-          key: 6,
-          text: "Q3 2016",
-          value: "Q3 2016",
-        },
-        {
-          key: 3,
-          text: "Q2 2016",
-          value: "Q2 2016",
-        },
-        {
-          key: 0,
-          text: "Q1 2016",
-          value: "Q1 2016",
-        }
-      ]
+      quarters: DataIn.Quarters
     }
 
     this.displayQtrSelector = this.displayQtrSelector.bind(this)
@@ -187,11 +100,28 @@ class QR extends Component {
     let currentQuarter = ""
     let currentFinYear = ""
 
+
     Object.keys(quarters).forEach((key) => {
       if (quarters[key].includes(currentMonth)) {
         currentQuarter = key
       }
     })
+
+    if (currentMonth === "January" || currentMonth === "February") {
+      currentQuarter = "Q4"
+    }
+
+    if (currentMonth === "April" || currentMonth === "May") {
+      currentQuarter = "Q3"
+    }
+
+    if (currentMonth === "July" || currentMonth === "August") {
+      currentQuarter = "Q2"
+    }
+
+    if (currentMonth === "October" || currentMonth === "November") {
+      currentQuarter = "Q1"
+    }
 
     if (currentQuarter === "Q1" || currentQuarter === "Q2") {
       let nextYear = parseInt(currentYear) + 1
@@ -202,6 +132,7 @@ class QR extends Component {
     }
 
     this.setState(prevState => ({ currentQuarter, currentFinYear, selectedQuarter: currentQuarter + " " + currentFinYear }))
+
   }
 
   renderForQR = () => {
@@ -217,14 +148,32 @@ class QR extends Component {
   }
 
   getDataFromChurn = (stateChurn) => {
-    this.setState({ stateChurn }, this.getCurrentQuarterAL)
+    this.setState({ stateChurn }, this.getActiveLicences)
   }
 
-  getCurrentQuarterAL = () => {
+  displayQtrSelector = () => {
+    let { currentQuarter, currentFinYear, stateAL, quarters } = this.state
+    let endOfQ1Total = 0
+
+    return (
+      <div>
+        <Segment color="yellow" style={{ width: 1079 }}>
+          <h2 style={{ textAlign: "center" }}>{"   "}
+            <Dropdown
+              inline
+              options={quarters}
+              defaultValue={quarters[0]['text']}
+              onChange={(e, data) => this.setState(({ selectedQuarter: data.value }), this.getActiveLicences)}
+            />
+          </h2>
+        </Segment>
+      </div>
+    )
+  }
+
+  getActiveLicences = () => {
     let { selectedQuarter, stateAL, quarters } = this.state
     let { ausData, canData, usaData, ukData, nzData } = stateAL
-
-
 
     quarters.forEach(qtr => {
       if (qtr.value === selectedQuarter) {
@@ -243,37 +192,148 @@ class QR extends Component {
 
         let totalALForSelectedQtr = aus + can + usa + uk + nz
         let totalALForPrevQtr = ausPrev + canPrev + usaPrev + ukPrev + nzPrev
-        this.setState({ totalALForSelectedQtr, totalALForPrevQtr })
+        this.setState({ totalALForSelectedQtr, totalALForPrevQtr }, this.getLostClients)
+      }
+    })
+  }
+
+  getLostClients = () => {
+    let { selectedQuarter, quarters } = this.state
+    let { lost } = this.state.stateChurn
+    quarters.forEach(qtr => {
+      if (qtr.value === selectedQuarter) {
+        let firstMonth = qtr.key
+
+        if (!lost[firstMonth]) {
+          return null
+        }
+
+        let month1 = lost[firstMonth - 1].length
+        let month2 = lost[firstMonth].length
+        let month3 = lost[firstMonth + 1].length
+
+        let prevMonth2 = lost[firstMonth - 3].length
+        let prevMonth3 = lost[firstMonth - 2].length
+        let totalLostForSelectedQtr = month1 + month2 + month3
+        let totalLostForPrevQtr = "N/A"
+
+        let prevMonth1 = 0
+        if (lost[firstMonth - 4]) {
+          prevMonth1 = lost[firstMonth - 4].length
+          totalLostForPrevQtr = prevMonth1 + prevMonth2 + prevMonth3
+        } else {
+          totalLostForPrevQtr = "N/A"
+        }
+
+
+        this.setState(prevState => ({ totalLostForSelectedQtr, totalLostForPrevQtr }), this.getNewClients)
+      }
+    })
+  }
+
+  getNewClients = () => {
+    let { selectedQuarter, quarters } = this.state
+    let newC = this.state.stateChurn.new
+    quarters.forEach(qtr => {
+      if (qtr.value === selectedQuarter) {
+        let firstMonth = qtr.key
+
+        let month1 = newC[firstMonth - 1].length
+        let month2 = newC[firstMonth].length
+        let month3 = newC[firstMonth + 1].length
+
+        let prevMonth2 = newC[firstMonth - 3].length
+        let prevMonth3 = newC[firstMonth - 2].length
+        let totalNewForSelectedQtr = month1 + month2 + month3
+        let totalNewForPrevQtr = "N/A"
+
+        let prevMonth1 = 0
+        if (newC[firstMonth - 4]) {
+          prevMonth1 = newC[firstMonth - 4].length
+          totalNewForPrevQtr = prevMonth1 + prevMonth2 + prevMonth3
+        } else {
+          totalNewForPrevQtr = "N/A"
+        }
+
+        this.setState(prevState => ({ totalNewForSelectedQtr, totalNewForPrevQtr }), this.getChurn)
+
+      }
+    })
+  }
+
+  getChurn = () => {
+    let { selectedQuarter, quarters } = this.state
+    let churn = this.state.stateChurn.chartData
+    quarters.forEach(qtr => {
+      if (qtr.value === selectedQuarter) {
+        let firstMonth = qtr.key
+
+        let month1 = churn[firstMonth][1]
+        let month2 = churn[firstMonth + 1][1]
+        let month3 = churn[firstMonth + 2][1]
+
+        let totalChurnForSelectedQtr = 0
+        let totalChurnForPrevQtr = 0
+
+        if (qtr.key < 7) {
+          totalChurnForSelectedQtr = month1 + month2 + month3
+
+          this.setState({ totalChurnForSelectedQtr, totalChurnForPrevQtr: 0.0000001 }, this.getMRR)
+
+        } else {
+          let prevMonth1 = churn[firstMonth - 3][1]
+          let prevMonth2 = churn[firstMonth - 2][1]
+          let prevMonth3 = churn[firstMonth - 1][1]
+          totalChurnForSelectedQtr = month1 + month2 + month3
+          totalChurnForPrevQtr = prevMonth1 + prevMonth2 + prevMonth3
+
+          this.setState(({ totalChurnForSelectedQtr, totalChurnForPrevQtr }), this.getMRR)
+        }
+      }
+    })
+  }
+
+  getMRR = () => {
+    let { ausDataRR, canDataRR, usaDataRR, ukDataRR, nzDataRR, } = this.state.stateRR
+    let { selectedMonth, selectedQuarter, forex, quarters } = this.state
+
+    quarters.forEach(qtr => {
+      if (qtr.value === selectedQuarter) {
+        let firstMonth = qtr.key
+        let pad = (n) => {
+          return (n < 10) ? ("0" + n) : n
+        }
+
+        let month3 = this.state.months[firstMonth + 2].getMonth() + 1
+        month3 = pad(month3)
+        let year = this.state.months[firstMonth].getFullYear()
+        let forexMonth3 = month3 + "/" + year
+        let audcad3 = forex[forexMonth3]["AUD/CAD"]
+        let audusd3 = forex[forexMonth3]["AUD/USD"]
+        let audgbp3 = forex[forexMonth3]["AUD/GBP"]
+        let audnzd3 = forex[forexMonth3]["AUD/NZD"]
+        let aus3 = ausDataRR[firstMonth + 2]
+        let can3 = canDataRR[firstMonth + 2] * audcad3
+        let usd3 = usaDataRR[firstMonth + 2] * audusd3
+        let gbp3 = ukDataRR[firstMonth + 2] * audgbp3
+        let nzd3 = nzDataRR[firstMonth + 2] * audnzd3
+        let mrrEndOfCurrentQtr = (aus3 + can3 + usd3 + gbp3 + nzd3).toFixed(0)
+
+        this.setState({ mrrEndOfCurrentQtr })
+
       }
     })
 
+
+
   }
 
-
-  displayQtrSelector = () => {
-    if (this.state.currentQuarter === "Q1") {
-      let { currentQuarter, currentFinYear, stateAL, quarters } = this.state
-      let endOfQ1Total = 0
-
-
-      return (
-        <div>
-          <Segment color="yellow" style={{ width: 1079 }}>
-            <h2 style={{ textAlign: "center" }}>{"   "}
-              <Dropdown
-                inline
-                options={quarters}
-                defaultValue={quarters[0]['text']}
-                onChange={(e, data) => this.setState(({ selectedQuarter: data.value }), this.getCurrentQuarterAL)}
-              />
-            </h2>
-          </Segment>
-        </div>
-      )
-    }
-  }
 
   displayReport = () => {
+    if (!this.state.totalChurnForSelectedQtr || !this.state.totalChurnForPrevQtr) {
+      return null
+    }
+
     return (
       <div>
         <Segment color="yellow" style={{ width: 1079, height: 950, marginTop: 12 }}>
@@ -295,21 +355,21 @@ class QR extends Component {
               </Table.Row>
               <Table.Row>
                 <Table.Cell>Lost Clients</Table.Cell>
-                <Table.Cell>...</Table.Cell>
-                <Table.Cell>...</Table.Cell>
-                <Table.Cell>...</Table.Cell>
+                <Table.Cell>{this.state.totalLostForSelectedQtr}</Table.Cell>
+                <Table.Cell>{this.state.totalLostForPrevQtr}</Table.Cell>
+                <Table.Cell>{this.state.totalLostForSelectedQtr - this.state.totalLostForPrevQtr}</Table.Cell>
               </Table.Row>
               <Table.Row>
                 <Table.Cell>New Clients</Table.Cell>
-                <Table.Cell>...</Table.Cell>
-                <Table.Cell>...</Table.Cell>
-                <Table.Cell>...</Table.Cell>
+                <Table.Cell>{this.state.totalNewForSelectedQtr}</Table.Cell>
+                <Table.Cell>{this.state.totalNewForPrevQtr}</Table.Cell>
+                <Table.Cell>{this.state.totalNewForSelectedQtr - this.state.totalNewForPrevQtr}</Table.Cell>
               </Table.Row>
               <Table.Row>
                 <Table.Cell>Churn Rate</Table.Cell>
-                <Table.Cell>...</Table.Cell>
-                <Table.Cell>...</Table.Cell>
-                <Table.Cell>...</Table.Cell>
+                <Table.Cell>{(this.state.totalChurnForSelectedQtr).toFixed(2)}%</Table.Cell>
+                <Table.Cell>{(this.state.totalChurnForPrevQtr).toFixed(2)}%</Table.Cell>
+                <Table.Cell>{(this.state.totalChurnForSelectedQtr - this.state.totalChurnForPrevQtr).toFixed(2)}%</Table.Cell>
               </Table.Row>
               <Table.Row>
                 <Table.Cell></Table.Cell>
@@ -318,20 +378,8 @@ class QR extends Component {
                 <Table.Cell></Table.Cell>
               </Table.Row>
               <Table.Row>
-                <Table.Cell>eHQ MMR</Table.Cell>
-                <Table.Cell>...</Table.Cell>
-                <Table.Cell>...</Table.Cell>
-                <Table.Cell>...</Table.Cell>
-              </Table.Row>
-              <Table.Row>
-                <Table.Cell>eIQ MMR</Table.Cell>
-                <Table.Cell>...</Table.Cell>
-                <Table.Cell>...</Table.Cell>
-                <Table.Cell>...</Table.Cell>
-              </Table.Row>
-              <Table.Row>
-                <Table.Cell>Total MMR</Table.Cell>
-                <Table.Cell>...</Table.Cell>
+                <Table.Cell>MRR at end of Qtr</Table.Cell>
+                <Table.Cell>{this.state.mrrEndOfCurrentQtr}</Table.Cell>
                 <Table.Cell>...</Table.Cell>
                 <Table.Cell>...</Table.Cell>
               </Table.Row>
@@ -340,18 +388,6 @@ class QR extends Component {
                 <Table.Cell></Table.Cell>
                 <Table.Cell></Table.Cell>
                 <Table.Cell></Table.Cell>
-              </Table.Row>
-              <Table.Row>
-                <Table.Cell>eHQ Non-MMR</Table.Cell>
-                <Table.Cell>...</Table.Cell>
-                <Table.Cell>...</Table.Cell>
-                <Table.Cell>...</Table.Cell>
-              </Table.Row>
-              <Table.Row>
-                <Table.Cell>eIQ Non-MR</Table.Cell>
-                <Table.Cell>...</Table.Cell>
-                <Table.Cell>...</Table.Cell>
-                <Table.Cell>...</Table.Cell>
               </Table.Row>
               <Table.Row>
                 <Table.Cell>Total Non-MMR</Table.Cell>
@@ -366,13 +402,7 @@ class QR extends Component {
                 <Table.Cell></Table.Cell>
               </Table.Row>
               <Table.Row>
-                <Table.Cell>eHQ Avg Monthly NON-RR</Table.Cell>
-                <Table.Cell>...</Table.Cell>
-                <Table.Cell>...</Table.Cell>
-                <Table.Cell>...</Table.Cell>
-              </Table.Row>
-              <Table.Row>
-                <Table.Cell>eHQ Avg Monthly NON-RR</Table.Cell>
+                <Table.Cell>Average Monthly NON-RR for Qtr</Table.Cell>
                 <Table.Cell>...</Table.Cell>
                 <Table.Cell>...</Table.Cell>
                 <Table.Cell>...</Table.Cell>
@@ -382,18 +412,6 @@ class QR extends Component {
                 <Table.Cell></Table.Cell>
                 <Table.Cell></Table.Cell>
                 <Table.Cell></Table.Cell>
-              </Table.Row>
-              <Table.Row>
-                <Table.Cell>eHQ Accrued Revenue</Table.Cell>
-                <Table.Cell>...</Table.Cell>
-                <Table.Cell>...</Table.Cell>
-                <Table.Cell>...</Table.Cell>
-              </Table.Row>
-              <Table.Row>
-                <Table.Cell>eIQ Accrued Revenue</Table.Cell>
-                <Table.Cell>...</Table.Cell>
-                <Table.Cell>...</Table.Cell>
-                <Table.Cell>...</Table.Cell>
               </Table.Row>
               <Table.Row>
                 <Table.Cell>Total Accrued Revenue</Table.Cell>
@@ -466,9 +484,8 @@ class QR extends Component {
         </Segment>
       </div>
     )
+
   }
-
-
 
   render() {
     if (this.state.months.length > 1) {
@@ -490,20 +507,3 @@ class QR extends Component {
 }
 
 export default QR
-
-
-
-
-
-
-    // if (typeof (this.state.stateAL) !== "undefined") {
-    //   console.log(this.state.stateAL)
-    // }
-
-    // if (typeof (this.state.stateRR) !== "undefined") {
-    //   console.log(this.state.stateRR)
-    // }
-
-    // if (typeof (this.state.stateChurn) !== "undefined") {
-    //   console.log(this.state.stateChurn)
-    // }

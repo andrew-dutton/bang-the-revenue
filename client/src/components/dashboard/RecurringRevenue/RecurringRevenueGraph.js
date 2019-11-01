@@ -3,7 +3,6 @@ import { Line } from 'react-chartjs-2'
 import { Segment, Grid, Checkbox, Flag, Image, GridColumn } from 'semantic-ui-react'
 import { HotTable } from '@handsontable/react';
 import DataIn from '../DataIn'
-import Labels from '../Labels'
 import DisplayMonth from '../DisplayMonth'
 
 class RecurringRevenueGraph extends Component {
@@ -968,7 +967,7 @@ class RecurringRevenueGraph extends Component {
       const { toggleActive } = this.state
 
       const data = {
-        labels: Labels.Labels,
+        labels: DataIn.Labels,
         datasets: [
           {
             label: 'Australia',

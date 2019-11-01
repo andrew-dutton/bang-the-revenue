@@ -16,20 +16,22 @@ const whatsNext = props => {
             <li>Allow any combination of territory data to be displayed on chart at once</li>
             <li>Include toggle to show total revenue line on chart</li>
             <li>Add option to show revenue data in USD or AUD (any other currencies worthwhile?)</li>
+            <li>Add total MMR in AUD toggle to Recurrin Revenue Chart</li>
+            <li>Show Compare Quarters tabs to QR dashboard</li>
           </ol>
 
           <h3 style={{ fontFamily: 'Titillium Web' }}>Main Dashboard</h3>
-          <ol start={5}>
+          <ol start={7}>
             <li>Hook data up to each section. Numbers here are currently hardcoded for September</li>
           </ol>
 
           <h3 style={{ fontFamily: 'Titillium Web' }}>Revenue Run Rate</h3>
-          <ol start={6}>
+          <ol start={8}>
             <li>Build out RRR dashboard</li>
           </ol>
 
           <h3 style={{ fontFamily: 'Titillium Web' }}>Churn</h3>
-          <ol start={7}>
+          <ol start={9}>
             <li>Add option to show churn data quarterly and annually</li>
             <li>Add switch to show Client Number Churn (as is currently displayed) or Churn by dollar value with option to select currency</li>
           </ol>

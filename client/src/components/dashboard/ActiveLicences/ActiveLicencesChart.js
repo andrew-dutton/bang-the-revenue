@@ -1,11 +1,11 @@
 import React from 'react'
 import { Segment } from 'semantic-ui-react'
 import { Line } from 'react-chartjs-2'
-import Labels from '../Labels'
+import DataIn from '../DataIn'
 
 const activeLicencesChart = props => {
   const data = {
-    labels: Labels.Labels,
+    labels: DataIn.Labels,
     datasets: [
       {
         label: 'Australia',

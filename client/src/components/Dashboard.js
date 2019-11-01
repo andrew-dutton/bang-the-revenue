@@ -4,9 +4,10 @@ import { Stitch, AnonymousCredential, RemoteMongoClient } from 'mongodb-stitch-b
 import WhatsNext from './dashboard/WhatsNext/WhatsNext'
 import RenderSelectedDashboard from './dashboard/TheDashboard/RenderSelectedDashboard'
 import RenderFullDashboard from './dashboard/TheDashboard/renderFullDashboard'
-import Forex from './dashboard/Forex'
+// import Forex from './dashboard/Forex'
 import AuthUsers from './dashboard/authUsers'
 import { Segment } from 'semantic-ui-react'
+import DataIn from './dashboard/DataIn'
 
 class Dashboard extends Component {
   state = {
@@ -14,7 +15,7 @@ class Dashboard extends Component {
     rawData: [],
     users: [],
     whatsNext: false,
-    forexData: Forex.rates,
+    forexData: DataIn.rates,
     name: "",
     recurringRevenueChart: false,
     selected: "Select Chart",
