@@ -7,9 +7,9 @@ class ActiveLicencesBox extends Component {
     super(props)
 
     this.state = {
-      thisMonth: 501,
-      lastMonth: 488,
-      diff: 13,
+      thisMonth: 507,
+      lastMonth: 506,
+      diff: 1,
       monthName: "",
       months: [],
       total: []

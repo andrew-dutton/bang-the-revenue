@@ -7,9 +7,9 @@ class RecurringRevenueBox extends Component {
     super(props)
 
     this.state = {
-      thisMonth: "$873,812",
-      lastMonth: "$853,311",
-      diff: "$18,915",
+      thisMonth: "$892,384",
+      lastMonth: "$878,488",
+      diff: "$13,896",
       monthName: "",
       months: []
     }
