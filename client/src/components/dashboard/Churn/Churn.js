@@ -83,7 +83,8 @@ class Churn extends Component {
         value: "NZ"
       }],
       table: {
-        colHeaders: ["Client", "MRR", "Location", "Currency", "Invoice", "Date", "Licence", "Start", "End", "Total"]
+        colHeadersLost: ["Client", "Status", "MRR", "Location", "Currency", "Invoice", "Date", "Licence", "Start", "End", "Total"],
+        colHeadersNew: ["Client", "MRR", "Location", "Currency", "Invoice", "Date", "Licence", "Start", "End", "Total"]
       }
     }
 
@@ -532,6 +533,7 @@ class Churn extends Component {
             if ((end < endOfThisMonth && end > endOfLastMonth)) {
               holder.push([
                 invoice["client"],
+                invoice["status"],
                 invoice["valuepermonth"],
                 invoice["territory"],
                 invoice["currency"],
@@ -645,7 +647,7 @@ class Churn extends Component {
                 var cellPrp = {};
                 if (col === 0) {
                   cellPrp.className = 'htLeft'
-                } else if (col === 1) {
+                } else if (col === 10) {
                   cellPrp.className = 'htRight'
                 } else if (col === 9) {
                   cellPrp.className = "htRight"
@@ -661,11 +663,11 @@ class Churn extends Component {
               // height={400}
               editor={false}
               filters={true}
-              columns={[{}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }, {}, {}, {}, {}, {}, {}, {}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }]}
+              columns={[{}, {}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }, {}, {}, {}, {}, {}, {}, {}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }]}
               columnSorting={true}
-              colWidths={[350, 70, 55, 55, 75, 75, 78, 75, 75, 70]}
+              colWidths={[350, 100, 55, 50, 50, 50, 70, 52, 70, 70, 60]}
               rowHeaders={true}
-              colHeaders={this.state.table.colHeaders}
+              colHeaders={this.state.table.colHeadersLost}
               data={this.state.lostValues[this.state.selectedMonth]} />
           </div>
         </Segment>
@@ -705,9 +707,9 @@ class Churn extends Component {
             filters={true}
             columns={[{}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }, {}, {}, {}, {}, {}, {}, {}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }]}
             columnSorting={true}
-            colWidths={[350, 70, 55, 55, 75, 75, 78, 75, 75, 70]}
+            colWidths={[450, 55, 50, 50, 50, 70, 52, 70, 70, 60]}
             rowHeaders={true}
-            colHeaders={this.state.table.colHeaders}
+            colHeaders={this.state.table.colHeadersNew}
             data={this.state.newValues[this.state.selectedMonth]} />
         </Segment>
       </div >
@@ -728,16 +730,16 @@ class Churn extends Component {
 
       if (typeof data !== 'undefined') {
         data.forEach((invoice) => {
-          if (invoice[3] === "CAD") {
-            audArray.push(invoice[1] * audcad)
-          } else if (invoice[3] === "USD") {
-            audArray.push(invoice[1] * audusd)
-          } else if (invoice[3] === "GBP") {
-            audArray.push(invoice[1] * audgbp)
-          } else if (invoice[3] === "NZD") {
-            audArray.push(invoice[1] * audnzd)
+          if (invoice[4] === "CAD") {
+            audArray.push(invoice[2] * audcad)
+          } else if (invoice[4] === "USD") {
+            audArray.push(invoice[2] * audusd)
+          } else if (invoice[4] === "GBP") {
+            audArray.push(invoice[2] * audgbp)
+          } else if (invoice[4] === "NZD") {
+            audArray.push(invoice[2] * audnzd)
           } else {
-            audArray.push(invoice[1])
+            audArray.push(invoice[2])
           }
         })
 

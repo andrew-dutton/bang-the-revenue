@@ -8,8 +8,8 @@ class ChurnBox extends Component {
 
     this.state = {
       thisMonth: "2.31%",
-      lastMonth: "0.78%",
-      diff: "1.53%",
+      lastMonth: "0.59%",
+      diff: "1.72",
       monthName: "",
       months: []
     }

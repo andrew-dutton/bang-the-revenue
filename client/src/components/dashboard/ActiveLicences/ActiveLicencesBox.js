@@ -8,8 +8,8 @@ class ActiveLicencesBox extends Component {
 
     this.state = {
       thisMonth: 507,
-      lastMonth: 506,
-      diff: 1,
+      lastMonth: 507,
+      diff: "-",
       monthName: "",
       months: [],
       total: []
@@ -73,7 +73,7 @@ class ActiveLicencesBox extends Component {
         <div style={{ height: 150 }}>
           <h1 style={{ position: 'absolute', left: '50%', top: '75%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>{this.state.thisMonth}</h1>
           <h3 style={{ fontFamily: 'Titillium Web' }}>{this.state.monthName}</h3>
-          <h4><Icon name="triangle up" color="green" />{this.state.diff}</h4>
+          <h4>{this.state.diff}</h4>
         </div>
       )
     } else {
@@ -81,7 +81,7 @@ class ActiveLicencesBox extends Component {
         <div style={{ height: 150 }}>
           <h1 style={{ position: 'absolute', left: '50%', top: '75%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>{this.state.thisMonth}</h1>
           <h3 style={{ fontFamily: 'Titillium Web' }}>{this.state.monthName}</h3>
-          <h4><Icon name="triangle up" color="green" />{this.state.diff}</h4>
+          <h4>{this.state.diff}</h4>
         </div>
       )
     }
