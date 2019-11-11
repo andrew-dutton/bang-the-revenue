@@ -11,6 +11,7 @@ class RecurringRevenueGraph extends Component {
 
     this.state = {
       toggleActive: false,
+      totalToggleActive: false,
       currentColor: "orange",
       forexData: props.forexData,
       totalAUD: 873822,
@@ -36,6 +37,7 @@ class RecurringRevenueGraph extends Component {
       nzData: [],
       tableData: [],
       tableDataNON: [],
+      tableDataGlobal: [],
       table: {
         colHeaders: ["Client", "MRR Value", "EHQ/EIQ", "Location", "Invoice", "Date", "Product", "Start", "End", "Value"],
         colHeadersNON: ["Client", "EHQ/EIQ", "Location", "Invoice", "Date", "Product", "Value"],
@@ -575,7 +577,41 @@ class RecurringRevenueGraph extends Component {
 
     this.setState((prevState) => ({
       tableData: [...detailLogged]
-    }), this.setStartingMonth)
+    }))
+
+    const totalDataRR = []
+    let canRates = []
+    let usaRates = []
+    let ukRates = []
+    let nzRates = []
+
+    Object.keys(this.state.forexData).forEach(key => {
+      canRates.push(this.state.forexData[key]["AUD/CAD"])
+    })
+
+    Object.keys(this.state.forexData).forEach(key => {
+      usaRates.push(this.state.forexData[key]["AUD/USD"])
+    })
+
+    Object.keys(this.state.forexData).forEach(key => {
+      ukRates.push(this.state.forexData[key]["AUD/GBP"])
+    })
+
+    Object.keys(this.state.forexData).forEach(key => {
+      nzRates.push(this.state.forexData[key]["AUD/NZD"])
+    })
+
+    for (let i = 0; i < ausTotal.length; i++) {
+      totalDataRR.push(Math.round(
+        ausTotal[i] +
+        (canTotal[i] * canRates[i]) +
+        (usaTotal[i] * usaRates[i]) +
+        (ukTotal[i] * ukRates[i]) +
+        (nzTotal[i] * nzRates[i])
+      ))
+    }
+
+    this.setState(prevState => ({ totalGlobalRR: totalDataRR }), this.setStartingMonth)
 
     return null
   }
@@ -733,6 +769,40 @@ class RecurringRevenueGraph extends Component {
     this.setState((prevState) => ({
       tableDataNON: [...detailLogged]
     }))
+
+    const totalDataRR = []
+    let canRates = []
+    let usaRates = []
+    let ukRates = []
+    let nzRates = []
+
+    Object.keys(this.state.forexData).forEach(key => {
+      canRates.push(this.state.forexData[key]["AUD/CAD"])
+    })
+
+    Object.keys(this.state.forexData).forEach(key => {
+      usaRates.push(this.state.forexData[key]["AUD/USD"])
+    })
+
+    Object.keys(this.state.forexData).forEach(key => {
+      ukRates.push(this.state.forexData[key]["AUD/GBP"])
+    })
+
+    Object.keys(this.state.forexData).forEach(key => {
+      nzRates.push(this.state.forexData[key]["AUD/NZD"])
+    })
+
+    for (let i = 0; i < newAusArray.length; i++) {
+      totalDataRR.push(Math.round(
+        newAusArray[i] +
+        (newCanArray[i] * canRates[i]) +
+        (newUsaArray[i] * usaRates[i]) +
+        (newUkArray[i] * ukRates[i]) +
+        (newNzArray[i] * nzRates[i])
+      ))
+    }
+
+    this.setState(prevState => ({ totalGlobalRR: totalDataRR }), this.calculateTotalAUD)
 
     return null
   }
@@ -957,18 +1027,37 @@ class RecurringRevenueGraph extends Component {
     }
   }
 
-
   render(props) {
     if (this.props.toRender === "QR") {
       return null
     } else {
-
 
       const { toggleActive } = this.state
 
       const data = {
         labels: DataIn.Labels,
         datasets: [
+          {
+            label: 'Global',
+            fill: false,
+            lineTension: 0.1,
+            backgroundColor: 'rgba(15,113,242,0.8)',
+            borderColor: 'rgba(15,113,242,0.8)',
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: 'rgba(15,113,242,0.8)',
+            pointBackgroundColor: '#fff',
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: 'rgba(15,113,242,0.8)',
+            pointHoverBorderColor: 'rgba(15,113,242,0.8)',
+            pointHoverBorderWidth: 2,
+            pointRadius: 3,
+            pointHitRadius: 10,
+            data: this.state.totalGlobalRR
+          },
           {
             label: 'Australia',
             fill: false,
@@ -1078,7 +1167,6 @@ class RecurringRevenueGraph extends Component {
       }
 
       return (
-
         <div style={{ paddingTop: 24, paddingBotton: 24, width: 1079 }}>
           <div >
             <Segment color={"orange"}>
@@ -1088,19 +1176,18 @@ class RecurringRevenueGraph extends Component {
             </Segment>
           </div>
           <Segment stlye={{ widht: 1079 }}>
-            <Grid width={16}>
-              <GridColumn width={8}>
-                <Image fluid label={{ as: 'a', color: 'orange', corner: 'right', icon: 'star' }} />
+            <Grid columns={3}>
+              <GridColumn>
                 <div>
                   <Segment color="orange">
-                    Dispaly Matt's <strong>"Total Recurring Accrued Monthly Revenue"</strong> Version
+                    Dispaly Total Recurring Accrued Monthly Revenue
                   <br />
                     <br />
                     <Checkbox toggle active={toggleActive.toString()} onClick={this.handleToggle} />
                   </Segment>
                 </div>
               </GridColumn>
-              <GridColumn width={8}>
+              <GridColumn>
                 <Segment color="orange">
                   Convert all figures to AUD (not yet active)
               <br />
@@ -1114,13 +1201,13 @@ class RecurringRevenueGraph extends Component {
             <Line
               data={data}
               options={{
-                scales: {
-                  yAxes: [{
-                    ticks: {
-                      suggestedMax: 600000
-                    }
-                  }]
-                },
+                // scales: {
+                //   yAxes: [{
+                //     ticks: {
+                //       suggestedMax: 600000
+                //     }
+                //   }]
+                // },
                 'onClick': (event, item) => {
                   if (item.length > 0) {
                     this.setState((prevState) => ({ selectedMonth: item[0]["_index"] }), this.setChangedMonth)
