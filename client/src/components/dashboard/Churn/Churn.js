@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Dimmer, Loader, Icon, Flag, Grid, Checkbox, Segment, Button, Image } from 'semantic-ui-react'
+import { Dimmer, Loader, Icon, Flag, Grid, Checkbox, Segment, Button } from 'semantic-ui-react'
 import Chart from 'react-google-charts'
 import { HotTable } from '@handsontable/react';
 import DataIn from '../DataIn'
@@ -882,7 +882,6 @@ class Churn extends Component {
             </Dimmer>
             <Grid>
               <Grid.Column width={4}>
-                <Image fluid label={{ as: 'a', color: 'blue', corner: 'right', icon: 'star' }} />
                 <div>
                   <Segment color="blue">
                     <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>MRR Lost</h3>
@@ -891,7 +890,6 @@ class Churn extends Component {
                 </div>
               </Grid.Column>
               <Grid.Column width={4}>
-                <Image fluid label={{ as: 'a', color: 'blue', corner: 'right', icon: 'star' }} />
                 <div>
                   <Segment color="blue">
                     <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>MRR Added</h3>
@@ -900,7 +898,6 @@ class Churn extends Component {
                 </div>
               </Grid.Column>
               <Grid.Column width={4}>
-                <Image fluid label={{ as: 'a', color: 'blue', corner: 'right', icon: 'star' }} />
                 <div>
                   <Segment color="blue">
                     <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Net MRR Change</h3>
@@ -909,7 +906,6 @@ class Churn extends Component {
                 </div>
               </Grid.Column>
               <Grid.Column width={4}>
-                <Image fluid label={{ as: 'a', color: 'blue', corner: 'right', icon: 'star' }} />
                 <div>
                   <Segment color="blue">
                     {todDisplay}

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Line } from 'react-chartjs-2'
-import { Segment, Grid, Checkbox, Flag, Image, GridColumn } from 'semantic-ui-react'
+import { Segment, Grid, Checkbox, Flag, GridColumn, Radio } from 'semantic-ui-react'
 import { HotTable } from '@handsontable/react';
 import DataIn from '../DataIn'
 import DisplayMonth from '../DisplayMonth'
@@ -11,6 +11,7 @@ class RecurringRevenueGraph extends Component {
 
     this.state = {
       toggleActive: false,
+      value: "local",
       totalToggleActive: false,
       currentColor: "orange",
       forexData: props.forexData,
@@ -19,7 +20,6 @@ class RecurringRevenueGraph extends Component {
       months: [],
       monthsText: [],
       currentMonth: "",
-      value: "Local",
       ausDataRR: [],
       canDataRR: [],
       usaDataRR: [],
@@ -168,6 +168,8 @@ class RecurringRevenueGraph extends Component {
   }
 
   handleChange = (e, { value }) => this.setState({ value })
+
+  handleCurrencyChange = (e, { value }) => this.setState({ value })
 
   getNumberOfMonthsSinceJuly2015 = () => {
     return DataIn.MonthNumber
@@ -813,7 +815,6 @@ class RecurringRevenueGraph extends Component {
       <div>
         <Grid columns='equal' style={{ width: 1109, paddingTop: 12, paddingBottom: 12, color: 'black' }}>
           <Grid.Column>
-            <Image fluid label={{ as: 'a', color: 'orange', corner: 'right', icon: 'star' }} />
             <div>
               <Segment color="orange">
                 <h3 style={{ fontFamily: 'Titillium Web' }}>Details of Recurring Revenue for {this.state.currentMonth}</h3>
@@ -864,7 +865,6 @@ class RecurringRevenueGraph extends Component {
         <div>
           <Grid columns='equal' style={{ width: 1109, paddingBottom: 50, color: 'black' }}>
             <Grid.Column>
-              <Image fluid label={{ as: 'a', color: 'orange', corner: 'right', icon: 'star' }} />
               <div>
                 <Segment color="orange">
                   <h3 style={{ fontFamily: 'Titillium Web' }}>Non recurring products invoiced in {this.state.currentMonth}</h3>
@@ -919,7 +919,6 @@ class RecurringRevenueGraph extends Component {
           <Segment style={{ width: 1079, backgroundColor: '#F7F7F7' }}>
             <Grid columns={5}>
               <Grid.Column>
-                <Image fluid label={{ as: 'a', color: 'orange', corner: 'right', icon: 'star' }} />
                 <div>
                   <Segment color="orange">
                     <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Australia<br />{this.state.currentMonth}</h3>
@@ -928,7 +927,6 @@ class RecurringRevenueGraph extends Component {
                 </div>
               </Grid.Column>
               <Grid.Column>
-                <Image fluid label={{ as: 'a', color: 'orange', corner: 'right', icon: 'star' }} />
                 <div>
                   <Segment color="orange">
                     <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Canada<br />{this.state.currentMonth}</h3>
@@ -937,7 +935,6 @@ class RecurringRevenueGraph extends Component {
                 </div>
               </Grid.Column>
               <Grid.Column>
-                <Image fluid label={{ as: 'a', color: 'orange', corner: 'right', icon: 'star' }} />
                 <div>
                   <Segment color="orange">
                     <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>United States<br />{this.state.currentMonth}</h3>
@@ -946,7 +943,6 @@ class RecurringRevenueGraph extends Component {
                 </div>
               </Grid.Column>
               <Grid.Column>
-                <Image fluid label={{ as: 'a', color: 'orange', corner: 'right', icon: 'star' }} />
                 <div>
                   <Segment color="orange">
                     <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>U.K.<br />{this.state.currentMonth} </h3>
@@ -955,7 +951,6 @@ class RecurringRevenueGraph extends Component {
                 </div>
               </Grid.Column>
               <Grid.Column>
-                <Image fluid label={{ as: 'a', color: 'orange', corner: 'right', icon: 'star' }} />
                 <div>
                   <Segment color="orange">
                     <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>New Zealand<br />{this.state.currentMonth} </h3>
@@ -1002,7 +997,6 @@ class RecurringRevenueGraph extends Component {
         <Segment>
           <Grid>
             <Grid.Column width={12}>
-              <Image fluid label={{ as: 'a', color: 'orange', corner: 'right', icon: 'star' }} />
               <div>
                 <Segment color="orange">
                   <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Global Recurring Revenue in AUD in {this.state.currentMonth}</h3>
@@ -1180,8 +1174,8 @@ class RecurringRevenueGraph extends Component {
               <GridColumn>
                 <div>
                   <Segment color="orange">
-                    Dispaly Total Recurring Accrued Monthly Revenue
-                  <br />
+                    Display Total Recurring Accrued Monthly Revenue
+                    <br />
                     <br />
                     <Checkbox toggle active={toggleActive.toString()} onClick={this.handleToggle} />
                   </Segment>
@@ -1189,10 +1183,41 @@ class RecurringRevenueGraph extends Component {
               </GridColumn>
               <GridColumn>
                 <Segment color="orange">
-                  Convert all figures to AUD (not yet active)
-              <br />
+                  Chart data displayed in: (Not yet active)
                   <br />
-                  <Checkbox disabled toggle active={toggleActive.toString()} />
+                  <br />
+                  <Grid columns={3}>
+                    <GridColumn>
+                      <Radio
+                        label="Local"
+                        name="local"
+                        value="local"
+                        checked={this.state.value === "local"}
+                        onChange={this.handleCurrencyChange}
+                        disabled
+                      />
+                    </GridColumn>
+                    <GridColumn>
+                      <Radio
+                        label="AUD"
+                        name="aud"
+                        value="aud"
+                        checked={this.state.value === "aud"}
+                        onChange={this.handleCurrencyChange}
+                        disabled
+                      />
+                    </GridColumn>
+                    <GridColumn>
+                      <Radio
+                        label="USD"
+                        name="usd"
+                        value="usd"
+                        checked={this.state.value === "usd"}
+                        onChange={this.handleCurrencyChange}
+                        disabled
+                      />
+                    </GridColumn>
+                  </Grid>
                 </Segment>
               </GridColumn>
             </Grid>
@@ -1203,9 +1228,7 @@ class RecurringRevenueGraph extends Component {
               options={{
                 // scales: {
                 //   yAxes: [{
-                //     ticks: {
-                //       suggestedMax: 600000
-                //     }
+                //     ticks: this.state.max
                 //   }]
                 // },
                 'onClick': (event, item) => {

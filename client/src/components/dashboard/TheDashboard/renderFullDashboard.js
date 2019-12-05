@@ -1,5 +1,5 @@
 import React from 'react'
-import { Segment, Grid, Button, Dimmer, Loader, Icon, Image } from 'semantic-ui-react'
+import { Segment, Grid, Button, Dimmer, Loader, Icon } from 'semantic-ui-react'
 import ActiveLicencesBox from '../ActiveLicences/ActiveLicencesBox'
 import RecurringRevenueBox from '../RecurringRevenue/RecurringRevenueBox'
 import ChurnBox from '../Churn/ChurnBox'
@@ -18,13 +18,13 @@ const renderFullDashboard = props => {
           <Segment color="black" style={{ width: 1079 }}>
             <Grid verticalAlign={"middle"}>
               <Grid.Column width={4}>
-                <Button basic style={{ cursor: 'pointer', fontSize: 12 }} onClick={() => props.triggerWhatsNext()} compact color="orange"><Icon name="cogs"></Icon>Work In Progress</Button>
+
               </Grid.Column>
               <Grid.Column width={8}>
                 <h1 style={{ fontSize: 40, textAlign: "center", fontFamily: 'Titillium Web' }}>Dashboard</h1>
               </Grid.Column>
               <Grid.Column width={4}>
-                <p style={{ textAlign: "right", size: 10 }}><Icon name="star outline"></Icon>=  Recently Updated</p>
+
               </Grid.Column>
             </Grid>
           </Segment>
@@ -44,7 +44,6 @@ const renderFullDashboard = props => {
                 </div>
               </Grid.Column>
               <Grid.Column>
-                <Image fluid label={{ as: 'a', color: 'orange', corner: 'right', icon: 'star' }} />
                 <div style={{ cursor: 'pointer' }} id="Recurring Revenue" onMouseEnter={() => props.onMouseEnterRecurringRevenue()} onMouseLeave={() => props.onMouseLeaveRecurringRevenue()} onClick={e => props.handleSelection(e.currentTarget.id)}>
                   <Segment color={"orange"} inverted={props.selected === "Recurring Revenue"} raised={props.raised === "Recurring Revenue"}>
                     <h1 style={{ fontFamily: 'Titillium Web' }}>Recurring Revenue</h1>
@@ -53,7 +52,6 @@ const renderFullDashboard = props => {
                 </div>
               </Grid.Column>
               <Grid.Column>
-                <Image fluid label={{ as: 'a', color: 'blue', corner: 'right', icon: 'star' }} />
                 <div style={{ cursor: 'pointer' }} id="Churn" onMouseEnter={() => props.onMouseEnterChurn()} onMouseLeave={() => props.onMouseLeaveChurn()} onClick={e => props.handleSelection(e.currentTarget.id)}>
                   <Segment color={"blue"} inverted={props.selected === "Churn"} raised={props.raised === "Churn"}>
                     <h1 style={{ fontFamily: 'Titillium Web' }}>Client Churn</h1>
@@ -64,7 +62,7 @@ const renderFullDashboard = props => {
             </Grid.Row>
             <Grid.Row style={{ color: '#E0E0E0' }} columns={3}>
               <Grid.Column>
-                <div style={{ color: '#A0A0A0' }} id="QR" onMouseEnter={() => props.onMouseEnterQR()} onMouseLeave={() => props.onMouseLeaveQR()}  >
+                <div style={{ color: '#A0A0A0' }} id="QR" onMouseEnter={() => props.onMouseEnterQR()} onMouseLeave={() => props.onMouseLeaveQR()} onClick={e => props.handleSelection(e.currentTarget.id)}>
                   <Segment color="yellow" inverted={props.selected === "QR"} raised={props.raised === "QR"}>
                     <h1 style={{ fontFamily: 'Titillium Web' }}>Quarterly Reporting</h1>
                     <QRBox selected={props.selected} rawData={props.rawData} />
@@ -106,7 +104,7 @@ const renderFullDashboard = props => {
                 </div>
               </Grid.Column>
               <Grid.Column>
-                <div id="Budget" onMouseEnter={() => props.onMouseEnterBudget()} onMouseLeave={() => props.onMouseLeaveBudget()}>
+                <div id="Budget" onMouseEnter={() => props.onMouseEnterBudget()} onMouseLeave={() => props.onMouseLeaveBudget()} onClick={e => props.handleSelection(e.currentTarget.id)}>
                   <Segment inverted={props.selected === "Budget"} raised={props.raised === "Budget"}>
                     <h1 style={{ fontFamily: 'Titillium Web' }}>Budget Variances</h1>
                     <BudgetBox selected={props.selected} rawData={props.rawData} />

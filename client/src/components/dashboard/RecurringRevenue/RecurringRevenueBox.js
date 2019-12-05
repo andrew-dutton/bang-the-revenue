@@ -7,9 +7,9 @@ class RecurringRevenueBox extends Component {
     super(props)
 
     this.state = {
-      thisMonth: "$893,160",
-      lastMonth: "$879,590",
-      diff: "$13,570",
+      thisMonth: "$889,640",
+      lastMonth: "$891,335",
+      diff: "$1,645",
       monthName: "",
       months: []
     }
@@ -73,7 +73,7 @@ class RecurringRevenueBox extends Component {
         <div style={{ height: 150 }}>
           <h1 style={{ position: 'absolute', left: '50%', top: '75%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>A {this.state.thisMonth}</h1>
           <h3 style={{ fontFamily: 'Titillium Web' }}>{this.state.monthName}</h3>
-          <h4 style={{ fontFamily: 'Titillium Web' }}><Icon name="triangle up" color="green" />A {this.state.diff}</h4>
+          <h4 style={{ fontFamily: 'Titillium Web' }}><Icon name="triangle down" color="red" />A {this.state.diff}</h4>
         </div>
       )
     } else {
@@ -81,7 +81,7 @@ class RecurringRevenueBox extends Component {
         <div style={{ height: 150 }}>
           <h1 style={{ position: 'absolute', left: '50%', top: '75%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>A {this.state.thisMonth}</h1>
           <h3 style={{ fontFamily: 'Titillium Web' }}>{this.state.monthName}</h3>
-          <h4 style={{ fontFamily: 'Titillium Web' }}><Icon name="triangle up" color="green" />A {this.state.diff}</h4>
+          <h4 style={{ fontFamily: 'Titillium Web' }}><Icon name="triangle down" color="red" />A {this.state.diff}</h4>
         </div>
       )
     }

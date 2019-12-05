@@ -3,6 +3,7 @@ import ActiveLicences from '../../dashboard/ActiveLicences/ActiveLicences'
 import RecurringRevenueGraph from '../../dashboard/RecurringRevenue/RecurringRevenueGraph'
 import Churn from '../../dashboard/Churn/Churn'
 import QR from '../../dashboard/QuarterlyReporting/QR'
+import Budget from '../../dashboard/Budget/Budget'
 
 const renderSelectedDashboard = props => {
   let toDisplay;
@@ -22,6 +23,10 @@ const renderSelectedDashboard = props => {
 
   if (props.selected === "QR") {
     toDisplay = <QR forexData={props.forexData} rawData={props.rawData} />
+  }
+
+  if (props.selected === "Budget") {
+    toDisplay = <Budget forexData={props.forexData} />
   }
 
   if (props.selected === "Whats Next") {
