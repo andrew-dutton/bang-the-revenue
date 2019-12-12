@@ -1,5 +1,5 @@
 import React from 'react'
-import { Segment, Grid, Button, Dimmer, Loader, Icon } from 'semantic-ui-react'
+import { Segment, Grid, Dimmer, Loader } from 'semantic-ui-react'
 import ActiveLicencesBox from '../ActiveLicences/ActiveLicencesBox'
 import RecurringRevenueBox from '../RecurringRevenue/RecurringRevenueBox'
 import ChurnBox from '../Churn/ChurnBox'
@@ -62,7 +62,7 @@ const renderFullDashboard = props => {
             </Grid.Row>
             <Grid.Row style={{ color: '#E0E0E0' }} columns={3}>
               <Grid.Column>
-                <div style={{ color: '#A0A0A0' }} id="QR" onMouseEnter={() => props.onMouseEnterQR()} onMouseLeave={() => props.onMouseLeaveQR()} onClick={e => props.handleSelection(e.currentTarget.id)}>
+                <div style={{ color: '#A0A0A0' }} id="QR" onMouseEnter={() => props.onMouseEnterQR()} onMouseLeave={() => props.onMouseLeaveQR()}>
                   <Segment color="yellow" inverted={props.selected === "QR"} raised={props.raised === "QR"}>
                     <h1 style={{ fontFamily: 'Titillium Web' }}>Quarterly Reporting</h1>
                     <QRBox selected={props.selected} rawData={props.rawData} />

@@ -127,7 +127,6 @@ class QR extends Component {
       let nextYear = parseInt(currentYear) + 1
       currentFinYear = nextYear
     } else {
-      let lastYear = parseInt(currentYear) - 1
       currentFinYear = currentYear
     }
 
@@ -152,8 +151,7 @@ class QR extends Component {
   }
 
   displayQtrSelector = () => {
-    let { currentQuarter, currentFinYear, stateAL, quarters } = this.state
-    let endOfQ1Total = 0
+    let { quarters } = this.state
 
     return (
       <div>
@@ -295,7 +293,7 @@ class QR extends Component {
 
   getMRR = () => {
     let { ausDataRR, canDataRR, usaDataRR, ukDataRR, nzDataRR, } = this.state.stateRR
-    let { selectedMonth, selectedQuarter, forex, quarters } = this.state
+    let { selectedQuarter, forex, quarters } = this.state
 
     quarters.forEach(qtr => {
       if (qtr.value === selectedQuarter) {
