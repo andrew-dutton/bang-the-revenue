@@ -114,6 +114,9 @@ const renderFullDashboard = props => {
             </Grid.Row>
           </Grid>
         </Segment>
+        <div>
+          <p style={{fontStyle: "italic"}}> Last updated 14 December 2019</p>
+        </div>
       </div >
     )
   }
