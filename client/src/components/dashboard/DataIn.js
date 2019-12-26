@@ -1,7 +1,7 @@
 export default {
   ActiveLicences: {
-    thisMonth: 510,
-    lastMonth: 508,
+    thisMonth: 511,
+    lastMonth: 509,
     diff: "2"
   },
   Churn: {
@@ -10,9 +10,9 @@ export default {
     diff: "0.20%"
   },
   RecurringRevenue: {
-      thisMonth: "$889,792",
-      lastMonth: "$891,335",
-      diff: "$1,543",
+      thisMonth: "$890,422",
+      lastMonth: "$892,790",
+      diff: "$2,368",
   },
   DataIn: true,
   MonthNumber: 54,
