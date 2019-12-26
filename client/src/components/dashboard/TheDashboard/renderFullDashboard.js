@@ -9,6 +9,7 @@ import EIQBox from '../EIQ/EIQBox'
 import CACBox from '../CAC/CACBox'
 import LTVBox from '../LTV/LTVBox'
 import BudgetBox from '../BudgetVariances/BudgetBox'
+import DataIn from '../DataIn'
 
 const renderFullDashboard = props => {
   if (props.selected === "Select Chart") {
@@ -115,7 +116,7 @@ const renderFullDashboard = props => {
           </Grid>
         </Segment>
         <div>
-          <p style={{fontStyle: "italic"}}> Last updated 16 December 2019</p>
+    <p style={{fontStyle: "italic"}}> Last updated {DataIn.Updated}</p>
         </div>
       </div >
     )
