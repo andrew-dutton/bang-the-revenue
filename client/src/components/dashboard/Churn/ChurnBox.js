@@ -79,7 +79,7 @@ class ChurnBox extends Component {
         <div style={{ height: 150 }}>
           <h1 style={{ position: 'absolute', left: '50%', top: '75%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>{this.state.thisMonth}</h1>
           <h3 style={{ fontFamily: 'Titillium Web' }}>{this.state.monthName}</h3>
-          <h4 style={{ fontFamily: 'Titillium Web' }}><Icon name="triangle down" color="green" />{this.state.diff}</h4>
+          <h4 style={{ fontFamily: 'Titillium Web' }}><Icon name="triangle up" color="red" />{this.state.diff}</h4>
         </div>
       )
     }

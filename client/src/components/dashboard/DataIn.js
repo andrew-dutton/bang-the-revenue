@@ -1,22 +1,22 @@
 export default {
   ActiveLicences: {
-    thisMonth: 511,
-    lastMonth: 509,
-    diff: "2"
+    thisMonth: 522,
+    lastMonth: 512,
+    diff: "10"
   },
   Churn: {
-    thisMonth: "1.54%",
-    lastMonth: "1.74%",
-    diff: "0.20%"
+    thisMonth: "1.88%",
+    lastMonth: "1.34%",
+    diff: "0.54%"
   },
   RecurringRevenue: {
-      thisMonth: "$890,422",
-      lastMonth: "$892,790",
-      diff: "$2,368",
+      thisMonth: "$920,245",
+      lastMonth: "$906,364",
+      diff: "$13,881",
   },
   DataIn: true,
-  Updated: "27 December 2019",
-  MonthNumber: 54,
+  Updated: "2 January 2020",
+  MonthNumber: 55,
   Quarters: [
     {
       key: 48,
@@ -418,6 +418,12 @@ export default {
       "AUD/USD": 1.464694,
       "AUD/GBP": 1.886362,
       "AUD/NZD": 0.936833
+    },
+    "12/2019": {
+      "AUD/CAD": 1.102382,
+      "AUD/USD": 1.45204,
+      "AUD/GBP": 1.901591,
+      "AUD/NZD": 0.95765
     }
   },
   Labels: [
@@ -425,7 +431,7 @@ export default {
     'Jul-16', 'Aug-16', 'Sep-16', 'Oct-16', 'Nov-16', 'Dec-16', 'Jan-17', 'Feb-17', 'Mar-17', 'Apr-17', 'May-17', 'Jun-17',
     'Jul-17', 'Aug-17', 'Sep-17', 'Oct-17', 'Nov-17', 'Dec-17', 'Jan-18', 'Feb-18', 'Mar-18', 'Apr-18', 'May-18', 'Jun-18',
     'Jul-18', 'Aug-18', 'Sep-18', 'Oct-18', 'Nov-18', 'Dec-18', 'Jan-19', 'Feb-19', 'Mar-19', 'Apr-19', 'May-19', 'Jun-19',
-    'Jul-19', 'Aug-19', 'Sep-19', 'Oct-19', 'Nov-19'
+    'Jul-19', 'Aug-19', 'Sep-19', 'Oct-19', 'Nov-19', 'Dec-19'
   ]
 }
 
