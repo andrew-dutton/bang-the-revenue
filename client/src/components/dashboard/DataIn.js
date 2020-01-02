@@ -5,14 +5,14 @@ export default {
     diff: "6"
   },
   Churn: {
-    thisMonth: "1.66%",
+    thisMonth: "1.69%",
     lastMonth: "1.34%",
-    diff: "0.32%"
+    diff: "0.35%"
   },
   RecurringRevenue: {
-      thisMonth: "$920,245",
+      thisMonth: "$920,362",
       lastMonth: "$906,364",
-      diff: "$13,881",
+      diff: "$13,998",
   },
   DataIn: true,
   Updated: "2 January 2020",
