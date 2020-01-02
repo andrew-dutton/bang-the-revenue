@@ -554,6 +554,7 @@ class Churn extends Component {
   }
 
   getValuesForNewClients = () => {
+    console.log(this.state.selectedMonth)
     let selectedMonth = this.state.selectedMonth
     let startfThisMonth = this.state.months[selectedMonth + 1]
     let startOfLastMonth = this.state.months[selectedMonth]
@@ -569,7 +570,7 @@ class Churn extends Component {
           let startDateParts = startString.split("/")
           let start = new Date(startDateParts[2], startDateParts[1] - 1, +startDateParts[0])
           if (invoice["client"] === details[i][k]) {
-            if ((start < startfThisMonth) && (start > startOfLastMonth)) {
+            if ((start <= startfThisMonth) && (start > startOfLastMonth)) {
               holder.push([
                 invoice["client"],
                 invoice["valuepermonth"],
@@ -588,8 +589,8 @@ class Churn extends Component {
       }
       holderArray.push(holder)
     }
+    console.log(holderArray)
     this.setState((prevState) => ({ newValues: holderArray }), this.getAddedTotalInAud)
-
   }
 
   getLostValue = () => {
@@ -1051,6 +1052,7 @@ class Churn extends Component {
   }
 
   render() {
+
     if (this.props.toRender === "QR") {
       return null
     } else {
