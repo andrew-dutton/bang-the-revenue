@@ -1,13 +1,13 @@
 export default {
   ActiveLicences: {
-    thisMonth: 522,
-    lastMonth: 512,
-    diff: "10"
+    thisMonth: 523,
+    lastMonth: 517,
+    diff: "6"
   },
   Churn: {
-    thisMonth: "1.88%",
+    thisMonth: "1.66%",
     lastMonth: "1.34%",
-    diff: "0.54%"
+    diff: "0.32%"
   },
   RecurringRevenue: {
       thisMonth: "$920,245",
