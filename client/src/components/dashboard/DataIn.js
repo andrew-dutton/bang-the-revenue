@@ -15,7 +15,7 @@ export default {
       diff: "$13,998",
   },
   DataIn: true,
-  Updated: "2 January 2020",
+  Updated: "7 January 2020",
   MonthNumber: 55,
   Quarters: [
     {
