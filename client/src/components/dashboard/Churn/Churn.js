@@ -744,7 +744,7 @@ class Churn extends Component {
           }
         })
 
-        total = audArray.reduce((a, b) => a + b, 0).toFixed(2)
+        total = Math.round(audArray.reduce((a, b) => a + b, 0).toFixed(2))
       }
 
     }
@@ -780,7 +780,7 @@ class Churn extends Component {
           }
         })
 
-        total = audArray.reduce((a, b) => a + b, 0).toFixed(2)
+        total = Math.round(audArray.reduce((a, b) => a + b, 0).toFixed(2))
       }
 
     }
@@ -863,7 +863,7 @@ class Churn extends Component {
     if (this.state.showTable) {
       let added = this.state.addedTotalInAud
       let churn = this.state.churnTotalInAud
-      let net = (added - churn).toFixed(2)
+      let net = Math.round((added - churn).toFixed(2))
       let displayTotal = this.numberWithCommas(net)
       let arrow = ""
       let color = ""
