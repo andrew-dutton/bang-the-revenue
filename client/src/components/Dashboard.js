@@ -13,6 +13,7 @@ class Dashboard extends Component {
   state = {
     authUsers: AuthUsers.authUsers,
     rawData: [],
+    rawSpend: [],
     users: [],
     whatsNext: false,
     forexData: DataIn.rates,
@@ -39,10 +40,16 @@ class Dashboard extends Component {
       .loginWithCredential(new AnonymousCredential())
       .then(this.getMongoData)
       .catch(console.error)
+      .then(this.getMongoSpend)
+      .catch(console.error)
   }
 
   getMongoData = () => {
     this.db.collection("invoice-lines").find({}).asArray().then(rawData => { this.setState({ rawData }) })
+  }
+
+  getMongoSpend = () => {
+    this.db.collection("btt-spend").find({}).asArray().then(rawSpend => { this.setState({ rawSpend}) })
   }
 
   handleSelection = (event, data) => {
@@ -168,6 +175,7 @@ class Dashboard extends Component {
           selected={this.state.selected}
           forexData={this.state.forexData}
           rawData={this.state.rawData}
+          rawSpend={this.state.rawSpend}
           onMouseEnterActiveLicences={this.onMouseEnterActiveLicences}
           onMouseLeaveActiveLiecences={this.onMouseLeaveActiveLiecences}
           onMouseEnterBudget={this.onMouseEnterBudget}
@@ -195,6 +203,7 @@ class Dashboard extends Component {
           selected={this.state.selected}
           forexData={this.state.forexData}
           rawData={this.state.rawData}
+          rawSpend={this.state.rawSpend}
           triggerWhatsNext={this.triggerWhatsNext}
         />
 

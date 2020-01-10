@@ -1,13 +1,32 @@
 import React, { Component } from 'react'
 
-export default class Budget extends Component {
-  render() {
-    return (
-      <div>
-        <h1>Budget ...</h1>
-      </div>
-    )
+class Budget extends Component {
+  constructor(props) {
+    super(props)
+    
+
+
+    return {
+      render() {
+        const bills = props.rawSpend.map((bill) => 
+          <li>{bill.debit}</li>
+        )
+
+        return (
+          <div>
+            <h1>Budget ... </h1>
+            <h2></h2>
+            <ol>
+              {bills}
+            </ol>
+            
+          </div>
+        )
+      }
+    }
   }
 }
+
+export default Budget
 
 

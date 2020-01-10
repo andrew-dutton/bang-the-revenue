@@ -105,10 +105,10 @@ const renderFullDashboard = props => {
                 </div>
               </Grid.Column>
               <Grid.Column>
-                <div id="Budget" onMouseEnter={() => props.onMouseEnterBudget()} onMouseLeave={() => props.onMouseLeaveBudget()} onClick={e => props.handleSelection(e.currentTarget.id)}>
+                <div id="Budget" onMouseEnter={() => props.onMouseEnterBudget()} onMouseLeave={() => props.onMouseLeaveBudget()} >
                   <Segment inverted={props.selected === "Budget"} raised={props.raised === "Budget"}>
                     <h1 style={{ fontFamily: 'Titillium Web' }}>Budget Variances</h1>
-                    <BudgetBox selected={props.selected} rawData={props.rawData} />
+                    <BudgetBox selected={props.selected} rawData={props.rawData} rawSpend={props.rawSpend}/>
                   </Segment>
                 </div>
               </Grid.Column>

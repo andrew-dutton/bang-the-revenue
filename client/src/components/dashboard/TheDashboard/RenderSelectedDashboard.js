@@ -10,7 +10,7 @@ const renderSelectedDashboard = props => {
 
 
   if (props.selected === "Active Licences") {
-    toDisplay = <ActiveLicences toRender={"AL"} rawData={props.rawData} />
+    toDisplay = <ActiveLicences toRender={"AL"} rawData={props.rawData} rawSpend={props.rawSpend}/>
   }
 
   if (props.selected === "Recurring Revenue") {
@@ -26,7 +26,7 @@ const renderSelectedDashboard = props => {
   }
 
   if (props.selected === "Budget") {
-    toDisplay = <Budget forexData={props.forexData} />
+    toDisplay = <Budget rawSpend={props.rawSpend}/>
   }
 
   if (props.selected === "Whats Next") {
