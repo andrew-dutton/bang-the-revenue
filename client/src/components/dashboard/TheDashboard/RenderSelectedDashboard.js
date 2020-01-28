@@ -4,6 +4,8 @@ import RecurringRevenueGraph from '../../dashboard/RecurringRevenue/RecurringRev
 import Churn from '../../dashboard/Churn/Churn'
 import QR from '../../dashboard/QuarterlyReporting/QR'
 import Budget from '../../dashboard/Budget/Budget'
+import Cashflow from '../../dashboard/Cashflow/Cashflow'
+
 
 const renderSelectedDashboard = props => {
   let toDisplay;
@@ -31,6 +33,10 @@ const renderSelectedDashboard = props => {
 
   if (props.selected === "Whats Next") {
     props.displayWhatsNext()
+  }
+
+  if (props.selected === "Cashflow") {
+    toDisplay = <Cashflow forexData={props.forexData} rawData={props.rawData} rawCashflow={props.rawCashflow}/>
   }
 
   return (

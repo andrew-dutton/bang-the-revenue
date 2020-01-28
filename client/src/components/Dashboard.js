@@ -42,6 +42,8 @@ class Dashboard extends Component {
       .catch(console.error)
       .then(this.getMongoSpend)
       .catch(console.error)
+      .then(this.getMongoCashflow)
+      .catch(console.error)
   }
 
   getMongoData = () => {
@@ -50,6 +52,10 @@ class Dashboard extends Component {
 
   getMongoSpend = () => {
     this.db.collection("btt-spend").find({}).asArray().then(rawSpend => { this.setState({ rawSpend}) })
+  }
+
+  getMongoCashflow = () => {
+    this.db.collection("cashflow").find({}).asArray().then(rawCashflow => { this.setState({ rawCashflow}) })
   }
 
   handleSelection = (event, data) => {
@@ -123,6 +129,14 @@ class Dashboard extends Component {
     this.setState((prevState) => ({ raised: '' }))
   }
 
+  onMouseEnterCashflow = () => {
+    this.setState((prevState) => ({ raised: "Cashflow" }))
+  }
+
+  onMouseLeaveCashflow = () => {
+    this.setState((prevState) => ({ raised: '' }))
+  }
+
   onMouseEnterNonRecurring = () => {
     this.setState((prevState) => ({ raised: "Non Recurring" }))
   }
@@ -192,6 +206,8 @@ class Dashboard extends Component {
           onMouseLeaveNonRecurring={this.onMouseLeaveNonRecurring}
           onMouseEnterQR={this.onMouseEnterQR}
           onMouseLeaveQR={this.onMouseLeaveQR}
+          onMouseEnterCashflow={this.onMouseEnterCashflow}
+          onMouseLeaveCashflow={this.onMouseLeaveCashflow}
           onMouseEnterRecurringRevenue={this.onMouseEnterRecurringRevenue}
           onMouseLeaveRecurringRevenue={this.onMouseEnterRecurringRevenue}
           handleSelection={this.handleSelection}
@@ -204,6 +220,7 @@ class Dashboard extends Component {
           forexData={this.state.forexData}
           rawData={this.state.rawData}
           rawSpend={this.state.rawSpend}
+          rawCashflow={this.state.rawCashflow}
           triggerWhatsNext={this.triggerWhatsNext}
         />
 

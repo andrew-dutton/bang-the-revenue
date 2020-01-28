@@ -3,7 +3,7 @@ import { Segment, Grid, Dimmer, Loader } from 'semantic-ui-react'
 import ActiveLicencesBox from '../ActiveLicences/ActiveLicencesBox'
 import RecurringRevenueBox from '../RecurringRevenue/RecurringRevenueBox'
 import ChurnBox from '../Churn/ChurnBox'
-import QRBox from '../QuarterlyReporting/QRBox'
+import CashflowBox from '../Cashflow/CashflowBox'
 import NonRecurringBox from '../NonRecurringRevenue/NonRecurringBox'
 import EIQBox from '../EIQ/EIQBox'
 import CACBox from '../CAC/CACBox'
@@ -63,10 +63,10 @@ const renderFullDashboard = props => {
             </Grid.Row>
             <Grid.Row style={{ color: '#E0E0E0' }} columns={3}>
               <Grid.Column>
-                <div style={{ color: '#A0A0A0' }} id="QR" onMouseEnter={() => props.onMouseEnterQR()} onMouseLeave={() => props.onMouseLeaveQR()}>
-                  <Segment color="yellow" inverted={props.selected === "QR"} raised={props.raised === "QR"}>
-                    <h1 style={{ fontFamily: 'Titillium Web' }}>Quarterly Reporting</h1>
-                    <QRBox selected={props.selected} rawData={props.rawData} />
+                <div style={{ color: '#A0A0A0' }} id="Cashflow" onMouseEnter={() => props.onMouseEnterCashflow()} onMouseLeave={() => props.onMouseLeaveCashflow()} >
+                  <Segment color="yellow" inverted={props.selected === "Cashflow"} raised={props.raised === "Cashflow"}>
+                    <h1 style={{ fontFamily: 'Titillium Web' }}>Cashflow Reporting</h1>
+                    <CashflowBox selected={props.selected} rawData={props.rawData} />
                   </Segment>
                 </div>
               </Grid.Column>

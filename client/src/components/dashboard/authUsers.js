@@ -1,6 +1,7 @@
 export default {
   authUsers: [
     'andrew@dutton.pro',
-    'david@glca.com'
+    'Davidjbluth@gmail.com',
+    'davidjbluth@gmail.com'
   ]
 }
