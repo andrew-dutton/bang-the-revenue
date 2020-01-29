@@ -1,7 +1,6 @@
 import React from 'react'
 import { Segment } from 'semantic-ui-react'
 import { Bar } from 'react-chartjs-2'
-import DataIn from '../DataIn'
 
 const cashflowChart = props => {
  const options = {
@@ -10,12 +9,23 @@ const cashflowChart = props => {
            stacked: true
        }],
        yAxes: [{
-           stacked: true
-       }]
-   }
+           stacked: true,
+           ticks: {
+            beginAtZero:true,
+            callback: function(value, index, values) {
+                if(parseInt(value) >= 1000){
+                   return '$' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                } else {
+                   return '$' + value;
+                }
+           }                            
+        }
+    }]
+   },
+   animation: false
 }
   const data = {
-    labels: DataIn.CashflowLabels,
+    labels: props.labels,
     datasets: [
       {
         label: 'ANZ',
@@ -105,7 +115,8 @@ const cashflowChart = props => {
     }
 
     return (
-      <Segment color={props.selectedColor} style={{ width: 1000 }}>
+      <Segment color={props.currentColor} style={{ width: 1079 }}>
+        <h3 style={{textAlign: "center"}}>Invoiced (AUD)</h3>
         <Bar
           data={data}
           options={options}

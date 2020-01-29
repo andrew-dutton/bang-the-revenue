@@ -1226,11 +1226,6 @@ class RecurringRevenueGraph extends Component {
             <Line
               data={data}
               options={{
-                // scales: {
-                //   yAxes: [{
-                //     ticks: this.state.max
-                //   }]
-                // },
                 'onClick': (event, item) => {
                   if (item.length > 0) {
                     this.setState((prevState) => ({ selectedMonth: item[0]["_index"] }), this.setChangedMonth)

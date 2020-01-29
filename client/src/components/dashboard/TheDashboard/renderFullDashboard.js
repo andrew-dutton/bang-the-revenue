@@ -63,7 +63,7 @@ const renderFullDashboard = props => {
             </Grid.Row>
             <Grid.Row style={{ color: '#E0E0E0' }} columns={3}>
               <Grid.Column>
-                <div style={{ color: '#A0A0A0' }} id="Cashflow" onMouseEnter={() => props.onMouseEnterCashflow()} onMouseLeave={() => props.onMouseLeaveCashflow()} >
+                <div style={{ color: '#A0A0A0' }} id="Cashflow" onMouseEnter={() => props.onMouseEnterCashflow()} onMouseLeave={() => props.onMouseLeaveCashflow()}  >
                   <Segment color="yellow" inverted={props.selected === "Cashflow"} raised={props.raised === "Cashflow"}>
                     <h1 style={{ fontFamily: 'Titillium Web' }}>Cashflow Reporting</h1>
                     <CashflowBox selected={props.selected} rawData={props.rawData} />

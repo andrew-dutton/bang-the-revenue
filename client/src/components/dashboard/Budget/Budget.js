@@ -15,7 +15,6 @@ class Budget extends Component {
         return (
           <div>
             <h1>Budget ... </h1>
-            <h2></h2>
             <ol>
               {bills}
             </ol>
