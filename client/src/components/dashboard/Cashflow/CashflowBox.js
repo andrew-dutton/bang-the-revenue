@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Icon } from 'semantic-ui-react'
 import DataIn from '../DataIn'
 
 class CashflowBox extends Component {
@@ -6,9 +7,9 @@ class CashflowBox extends Component {
     super(props)
 
     this.state = {
-      thisMonth: "Coming next!",
-      lastMonth: "Coming next!",
-      diff: "Coming next!",
+      thisFY: DataIn.CashflowReporting.thisFY,
+      lastFY: DataIn.CashflowReporting.lastFY,
+      diff: DataIn.CashflowReporting.diff,
       monthName: "",
       months: []
     }
@@ -69,15 +70,16 @@ class CashflowBox extends Component {
     if (this.props.selected === "CashflowBox") {
       return (
         <div style={{ height: 150 }}>
-          <h1 style={{ position: 'absolute', left: '50%', top: '75%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>Coming next...</h1>
+          <h1 style={{ position: 'absolute', left: '50%', top: '75%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>{this.state.invoiced}</h1>
           <h3 style={{ fontFamily: 'Titillium Web' }}>{this.state.monthName}</h3>
         </div>
       )
     } else {
       return (
         <div style={{ height: 150 }}>
-          <h1 style={{ position: 'absolute', left: '50%', top: '75%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>Coming next...</h1>
-          <h3 style={{ fontFamily: 'Titillium Web' }}>{this.state.monthName}</h3>
+          <h1 style={{ position: 'absolute', left: '50%', top: '75%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>A {this.state.thisFY}</h1>
+          <h3 style={{ fontFamily: 'Titillium Web' }}>Invoiced Year to Date</h3>
+          <h4 style={{ fontFamily: 'Titillium Web' }}><Icon name="triangle up" color="green" />A {this.state.diff}</h4>
         </div>
       )
     }

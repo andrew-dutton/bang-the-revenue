@@ -37,7 +37,7 @@ const renderFullDashboard = props => {
           <Grid>
             <Grid.Row columns={3}>
               <Grid.Column>
-                <div style={{ cursor: 'pointer' }} id="Active Licences" onMouseEnter={() => props.onMouseEnterActiveLicences()} onMouseLeave={() => props.onMouseLeaveActiveLiecences()} onClick={e => props.handleSelection(e.currentTarget.id)}>
+                <div style={{ cursor: 'pointer', color: '#000000' }} id="Active Licences" onMouseEnter={() => props.onMouseEnterActiveLicences()} onMouseLeave={() => props.onMouseLeaveActiveLiecences()} onClick={e => props.handleSelection(e.currentTarget.id)}>
                   <Segment color={"green"} inverted={props.selected === "Active Licences"} raised={props.raised === "Active Licences"}>
                     <h1 style={{ fontFamily: 'Titillium Web' }}>Active Licences</h1>
                     <ActiveLicencesBox selected={props.selected} rawData={props.rawData} />
@@ -45,7 +45,7 @@ const renderFullDashboard = props => {
                 </div>
               </Grid.Column>
               <Grid.Column>
-                <div style={{ cursor: 'pointer' }} id="Recurring Revenue" onMouseEnter={() => props.onMouseEnterRecurringRevenue()} onMouseLeave={() => props.onMouseLeaveRecurringRevenue()} onClick={e => props.handleSelection(e.currentTarget.id)}>
+                <div style={{ cursor: 'pointer', color: '#000000' }} id="Recurring Revenue" onMouseEnter={() => props.onMouseEnterRecurringRevenue()} onMouseLeave={() => props.onMouseLeaveRecurringRevenue()} onClick={e => props.handleSelection(e.currentTarget.id)}>
                   <Segment color={"orange"} inverted={props.selected === "Recurring Revenue"} raised={props.raised === "Recurring Revenue"}>
                     <h1 style={{ fontFamily: 'Titillium Web' }}>Recurring Revenue</h1>
                     <RecurringRevenueBox selected={props.selected} rawData={props.rawData} />
@@ -53,7 +53,7 @@ const renderFullDashboard = props => {
                 </div>
               </Grid.Column>
               <Grid.Column>
-                <div style={{ cursor: 'pointer' }} id="Churn" onMouseEnter={() => props.onMouseEnterChurn()} onMouseLeave={() => props.onMouseLeaveChurn()} onClick={e => props.handleSelection(e.currentTarget.id)}>
+                <div style={{ cursor: 'pointer', color: '#000000' }} id="Churn" onMouseEnter={() => props.onMouseEnterChurn()} onMouseLeave={() => props.onMouseLeaveChurn()} onClick={e => props.handleSelection(e.currentTarget.id)}>
                   <Segment color={"blue"} inverted={props.selected === "Churn"} raised={props.raised === "Churn"}>
                     <h1 style={{ fontFamily: 'Titillium Web' }}>Client Churn</h1>
                     <ChurnBox selected={props.selected} rawData={props.rawData} />
@@ -63,7 +63,7 @@ const renderFullDashboard = props => {
             </Grid.Row>
             <Grid.Row style={{ color: '#E0E0E0' }} columns={3}>
               <Grid.Column>
-                <div style={{ color: '#A0A0A0' }} id="Cashflow" onMouseEnter={() => props.onMouseEnterCashflow()} onMouseLeave={() => props.onMouseLeaveCashflow()}  >
+                <div style={{ cursor: 'pointer', color: '#000000' }} id="Cashflow" onMouseEnter={() => props.onMouseEnterCashflow()} onMouseLeave={() => props.onMouseLeaveCashflow()} onClick={e => props.handleSelection(e.currentTarget.id)} >
                   <Segment color="yellow" inverted={props.selected === "Cashflow"} raised={props.raised === "Cashflow"}>
                     <h1 style={{ fontFamily: 'Titillium Web' }}>Cashflow Reporting</h1>
                     <CashflowBox selected={props.selected} rawData={props.rawData} />

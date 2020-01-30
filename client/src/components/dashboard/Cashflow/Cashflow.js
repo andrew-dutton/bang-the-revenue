@@ -9,7 +9,8 @@ class Cashflow extends Component {
     super(props)
     this.state = {
       currentColor: "yellow",
-      value: "monthly"
+      value: "monthly",
+      dataTypeValue: "invoiced"
     }
   }
 
@@ -17,13 +18,211 @@ class Cashflow extends Component {
       this.loadAusData()
   }
 
-  loadAusData = props => {
-    this.setState({
-      anzi: [],
-      cani: [],
-      usai: [],
-      uki: []
+  loadSpendAusData = () => {
+    const data = this.props.rawCashflow
+
+    let anzsUnsorted = []
+    let anzs = []
+
+    data.forEach((item) => {
+      let monthDigit = ""
+      if (item.month < 10)  {
+        monthDigit = "0" + item.month
+      } else {
+        monthDigit = item.month.toString() 
+      }
+      anzsUnsorted.push({
+        date: item.year.toString() + "/" + monthDigit,
+        amount: item.ANZS 
+      })
     })
+
+    anzsUnsorted.sort((a,b) => (a.date > b.date) ? 1 : -1)
+
+    anzsUnsorted.forEach((item) => {
+      anzs.push(Math.round(item.amount))
+    })
+
+    
+    this.setState({ anzs }, this.loadSpendRates)
+  }
+
+  loadSpendRates = () => {
+    const rates = DataIn.rates
+    let canRates = []
+    let usaRates = []
+    let ukRates = []
+
+    Object.keys(rates).forEach(month => {
+      canRates.push(rates[month]["AUD/CAD"])
+      usaRates.push(rates[month]["AUD/USD"])
+      ukRates.push(rates[month]["AUD/GBP"])
+    })
+
+    this.setState({ canRates, usaRates, ukRates }, this.loadOtherSpendData)
+  }
+
+  loadOtherSpendData = () => {
+    const data = this.props.rawCashflow
+    const canRates = this.state.canRates
+    const usaRates = this.state.usaRates
+    const ukRates = this.state.ukRates
+    const labels = DataIn.CashflowLabels
+    let cansUnsorted = []
+    let usasUnsorted = []
+    let uksUnsorted = []
+    let canCad = []
+    let usaUsd = []
+    let ukGbp = []
+    let cans = []
+    let usas = []
+    let uks = []
+
+    data.forEach((item) => {
+      let monthDigit = ""
+      if (item.month < 10)  {
+        monthDigit = "0" + item.month
+      } else {
+        monthDigit = item.month.toString() 
+      }
+      cansUnsorted.push({
+        date: item.year.toString() + "/" + monthDigit,
+        amount: item.CANS 
+      })
+      usasUnsorted.push({
+        date: item.year.toString() + "/" + monthDigit,
+        amount: item.USAS 
+      })
+      uksUnsorted.push({
+        date: item.year.toString() + "/" + monthDigit,
+        amount: item.UKS 
+      })
+    })
+
+    cansUnsorted.sort((a,b) => (a.date > b.date) ? 1 : -1)
+    usasUnsorted.sort((a,b) => (a.date > b.date) ? 1 : -1)
+    uksUnsorted.sort((a,b) => (a.date > b.date) ? 1 : -1)
+
+    cansUnsorted.forEach((item) => {
+      canCad.push(item.amount)
+    })
+
+    usasUnsorted.forEach((item) => {
+      usaUsd.push(item.amount)
+    })
+
+    uksUnsorted.forEach((item) => {
+      ukGbp.push(item.amount)
+    })
+
+    canCad.forEach((item, index) => {
+      cans.push(Math.round(item * canRates[index]))
+    })
+
+    usaUsd.forEach((item, index) => {
+      usas.push(Math.round(item * usaRates[index]))
+    })
+
+    ukGbp.forEach((item, index) => {
+      uks.push(Math.round(item * ukRates[index]))
+    })
+
+    this.setState({ cans, usas, uks, labels }, this.checkSpendTimeframe)
+  }
+
+  checkSpendTimeframe = () => {
+    if(this.state.value === "monthly") {
+      return null
+    } else if(this.state.value === "quarterly") {
+      this.showQuarterlySpendData()
+    } else {
+      this.showAnnualSpendData()
+    }
+  }
+
+  showQuarterlySpendData = () => {
+    let quarters = DataIn.CashflowQuarters
+    let anzsq = []
+    let cansq = []
+    let usasq = []
+    let uksq = []
+    let anz = []
+    let can = []
+    let usa = []
+    let uk = []
+
+    anzsq = this.arrayTo2DArray2(this.state.anzs, 3)
+    cansq = this.arrayTo2DArray2(this.state.cans, 3)
+    usasq = this.arrayTo2DArray2(this.state.usas, 3)
+    uksq = this.arrayTo2DArray2(this.state.uks, 3)
+
+    anzsq.forEach(qtr => {
+      anz.push(qtr.reduce((a,b) => a+b, 0))
+    })
+
+    cansq.forEach(qtr => {
+      can.push(qtr.reduce((a,b) => a+b, 0))
+    })
+
+    usasq.forEach(qtr => {
+      usa.push(qtr.reduce((a,b) => a+b, 0))
+    })
+
+    uksq.forEach(qtr => {
+      uk.push(qtr.reduce((a,b) => a+b, 0))
+    })
+
+    this.setState({
+      anzs: anz,
+      cans: can,
+      usas: usa,
+      uks: uk,
+      labels: quarters
+    })
+  }
+
+  showAnnualSpendData = () => {
+    let years = DataIn.Years
+    let anzs = this.state.anzs
+    let cans = this.state.cans
+    let usas = this.state.usas
+    let uks = this.state.uks
+    let anz = []
+    let can = []
+    let usa = []
+    let uk = []
+
+    let anzsa = this.arrayTo2DArray2(anzs, 12)
+    let cansa = this.arrayTo2DArray2(cans, 12)
+    let usasa = this.arrayTo2DArray2(usas, 12)
+    let uksa = this.arrayTo2DArray2(uks, 12)
+
+    anzsa.forEach(qtr => {
+      anz.push(qtr.reduce((a,b) => a+b, 0))
+    })
+
+    cansa.forEach(qtr => {
+      can.push(qtr.reduce((a,b) => a+b, 0))
+    })
+
+    usasa.forEach(qtr => {
+      usa.push(qtr.reduce((a,b) => a+b, 0))
+    })
+
+    uksa.forEach(qtr => {
+      uk.push(qtr.reduce((a,b) => a+b, 0))
+    })
+
+    this.setState({ 
+      labels: years,
+      anzs: anz,
+      cans: can,
+      usas: usa,
+      uks: uk
+    })
+  }
+
+  loadAusData = props => {
     const data = this.props.rawCashflow
     let anziUnsorted = []
     let anzi = []
@@ -130,11 +329,11 @@ class Cashflow extends Component {
       uki.push(Math.round(item * ukRates[index]))
     })
 
-    this.setState({ cani, usai, uki, labels }, this.checkTimeFrame)
+    this.setState({ cani, usai, uki, labels }, this.checkInvoicedTimeFrame)
 
   }
 
-  checkTimeFrame = () => {
+  checkInvoicedTimeFrame = () => {
     if(this.state.value === "monthly") {
       return null
     } else if(this.state.value === "quarterly") {
@@ -181,7 +380,7 @@ class Cashflow extends Component {
       anzi: anz,
       cani: can,
       usai: usa,
-      uki: uk,
+      uki: uk
     })
   }
 
@@ -238,7 +437,17 @@ class Cashflow extends Component {
     })
   }
 
-  handleTimeframeChange = (e, { value }) => this.setState({ value }, this.loadAusData)
+  handleTimeframeChange = (e, { value }) => this.setState({ value }, this.checkDataChange)
+
+  handleDataChange = (e, { value }) => this.setState({ dataTypeValue: value}, this.checkDataChange)
+
+  checkDataChange = () => {
+    if(this.state.dataTypeValue === "invoiced") {
+      this.loadAusData()
+    } else {
+      this.loadSpendAusData()
+    }
+  }
 
   render(props) {
     if(!this.state.anzi || !this.state.cani || !this.state.usai || !this.state.uki || !this.state.labels) {
@@ -249,6 +458,35 @@ class Cashflow extends Component {
           <DashboardHeading title={"Cashflow Reporting"} currentColor={this.state.currentColor} />
             <Segment style={{ width: 1079 }}>
             <Grid columns={2}>
+                <GridColumn>
+                  <Segment color={this.state.currentColor}>
+                    Select Data to Display:
+                    <br />
+                    <br />
+                    <Grid columns={3}>
+                      <GridColumn>
+                      <Radio
+                          label="Invoiced"
+                          name="invoiced"
+                          value="invoiced"
+                          checked={this.state.dataTypeValue === "invoiced"}
+                          onChange={this.handleDataChange}
+                          enabled="true"
+                        />
+                      </GridColumn>
+                      <GridColumn>
+                      <Radio
+                          label="Spending"
+                          name="spending"
+                          value="spending"
+                          checked={this.state.dataTypeValue === "spending"}
+                          onChange={this.handleDataChange}
+                          enabled="true"
+                        />
+                      </GridColumn>
+                    </Grid>
+                  </Segment>
+                </GridColumn>
                 <GridColumn>
                   <Segment color={this.state.currentColor}>
                     Display Data by:
@@ -288,6 +526,7 @@ class Cashflow extends Component {
                     </Grid>
                   </Segment>
                 </GridColumn>
+
               </Grid>
           </Segment>
 
@@ -297,7 +536,13 @@ class Cashflow extends Component {
               cani={this.state.cani}
               usai={this.state.usai}
               uki={this.state.uki}
+              anzs={this.state.anzs}
+              cans={this.state.cans}
+              usas={this.state.usas}
+              uks={this.state.uks}
               labels={this.state.labels}
+              timeFrameValue={this.state.value}
+              dataTypeValue={this.state.dataTypeValue}
             />         
         </div>
       )

@@ -14,8 +14,13 @@ export default {
       lastMonth: "$906,364",
       diff: "$14,297",
   },
+  CashflowReporting: {
+    thisFY: "$6,197,956",
+    lastFY: "$4,858856",
+    diff: "$1,329,100"
+  },
   DataIn: true,
-  Updated: "10 January 2020",
+  Updated: "30 January 2020",
   MonthNumber: 55,
   rates:
   {

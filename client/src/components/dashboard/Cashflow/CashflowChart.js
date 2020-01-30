@@ -3,7 +3,7 @@ import { Segment } from 'semantic-ui-react'
 import { Bar } from 'react-chartjs-2'
 
 const cashflowChart = props => {
- const options = {
+  const options = {
   scales: {
        xAxes: [{
            stacked: true
@@ -22,7 +22,28 @@ const cashflowChart = props => {
         }
     }]
    },
-   animation: false
+   title: {
+     display: true,
+     text: props.dataTypeValue === "invoiced" ? "Invoiced in AUD" : "Spent in AUD",
+     fontSize: 20
+   },
+   tooltips: {
+    mode: 'label',
+    callbacks: {
+        afterTitle: function() {
+            window.total = 0;
+        },
+        label: function(tooltipItem, data) {
+            var corporation = data.datasets[tooltipItem.datasetIndex].label;
+            var valor = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+            window.total += valor;
+            return corporation + ": $" + valor.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");             
+        },
+        footer: function() {
+            return "TOTAL: $" + window.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+      }
+  }
 }
   const data = {
     labels: props.labels,
@@ -46,7 +67,7 @@ const cashflowChart = props => {
         pointHoverBorderWidth: 2,
         pointRadius: 3,
         pointHitRadius: 10,
-        data: props.anzi
+        data: props.dataTypeValue === "invoiced" ? props.anzi : props.anzs
       },
       {
         label: 'Canada',
@@ -67,7 +88,7 @@ const cashflowChart = props => {
         pointHoverBorderWidth: 2,
         pointRadius: 3,
         pointHitRadius: 10,
-        data: props.cani
+        data: props.dataTypeValue === "invoiced" ? props.cani : props.cans
       },
       {
         label: 'USA',
@@ -88,7 +109,7 @@ const cashflowChart = props => {
         pointHoverBorderWidth: 2,
         pointRadius: 3,
         pointHitRadius: 10,
-        data: props.usai
+        data: props.dataTypeValue === "invoiced" ? props.usai : props.usas
       },
       {
         label: 'UK',
@@ -109,14 +130,13 @@ const cashflowChart = props => {
         pointHoverBorderWidth: 2,
         pointRadius: 3,
         pointHitRadius: 10,
-        data: props.uki
+        data: props.dataTypeValue === "invoiced" ? props.uki : props.uks
       }
     ]
     }
 
     return (
       <Segment color={props.currentColor} style={{ width: 1079 }}>
-        <h3 style={{textAlign: "center"}}>Invoiced (AUD)</h3>
         <Bar
           data={data}
           options={options}
