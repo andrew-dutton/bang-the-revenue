@@ -16,6 +16,7 @@ class Cashflow extends Component {
 
   componentDidMount() {
       this.loadAusData()
+      this.loadSpendAusData()
   }
 
   loadSpendAusData = () => {
@@ -442,11 +443,18 @@ class Cashflow extends Component {
   handleDataChange = (e, { value }) => this.setState({ dataTypeValue: value}, this.checkDataChange)
 
   checkDataChange = () => {
-    if(this.state.dataTypeValue === "invoiced") {
+    if(this.state.dataTypeValue === "comparison") {
+      this.loadComparison()
+    } else if(this.state.dataTypeValue === "invoiced") {
       this.loadAusData()
     } else {
       this.loadSpendAusData()
     }
+  }
+
+  loadComparison = () => {
+    this.loadAusData()
+    this.loadSpendAusData()
   }
 
   render(props) {
@@ -480,6 +488,16 @@ class Cashflow extends Component {
                           name="spending"
                           value="spending"
                           checked={this.state.dataTypeValue === "spending"}
+                          onChange={this.handleDataChange}
+                          enabled="true"
+                        />
+                      </GridColumn>
+                      <GridColumn>
+                      <Radio
+                          label="Comparison"
+                          name="comparison"
+                          value="comparison"
+                          checked={this.state.dataTypeValue === "comparison"}
                           onChange={this.handleDataChange}
                           enabled="true"
                         />

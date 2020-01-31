@@ -10,6 +10,7 @@ class CashflowBox extends Component {
       thisFY: DataIn.CashflowReporting.thisFY,
       lastFY: DataIn.CashflowReporting.lastFY,
       diff: DataIn.CashflowReporting.diff,
+      
       monthName: "",
       months: []
     }
