@@ -612,7 +612,7 @@ class RecurringRevenueGraph extends Component {
         (nzTotal[i] * nzRates[i])
       ))
     }
-
+    
     this.setState(prevState => ({ totalGlobalRR: totalDataRR }), this.setStartingMonth)
 
     return null

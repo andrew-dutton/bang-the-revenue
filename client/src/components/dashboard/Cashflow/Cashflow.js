@@ -49,7 +49,7 @@ class Cashflow extends Component {
   }
 
   loadSpendRates = () => {
-    const rates = DataIn.rates
+    const rates = DataIn.cfrates
     let canRates = []
     let usaRates = []
     let ukRates = []
@@ -251,7 +251,7 @@ class Cashflow extends Component {
   }
 
   loadRates = () => {
-    const rates = DataIn.rates
+    const rates = DataIn.cfrates
     let canRates = []
     let usaRates = []
     let ukRates = []

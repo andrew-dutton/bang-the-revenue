@@ -554,7 +554,6 @@ class Churn extends Component {
   }
 
   getValuesForNewClients = () => {
-    console.log(this.state.selectedMonth)
     let selectedMonth = this.state.selectedMonth
     let startfThisMonth = this.state.months[selectedMonth + 1]
     let startOfLastMonth = this.state.months[selectedMonth]
@@ -589,7 +588,7 @@ class Churn extends Component {
       }
       holderArray.push(holder)
     }
-    console.log(holderArray)
+
     this.setState((prevState) => ({ newValues: holderArray }), this.getAddedTotalInAud)
   }
 

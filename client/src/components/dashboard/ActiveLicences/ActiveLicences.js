@@ -143,7 +143,7 @@ class ActiveLicences extends Component {
   }
 
   getNumberOfMonthsSinceJuly2015 = () => {
-    console.log(this.props)
+
     // let today = new Date()
 
     // if (!this.state.dataIn) {
