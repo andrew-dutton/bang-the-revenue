@@ -10,9 +10,9 @@ export default {
     diff: "1.1%"
   },
   RecurringRevenue: {
-      thisMonth: "$920,362",
+      thisMonth: "$920,326",
       lastMonth: "$916,011",
-      diff: "$4,351",
+      diff: "$4,315",
   },
   CashflowReporting: {
     thisFY: "$6,993,221",
