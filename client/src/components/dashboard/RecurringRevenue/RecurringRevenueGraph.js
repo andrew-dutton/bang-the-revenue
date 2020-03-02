@@ -169,7 +169,16 @@ class RecurringRevenueGraph extends Component {
 
   handleChange = (e, { value }) => this.setState({ value })
 
-  handleCurrencyChange = (e, { value }) => this.setState({ value })
+  handleCurrencyChange = (e, { value }) => this.setState({ value }, this.convertToOtherCurrency)
+
+  convertToOtherCurrency = () => {
+    if(this.state.value === "local") {
+      this.createMonthsArray()
+    }
+
+    console.log(this.state.canDataRR)
+  }
+
 
   getNumberOfMonthsSinceJuly2015 = () => {
     return DataIn.MonthNumber
@@ -1194,7 +1203,7 @@ class RecurringRevenueGraph extends Component {
                         value="local"
                         checked={this.state.value === "local"}
                         onChange={this.handleCurrencyChange}
-                        disabled
+                        
                       />
                     </GridColumn>
                     <GridColumn>
@@ -1204,7 +1213,7 @@ class RecurringRevenueGraph extends Component {
                         value="aud"
                         checked={this.state.value === "aud"}
                         onChange={this.handleCurrencyChange}
-                        disabled
+                        
                       />
                     </GridColumn>
                     <GridColumn>
@@ -1214,7 +1223,7 @@ class RecurringRevenueGraph extends Component {
                         value="usd"
                         checked={this.state.value === "usd"}
                         onChange={this.handleCurrencyChange}
-                        disabled
+                        
                       />
                     </GridColumn>
                   </Grid>
