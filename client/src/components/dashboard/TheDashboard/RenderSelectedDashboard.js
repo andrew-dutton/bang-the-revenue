@@ -5,6 +5,7 @@ import Churn from '../../dashboard/Churn/Churn'
 import QR from '../../dashboard/QuarterlyReporting/QR'
 import Budget from '../../dashboard/Budget/Budget'
 import Cashflow from '../../dashboard/Cashflow/Cashflow'
+import Search from '../../dashboard/Search/Search'
 
 
 const renderSelectedDashboard = props => {
@@ -37,6 +38,10 @@ const renderSelectedDashboard = props => {
 
   if (props.selected === "Cashflow") {
     toDisplay = <Cashflow forexData={props.forexData} rawData={props.rawData} rawCashflow={props.rawCashflow}/>
+  }
+
+  if (props.selected === "Search") {
+    toDisplay = <Search rawData={props.rawData} />
   }
 
   return (

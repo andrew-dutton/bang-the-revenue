@@ -1,5 +1,5 @@
 import React from 'react'
-import { Segment, Grid, Dimmer, Loader } from 'semantic-ui-react'
+import { Segment, Grid, Dimmer, Loader, Button } from 'semantic-ui-react'
 import ActiveLicencesBox from '../ActiveLicences/ActiveLicencesBox'
 import RecurringRevenueBox from '../RecurringRevenue/RecurringRevenueBox'
 import ChurnBox from '../Churn/ChurnBox'
@@ -19,7 +19,7 @@ const renderFullDashboard = props => {
           <Segment color="black" style={{ width: 1079 }}>
             <Grid verticalAlign={"middle"}>
               <Grid.Column width={4}>
-
+                <Button id="Search" onClick={e => props.handleSelection(e.currentTarget.id)} color="teal">Search Data</Button>
               </Grid.Column>
               <Grid.Column width={8}>
                 <h1 style={{ fontSize: 40, textAlign: "center", fontFamily: 'Titillium Web' }}>Dashboard</h1>
