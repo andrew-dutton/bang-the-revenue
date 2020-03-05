@@ -1,18 +1,18 @@
 export default {
   ActiveLicences: {
-    thisMonth: 540,
+    thisMonth: 541,
     lastMonth: 536,
-    diff: "4"
+    diff: "5"
   },
   Churn: {
-    thisMonth: "2.35%",
+    thisMonth: "2.17%",
     lastMonth: "1.83%",
-    diff: "0.5%"
+    diff: "0.3%"
   },
   RecurringRevenue: {
-      thisMonth: "$935,417",
+      thisMonth: "$936,547",
       lastMonth: "$917,874",
-      diff: "$17,543",
+      diff: "$19,004",
   },
   CashflowReporting: {
     thisFY: "$6,993,221",
