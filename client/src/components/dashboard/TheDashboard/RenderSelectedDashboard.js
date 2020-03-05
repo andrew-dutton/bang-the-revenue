@@ -6,6 +6,7 @@ import QR from '../../dashboard/QuarterlyReporting/QR'
 import Budget from '../../dashboard/Budget/Budget'
 import Cashflow from '../../dashboard/Cashflow/Cashflow'
 import Search from '../../dashboard/Search/Search'
+import Forecasts from '../../dashboard/Forecasts/Forecasts'
 
 
 const renderSelectedDashboard = props => {
@@ -42,6 +43,10 @@ const renderSelectedDashboard = props => {
 
   if (props.selected === "Search") {
     toDisplay = <Search rawData={props.rawData} />
+  }
+
+  if (props.selected === "Forecasts") {
+    toDisplay = <Forecasts rawData={props.rawData} />
   }
 
   return (

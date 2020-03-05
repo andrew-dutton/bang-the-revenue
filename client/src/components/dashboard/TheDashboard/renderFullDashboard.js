@@ -25,7 +25,6 @@ const renderFullDashboard = props => {
                 <h1 style={{ fontSize: 40, textAlign: "center", fontFamily: 'Titillium Web' }}>Dashboard</h1>
               </Grid.Column>
               <Grid.Column width={4}>
-
               </Grid.Column>
             </Grid>
           </Segment>
@@ -117,6 +116,9 @@ const renderFullDashboard = props => {
         </Segment>
         <div>
     <p style={{fontStyle: "italic"}}> Last updated {DataIn.Updated}</p>
+        </div>
+        <div>
+          {/* <Button id="Forecasts" onClick={e => props.handleSelection(e.currentTarget.id)} color="teal">Forecasts</Button> */}
         </div>
       </div >
     )

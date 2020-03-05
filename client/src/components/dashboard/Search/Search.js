@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import DashboardHeading from '../DashboardHeading'
 import { Grid, Segment, Button, Icon } from 'semantic-ui-react'
 import { HotTable } from '@handsontable/react';
-import _ from 'lodash'
 
 class SearchData extends Component {
     constructor(props) {
