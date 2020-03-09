@@ -1,18 +1,18 @@
 export default {
   ActiveLicences: {
-    thisMonth: 541,
-    lastMonth: 536,
+    thisMonth: 542,
+    lastMonth: 537,
     diff: "5"
   },
   Churn: {
     thisMonth: "2.17%",
-    lastMonth: "1.83%",
-    diff: "0.3%"
+    lastMonth: "1.65%",
+    diff: "0.5%"
   },
   RecurringRevenue: {
-      thisMonth: "$936,547",
-      lastMonth: "$917,874",
-      diff: "$19,004",
+      thisMonth: "$947,846",
+      lastMonth: "$929,009",
+      diff: "$18,837",
   },
   CashflowReporting: {
     thisFY: "$6,993,221",
@@ -20,7 +20,7 @@ export default {
     diff: "$1,347,078"
   },
   DataIn: true,
-  Updated: "05 March 2020",
+  Updated: "10 March 2020",
   MonthNumber: 57,
   rates:
   {
