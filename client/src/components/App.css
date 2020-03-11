@@ -3,3 +3,7 @@
   padding-top: 10px;
   padding-right: 100px;
 }
+
+.handsontable .htDimmed {
+  color: #000
+}

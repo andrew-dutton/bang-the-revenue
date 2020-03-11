@@ -94,7 +94,7 @@ class SearchData extends Component {
                         wordWrap={false}
                         height={500}
                         editor={false}
-                        columns={[{}, {}, {}, {}, {}, {}, {}, {}, {}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }, {}, {}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }]}
+                        columns={[{}, { type: "date" }, {}, {}, {}, {}, { type: "date" }, { type: "date" }, {}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }, {}, {}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }]}
                         columnSorting={true}
                         colWidths={[55, 70, 324, 90, 35, 35, 70, 70, 40, 52, 45, 45, 60]}
                         rowHeaders={true}

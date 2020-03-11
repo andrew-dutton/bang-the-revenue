@@ -831,7 +831,7 @@ class RecurringRevenueGraph extends Component {
                   <HotTable
                     licenseKey="non-commercial-and-evaluation"
                     className={"htCenter"}
-                    columns={[{}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }, {}, {}, {}, {}, {}, {}, {}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }]}
+                    columns={[{}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }, {}, {}, {}, { type: "date" }, {}, { type: "date" }, { type: "date" }, { type: "numeric", numericFormat: { pattern: "0,00.00" } }]}
                     style={{ fontSize: 10, color: 'black' }}
                     cells={function (row, col) {
                       var cellPrp = {};
@@ -881,7 +881,7 @@ class RecurringRevenueGraph extends Component {
                     <HotTable
                       licenseKey="non-commercial-and-evaluation"
                       className={"htCenter"}
-                      columns={[{}, {}, {}, {}, {}, {}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }]}
+                      columns={[{}, {}, {}, {}, { type: "date" }, {}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }]}
                       style={{ fontSize: 10, color: 'black' }}
                       cells={function (row, col) {
                         var cellPrp = {};

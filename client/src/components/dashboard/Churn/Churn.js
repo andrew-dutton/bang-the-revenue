@@ -663,7 +663,7 @@ class Churn extends Component {
               // height={400}
               editor={false}
               filters={true}
-              columns={[{}, {}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }, {}, {}, {}, {}, {}, {}, {}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }]}
+              columns={[{}, {}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }, {}, {}, {}, { type: "date" }, {}, { type: "date" }, { type: "date" }, { type: "numeric", numericFormat: { pattern: "0,00.00" } }]}
               columnSorting={true}
               colWidths={[350, 100, 55, 50, 50, 50, 70, 52, 70, 70, 60]}
               rowHeaders={true}
@@ -705,7 +705,7 @@ class Churn extends Component {
             // height={400}
             editor={false}
             filters={true}
-            columns={[{}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }, {}, {}, {}, {}, {}, {}, {}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }]}
+            columns={[{}, { type: "numeric", numericFormat: { pattern: "0,00.00" } }, {}, {}, {}, { type: "date" }, {}, { type: "date" }, { type: "date" }, { type: "numeric", numericFormat: { pattern: "0,00.00" } }]}
             columnSorting={true}
             colWidths={[450, 55, 50, 50, 50, 70, 52, 70, 70, 60]}
             rowHeaders={true}
