@@ -7,3 +7,14 @@
 .handsontable .htDimmed {
   color: #000
 }
+
+/*Override*/
+.ui.menu {
+  opacity: 1;
+z-index: 1;
+}
+
+.go-behind {
+      position: relative !important;
+
+}
