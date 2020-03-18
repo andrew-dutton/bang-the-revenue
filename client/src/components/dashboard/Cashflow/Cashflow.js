@@ -463,7 +463,7 @@ class Cashflow extends Component {
     } else {
       return (
         <div style={{ paddingTop: 24, paddingBotton: 24 }}>
-          <DashboardHeading title={"Cashflow Reporting - to end January 2020"} currentColor={this.state.currentColor} />
+          <DashboardHeading title={"Cashflow Reporting"} currentColor={this.state.currentColor} />
             <Segment style={{ width: 1079 }}>
             <Grid columns={2}>
                 <GridColumn>
