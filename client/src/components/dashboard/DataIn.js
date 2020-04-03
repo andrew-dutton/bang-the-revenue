@@ -1,18 +1,18 @@
 export default {
   ActiveLicences: {
-    thisMonth: 542,
-    lastMonth: 537,
-    diff: "5"
+    thisMonth: 559,
+    lastMonth: 547,
+    diff: "12"
   },
   Churn: {
-    thisMonth: "2.17%",
-    lastMonth: "1.65%",
-    diff: "0.5%"
+    thisMonth: "2.10%",
+    lastMonth: "1.97%",
+    diff: "0.13%"
   },
   RecurringRevenue: {
-      thisMonth: "$947,846",
-      lastMonth: "$929,009",
-      diff: "$18,837",
+      thisMonth: "$981,296",
+      lastMonth: "$951,749",
+      diff: "$29,547",
   },
   CashflowReporting: {
     thisFY: "$7,839,680",
@@ -20,8 +20,8 @@ export default {
     diff: "$1,436,824"
   },
   DataIn: true,
-  Updated: "20 March 2020",
-  MonthNumber: 57,
+  Updated: "3 April 2020",
+  MonthNumber: 58,
   rates:
   {
     "07/2015": {
@@ -359,6 +359,12 @@ export default {
       "AUD/USD": 1.500632,
       "AUD/GBP": 1.946143,
       "AUD/NZD": 0.959245
+    },
+    "03/2020": {
+      "AUD/CAD": 1.155666,
+      "AUD/USD": 1.61132,
+      "AUD/GBP": 1.989515,
+      "AUD/NZD": 0.973874
     }
   },
   Labels: [
@@ -366,7 +372,7 @@ export default {
     'Jul-16', 'Aug-16', 'Sep-16', 'Oct-16', 'Nov-16', 'Dec-16', 'Jan-17', 'Feb-17', 'Mar-17', 'Apr-17', 'May-17', 'Jun-17',
     'Jul-17', 'Aug-17', 'Sep-17', 'Oct-17', 'Nov-17', 'Dec-17', 'Jan-18', 'Feb-18', 'Mar-18', 'Apr-18', 'May-18', 'Jun-18',
     'Jul-18', 'Aug-18', 'Sep-18', 'Oct-18', 'Nov-18', 'Dec-18', 'Jan-19', 'Feb-19', 'Mar-19', 'Apr-19', 'May-19', 'Jun-19',
-    'Jul-19', 'Aug-19', 'Sep-19', 'Oct-19', 'Nov-19', 'Dec-19', 'Jan-20', 'Feb-20'
+    'Jul-19', 'Aug-19', 'Sep-19', 'Oct-19', 'Nov-19', 'Dec-19', 'Jan-20', 'Feb-20', 'Mar-20'
   ],
   CashflowLabels: [
     'Jul-14', 'Aug-14', 'Sep-14', 'Oct-14', 'Nov-14', 'Dec-14', 'Jan-15', 'Feb-15', 'Mar-15', 'Apr-15', 'May-15', 'Jun-15',
@@ -374,7 +380,7 @@ export default {
     'Jul-16', 'Aug-16', 'Sep-16', 'Oct-16', 'Nov-16', 'Dec-16', 'Jan-17', 'Feb-17', 'Mar-17', 'Apr-17', 'May-17', 'Jun-17',
     'Jul-17', 'Aug-17', 'Sep-17', 'Oct-17', 'Nov-17', 'Dec-17', 'Jan-18', 'Feb-18', 'Mar-18', 'Apr-18', 'May-18', 'Jun-18',
     'Jul-18', 'Aug-18', 'Sep-18', 'Oct-18', 'Nov-18', 'Dec-18', 'Jan-19', 'Feb-19', 'Mar-19', 'Apr-19', 'May-19', 'Jun-19',
-    'Jul-19', 'Aug-19', 'Sep-19', 'Oct-19', 'Nov-19', 'Dec-19', 'Jan-20', 'Feb-20'
+    'Jul-19', 'Aug-19', 'Sep-19', 'Oct-19', 'Nov-19', 'Dec-19', 'Jan-20', 'Feb-20', 'Mar-20'
   ],
   CashflowQuarters: [
     'Q1 2014/2015', 'Q2 2014/2015', 'Q3 2014/2015', 'Q4 2014/2015',
@@ -801,6 +807,12 @@ export default {
         "AUD/USD": 1.500632,
         "AUD/GBP": 1.946143,
         "AUD/NZD": 0.959245
+      },
+      "03/2020": {
+        "AUD/CAD": 1.155666,
+        "AUD/USD": 1.61132,
+        "AUD/GBP": 1.989515,
+        "AUD/NZD": 0.973874
       }
   }
 }
