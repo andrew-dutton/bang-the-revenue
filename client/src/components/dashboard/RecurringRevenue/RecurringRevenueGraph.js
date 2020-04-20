@@ -176,7 +176,65 @@ class RecurringRevenueGraph extends Component {
       this.createMonthsArray()
     }
 
-    console.log(this.state.canDataRR)
+    if(this.state.value === "aud") {
+      this.convertAllToAUD()
+    }
+
+    if(this.state.value === "usd") {
+      this.createMonthsArray()
+      console.log("USD")
+    }
+  }
+
+  convertAllToAUD = () => {
+    let canRates = []
+    let usaRates = []
+    let ukRates = []
+    let nzRates = []
+
+    Object.keys(this.state.forexData).forEach(key => {
+      canRates.push(this.state.forexData[key]["AUD/CAD"])
+    })
+
+    Object.keys(this.state.forexData).forEach(key => {
+      usaRates.push(this.state.forexData[key]["AUD/USD"])
+    })
+
+    Object.keys(this.state.forexData).forEach(key => {
+      ukRates.push(this.state.forexData[key]["AUD/GBP"])
+    })
+
+    Object.keys(this.state.forexData).forEach(key => {
+      nzRates.push(this.state.forexData[key]["AUD/NZD"])
+    })
+
+    let canAusRR = []
+    let usaAusRR = []
+    let ukAusRR = []
+    let nzAusRR = []
+
+    canRates.forEach((rate, index) => {
+      canAusRR.push(Math.round(rate * this.state.canDataRR[index])) 
+    })
+
+    usaRates.forEach((rate, index) => {
+      usaAusRR.push(Math.round(rate * this.state.usaDataRR[index])) 
+    })
+
+    ukRates.forEach((rate, index) => {
+      ukAusRR.push(Math.round(rate * this.state.ukDataRR[index])) 
+    })
+
+    nzRates.forEach((rate, index) => {
+      nzAusRR.push(Math.round(rate * this.state.nzDataRR[index])) 
+    })
+
+    this.setState(prevState => ({
+      canData: [...canAusRR],
+      usaData: [...usaAusRR],
+      ukData: [...ukAusRR],
+      nzData: [...nzAusRR]
+    }))
   }
 
 
@@ -1213,7 +1271,7 @@ class RecurringRevenueGraph extends Component {
                         value="aud"
                         checked={this.state.value === "aud"}
                         onChange={this.handleCurrencyChange}
-                        
+                        disabled
                       />
                     </GridColumn>
                     <GridColumn>
@@ -1223,7 +1281,7 @@ class RecurringRevenueGraph extends Component {
                         value="usd"
                         checked={this.state.value === "usd"}
                         onChange={this.handleCurrencyChange}
-                        
+                        disabled
                       />
                     </GridColumn>
                   </Grid>
