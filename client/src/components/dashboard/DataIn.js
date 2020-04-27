@@ -5,14 +5,14 @@ export default {
     diff: "12"
   },
   Churn: {
-    thisMonth: "2.10%",
+    thisMonth: "1.92%",
     lastMonth: "1.97%",
-    diff: "0.13%"
+    diff: ".05%"
   },
   RecurringRevenue: {
-      thisMonth: "$981,296",
+      thisMonth: "$981,744",
       lastMonth: "$951,749",
-      diff: "$29,547",
+      diff: "$29,995",
   },
   CashflowReporting: {
     thisFY: "$9,204,247",
@@ -20,7 +20,7 @@ export default {
     diff: "$2,217,709"
   },
   DataIn: true,
-  Updated: "15 April 2020",
+  Updated: "27 April 2020",
   MonthNumber: 58,
   rates:
   {
