@@ -70,18 +70,18 @@ const renderFullDashboard = props => {
                 </div>
               </Grid.Column>
               <Grid.Column>
-                <div id="Non Recurring" onMouseEnter={() => props.onMouseEnterNonRecurring()} onMouseLeave={() => props.onMouseLeaveNonRecurring()}>
-                  <Segment inverted={props.selected === "Non Recurring"} raised={props.raised === "Non Recurring"}>
-                    <h1 style={{ fontFamily: 'Titillium Web' }}>Non Recurring Revenue</h1>
-                    <NonRecurringBox selected={props.selected} rawData={props.rawData} />
+              <div id="EIQ" onMouseEnter={() => props.onMouseEnterEIQ()} onMouseLeave={() => props.onMouseLeaveEIQ()} >
+                  <Segment inverted={props.selected === "EIQ"} raised={props.raised === "EIQ"}>
+                    <h1 style={{ fontFamily: 'Titillium Web' }}>EngagementIQ</h1>
+                    <EIQBox selected={props.selected} rawData={props.rawData} />
                   </Segment>
                 </div>
               </Grid.Column>
               <Grid.Column>
-                <div id="EIQ" onMouseEnter={() => props.onMouseEnterEIQ()} onMouseLeave={() => props.onMouseLeaveEIQ()}>
-                  <Segment inverted={props.selected === "EIQ"} raised={props.raised === "EIQ"}>
-                    <h1 style={{ fontFamily: 'Titillium Web' }}>EngagementIQ</h1>
-                    <EIQBox selected={props.selected} rawData={props.rawData} />
+                <div id="Non Recurring" onMouseEnter={() => props.onMouseEnterNonRecurring()} onMouseLeave={() => props.onMouseLeaveNonRecurring()}>
+                  <Segment inverted={props.selected === "Non Recurring"} raised={props.raised === "Non Recurring"}>
+                    <h1 style={{ fontFamily: 'Titillium Web' }}>Non Recurring Revenue</h1>
+                    <NonRecurringBox selected={props.selected} rawData={props.rawData} />
                   </Segment>
                 </div>
               </Grid.Column>

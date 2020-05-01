@@ -1,18 +1,18 @@
 import React from 'react'
 import { Segment } from 'semantic-ui-react'
-import { Line } from 'react-chartjs-2'
+import { Bar } from 'react-chartjs-2'
 import DataIn from '../DataIn'
 
-const activeLicencesChart = props => {
+const EIQChart = props => {
   const data = {
-    labels: DataIn.Labels,
+    labels: props.dateLabels,
     datasets: [
       {
-        label: 'Australia',
+        label: 'Admins',
         fill: false,
         lineTension: 0.1,
-        backgroundColor: 'rgba(75,192,1,0.8)',
-        borderColor: 'rgba(75,192,1,0.8)',
+        backgroundColor: 'rgb(206,222,56)',
+        borderColor: 'rgb(206,222,56)',
         borderCapStyle: 'butt',
         borderDash: [],
         borderDashOffset: 0.0,
@@ -26,14 +26,14 @@ const activeLicencesChart = props => {
         pointHoverBorderWidth: 2,
         pointRadius: 3,
         pointHitRadius: 10,
-        data: props.ausData
+        data: props.adminsData
       },
       {
-        label: 'Canada',
+        label: 'Advisory',
         fill: false,
         lineTension: 0.1,
-        backgroundColor: 'rgba(222,213,42,0.8)',
-        borderColor: 'rgba(222,213,42,0.8)',
+        backgroundColor: 'rgb(100,178,72)',
+        borderColor: 'rgb(100,178,72)',
         borderCapStyle: 'butt',
         borderDash: [],
         borderDashOffset: 0.0,
@@ -47,14 +47,14 @@ const activeLicencesChart = props => {
         pointHoverBorderWidth: 2,
         pointRadius: 3,
         pointHitRadius: 10,
-        data: props.canData
+        data: props.advisoryData
       },
       {
-        label: 'USA',
+        label: 'Concierge',
         fill: false,
         lineTension: 0.1,
-        backgroundColor: 'rgba(234,77,49,0.8)',
-        borderColor: 'rgba(234,77,49,0.8)',
+        backgroundColor: 'rgb(24,149,206)',
+        borderColor: 'rgb(24,149,206)',
         borderCapStyle: 'butt',
         borderDash: [],
         borderDashOffset: 0.0,
@@ -68,14 +68,14 @@ const activeLicencesChart = props => {
         pointHoverBorderWidth: 2,
         pointRadius: 3,
         pointHitRadius: 10,
-        data: props.usaData
+        data: props.conciergeData
       },
       {
-        label: 'UK',
+        label: 'Onboarding',
         fill: false,
         lineTension: 0.1,
-        backgroundColor: 'rgba(49,234,212,0.8)',
-        borderColor: 'rgba(49,234,212,0.8)',
+        backgroundColor: 'rgb(63,95,173)',
+        borderColor: 'rgb(63,95,173)',
         borderCapStyle: 'butt',
         borderDash: [],
         borderDashOffset: 0.0,
@@ -89,14 +89,14 @@ const activeLicencesChart = props => {
         pointHoverBorderWidth: 2,
         pointRadius: 3,
         pointHitRadius: 10,
-        data: props.ukData
+        data: props.onboardingData
       },
       {
-        label: 'New Zealand',
+        label: 'Support',
         fill: false,
         lineTension: 0.1,
-        backgroundColor: 'rgba(234,49,223,0.8)',
-        borderColor: 'rgba(234,49,223,0.8)',
+        backgroundColor: 'rgb(72,50,144)',
+        borderColor: 'rgb(72,50,144)',
         borderCapStyle: 'butt',
         borderDash: [],
         borderDashOffset: 0.0,
@@ -110,20 +110,45 @@ const activeLicencesChart = props => {
         pointHoverBorderWidth: 2,
         pointRadius: 3,
         pointHitRadius: 10,
-        data: props.nzData
+        data: props.supportData
+      },
+      {
+        label: 'Training',
+        fill: false,
+        lineTension: 0.1,
+        backgroundColor: 'rgb(126,56,151)',
+        borderColor: 'rgb(126,56,151)',
+        borderCapStyle: 'butt',
+        borderDash: [],
+        borderDashOffset: 0.0,
+        borderJoinStyle: 'miter',
+        pointBorderColor: 'rgba(75,192,192,1)',
+        pointBackgroundColor: '#fff',
+        pointBorderWidth: 1,
+        pointHoverRadius: 5,
+        pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+        pointHoverBorderColor: 'rgba(220,220,220,1)',
+        pointHoverBorderWidth: 2,
+        pointRadius: 3,
+        pointHitRadius: 10,
+        data: props.trainingData
       }
     ]
   }
 
   return (
     <Segment color={props.selectedColor} style={{ width: 1000 }}>
-      <Line
+      <Bar
         data={data}
         options={{
           'onClick': (event, item) => {
             if (item.length > 0) {
-              props.updateCurrentMonth(item[0]["_index"])
+              //props.updateCurrentMonth(item[0]["_index"])
             }
+          },
+          'scales': {
+              xAxes: [{ stacked: true }],
+              yAxes: [{ stacked: true }]
           }
         }}
       />
@@ -132,4 +157,4 @@ const activeLicencesChart = props => {
   )
 }
 
-export default activeLicencesChart
+export default EIQChart

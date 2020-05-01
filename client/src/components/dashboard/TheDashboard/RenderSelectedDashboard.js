@@ -7,6 +7,7 @@ import Budget from '../../dashboard/Budget/Budget'
 import Cashflow from '../../dashboard/Cashflow/Cashflow'
 import Search from '../../dashboard/Search/Search'
 import Forecasts from '../../dashboard/Forecasts/Forecasts'
+import EIQ from '../../dashboard/EIQ/EIQ'
 
 
 const renderSelectedDashboard = props => {
@@ -23,6 +24,10 @@ const renderSelectedDashboard = props => {
 
   if (props.selected === "Churn") {
     toDisplay = <Churn forexData={props.forexData} rawData={props.rawData} />
+  }
+
+  if (props.selected === "EIQ") {
+    toDisplay = <EIQ forexData={props.forexData} rawData={props.rawData} />
   }
 
   if (props.selected === "QR") {
@@ -52,7 +57,7 @@ const renderSelectedDashboard = props => {
   return (
     <div style={{ fontFamily: 'Titillium Web' }}>
       {toDisplay}
-    </div >
+    </div>
   )
 }
 

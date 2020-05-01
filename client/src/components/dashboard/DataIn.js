@@ -1,8 +1,8 @@
 export default {
   ActiveLicences: {
-    thisMonth: 559,
-    lastMonth: 547,
-    diff: "12"
+    thisMonth: 561,
+    lastMonth: 539,
+    diff: "22"
   },
   Churn: {
     thisMonth: "1.92%",
