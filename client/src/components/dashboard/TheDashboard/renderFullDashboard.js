@@ -47,7 +47,7 @@ const renderFullDashboard = props => {
                 <div style={{ cursor: 'pointer', color: '#000000' }} id="Recurring Revenue" onMouseEnter={() => props.onMouseEnterRecurringRevenue()} onMouseLeave={() => props.onMouseLeaveRecurringRevenue()} onClick={e => props.handleSelection(e.currentTarget.id)}>
                   <Segment color={"orange"} inverted={props.selected === "Recurring Revenue"} raised={props.raised === "Recurring Revenue"}>
                     <h1 style={{ fontFamily: 'Titillium Web' }}>Recurring Revenue</h1>
-                    <RecurringRevenueBox selected={props.selected} rawData={props.rawData} />
+                    <RecurringRevenueBox selected={props.selected} rawData={props.rawData} forexData={props.forexData} />
                   </Segment>
                 </div>
               </Grid.Column>

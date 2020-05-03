@@ -119,7 +119,7 @@ class Churn extends Component {
   }
 
   createMonthsArray = () => {
-    const numberOfMonths = this.getNumberOfMonthsSinceJuly2015()
+    const numberOfMonths = DataIn.MonthNumber
 
     let year = 2015
     let yearStep = 12
@@ -151,11 +151,6 @@ class Churn extends Component {
 
     this.setState({ months, monthsText }, this.setStartingMonth)
   }
-
-  getNumberOfMonthsSinceJuly2015 = () => {
-    return DataIn.MonthNumber
-  }
-
 
   setStartingMonth = () => {
     let monthsOfYear = [
@@ -286,6 +281,7 @@ class Churn extends Component {
 
     this.state.months.forEach((month) => {
       let counter = []
+
 
       this.props.rawData.forEach((invoice) => {
         let startString = invoice["start"]

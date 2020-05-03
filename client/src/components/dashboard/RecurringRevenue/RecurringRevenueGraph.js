@@ -15,7 +15,7 @@ class RecurringRevenueGraph extends Component {
       totalToggleActive: false,
       currentColor: "orange",
       forexData: props.forexData,
-      totalAUD: 873822,
+      totalAUD: 0,
       selectedMonth: 0,
       months: [],
       monthsText: [],
