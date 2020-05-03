@@ -5,10 +5,9 @@ import DataIn from '../DataIn'
 class ActiveLicencesBox extends Component {
   constructor(props) {
     super(props)
-
     this.state = {
-      thisMonth: DataIn.ActiveLicences.thisMonth,
-      lastMonth: DataIn.ActiveLicences.lastMonth,
+      thisMonth: 0,
+      lastMonth: 0,
       diff: DataIn.ActiveLicences.diff,
       monthName: "",
       months: [],
@@ -64,28 +63,62 @@ class ActiveLicencesBox extends Component {
 
     let fullDate = month + " " + theYear
 
-    this.setState((prevState) => ({ monthName: fullDate }))
+    this.setState((prevState) => ({ monthName: fullDate }), this.totalClients)
+  }
+
+  totalClients() {
+    const total = []
+    const uniqClients = []
+
+    this.state.months.forEach((month) => {
+      const counter = []
+      this.props.rawData.forEach((invoice) => {
+
+        let startString = invoice["start"]
+        let startDateParts = startString.split("/")
+        let start = new Date(startDateParts[2], startDateParts[1] - 1, +startDateParts[0])
+        let endString = invoice["end"]
+        let endDateParts = endString.split("/")
+        let end = new Date(endDateParts[2], endDateParts[1] - 1, +endDateParts[0])
+
+        if (start <= month && end >= month) {
+          counter.push(invoice["client"])
+        }
+      })
+
+      const onlyUnique = (value, index, self) => {
+        return self.indexOf(value) === index;
+      }
+
+      let uniqClients = counter.filter(onlyUnique)
+
+      total.push(uniqClients.length)
+    })
+
+    if(total[DataIn.MonthNumber-2] > total[DataIn.MonthNumber-3]) {
+      this.setState({arrow: "triangle up", arrowColor: "green"})
+    } else if(total[DataIn.MonthNumber-2] < total[DataIn.MonthNumber-3]) {
+      this.setState({arrow: "triangle down", arrowColor: "red"})
+    } else {
+      this.setState({arrow: "", arrowColor: ""})
+    }
+
+    this.setState({thisMonth: total[DataIn.MonthNumber - 2], diff:total[DataIn.MonthNumber-2] - total[DataIn.MonthNumber - 3] })
+    return null
+  }
+
+  getTotalForCurrentMonth = () => {
+    console.log(this.state)
   }
 
   boxSelected = () => {
-    if (this.props.selected === "Active Licences") {
-      return (
-        <div style={{ height: 150 }}>
-          <h1 style={{ position: 'absolute', left: '50%', top: '75%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>{this.state.thisMonth}</h1>
-          <h3 style={{ fontFamily: 'Titillium Web' }}>{this.state.monthName}</h3>
-          <h4><Icon name="triangle up" color="green" />{this.state.diff}</h4>
-        </div>
-      )
-    } else {
-      return (
-        <div style={{ height: 150 }}>
-          <h1 style={{ position: 'absolute', left: '50%', top: '75%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>{this.state.thisMonth}</h1>
-          <h3 style={{ fontFamily: 'Titillium Web' }}>{this.state.monthName}</h3>
-          <h4><Icon name="triangle up" color="green" />{this.state.diff}</h4>
-        </div>
-      )
-    }
-
+    return (
+      <div style={{ height: 150 }}>
+        <h1 style={{ position: 'absolute', left: '50%', top: '75%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>{this.state.thisMonth}</h1>
+        <h3 style={{ fontFamily: 'Titillium Web' }}>{this.state.monthName}</h3>
+        <h4><Icon name={this.state.arrow} color={this.state.arrowColor} />{this.state.diff}</h4>
+      </div>
+    )
   }
 
 

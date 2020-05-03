@@ -12,7 +12,7 @@ import BudgetBox from '../BudgetVariances/BudgetBox'
 import DataIn from '../DataIn'
 
 const renderFullDashboard = props => {
-  if (props.selected === "Select Chart") {
+  if (props.selected === "Select Chart" && props.rawData.length > 0) {
     return (
       <div style={{ paddingTop: 24, paddingBotton: 100 }}>
         <div style={{ paddingBottom: 12 }}>
