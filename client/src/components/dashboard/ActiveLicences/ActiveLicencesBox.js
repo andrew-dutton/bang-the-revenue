@@ -8,7 +8,6 @@ class ActiveLicencesBox extends Component {
     this.state = {
       thisMonth: 0,
       lastMonth: 0,
-      diff: DataIn.ActiveLicences.diff,
       monthName: "",
       months: [],
       total: []
