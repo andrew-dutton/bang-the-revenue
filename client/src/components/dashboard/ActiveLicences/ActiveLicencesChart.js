@@ -124,6 +124,20 @@ const activeLicencesChart = props => {
             if (item.length > 0) {
               props.updateCurrentMonth(item[0]["_index"])
             }
+          },
+          tooltips: {
+            mode: 'label',
+            callbacks: {
+                afterTitle: function() {
+                    window.total = 0;
+                },
+                label: function(tooltipItem, data) {
+                    var corporation = data.datasets[tooltipItem.datasetIndex].label;
+                    var valor = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                    window.total += parseInt(valor);
+                    return corporation + "  " + valor           
+                }
+              }
           }
         }}
       />
