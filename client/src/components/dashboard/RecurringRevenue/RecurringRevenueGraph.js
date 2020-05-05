@@ -96,7 +96,6 @@ class RecurringRevenueGraph extends Component {
 
     let startingMonthNumber = this.state.months.length - 2
 
-
     let month = monthsOfYear[this.state.months[this.state.months.length - 2].getMonth()]
     let year = this.state.months[this.state.months.length - 2].getFullYear()
 
@@ -1089,6 +1088,7 @@ class RecurringRevenueGraph extends Component {
   }
 
   render(props) {
+    
     if (this.props.toRender === "QR") {
       return null
     } else {
@@ -1226,7 +1226,7 @@ class RecurringRevenueGraph extends Component {
           }
         ]
       }
-
+      
       return (
         <div style={{ paddingTop: 24, paddingBotton: 24, width: 1079 }}>
           <div >
@@ -1297,7 +1297,39 @@ class RecurringRevenueGraph extends Component {
                   if (item.length > 0) {
                     this.setState((prevState) => ({ selectedMonth: item[0]["_index"] }), this.setChangedMonth)
                   }
-                }
+                },
+                'scales': {
+                  xAxes: [{ 
+                    stacked: false 
+                  }],
+                  yAxes: [{ 
+                    stacked: false ,
+                    ticks: {
+                      beginAtZero: true,
+                      callback: function(value, index, values) {
+                        if(parseInt(value) >= 1000){
+                           return '$' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                        } else {
+                           return '$' + value;
+                        }
+                      }     
+                    }
+                  }]
+              },
+              tooltips: {
+                mode: 'label',
+                callbacks: {
+                    afterTitle: function() {
+                        window.total = 0;
+                    },
+                    label: function(tooltipItem, data) {
+                        var corporation = data.datasets[tooltipItem.datasetIndex].label;
+                        var valor = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                        window.total += parseInt(valor);
+                        return corporation + ": $" + valor.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");             
+                    }
+                  }
+              }
               }}
             />
           </Segment>

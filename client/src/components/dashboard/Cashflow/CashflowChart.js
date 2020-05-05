@@ -24,44 +24,44 @@ const cashflowChart = props => {
   
 
   const options = {
-  scales: {
-       xAxes: [{
-           stacked: true
-       }],
-       yAxes: [{
-           stacked: true,
-           ticks: {
-            beginAtZero:true,
-            callback: function(value, index, values) {
-                if(parseInt(value) >= 1000){
-                   return '$' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                } else {
-                   return '$' + value;
-                }
-           }                            
+    scales: {
+        xAxes: [{
+            stacked: true
+        }],
+        yAxes: [{
+            stacked: true,
+            ticks: {
+              beginAtZero:true,
+              callback: function(value, index, values) {
+                  if(parseInt(value) >= 1000){
+                    return '$' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                  } else {
+                    return '$' + value;
+                  }
+            }                            
+          }
+      }]
+    },
+      title: {
+      display: true,
+      text: displayTitle(),
+      fontSize: 20
+    },
+    tooltips: {
+      mode: 'label',
+      callbacks: {
+          afterTitle: function() {
+              window.total = 0;
+          },
+          label: function(tooltipItem, data) {
+              var corporation = data.datasets[tooltipItem.datasetIndex].label;
+              var valor = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+              window.total += valor;
+              return corporation + ": $" + valor.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");             
+          },
+          footer: footer
         }
-    }]
-   },
-     title: {
-     display: true,
-     text: displayTitle(),
-     fontSize: 20
-   },
-   tooltips: {
-    mode: 'label',
-    callbacks: {
-        afterTitle: function() {
-            window.total = 0;
-        },
-        label: function(tooltipItem, data) {
-            var corporation = data.datasets[tooltipItem.datasetIndex].label;
-            var valor = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-            window.total += valor;
-            return corporation + ": $" + valor.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");             
-        },
-        footer: footer
-      }
-  }
+    }
 }
 
   const doubleData = {

@@ -3,6 +3,7 @@ import { Grid, Segment, Button, GridColumn, Radio } from 'semantic-ui-react'
 import DashboardHeading from '../DashboardHeading'
 import DataIn from '../DataIn'
 import EIQChart from './EIQChart'
+import DisplayMonth from '../DisplayMonth'
 
 class EIQ extends Component {
   constructor(props) {
@@ -11,6 +12,10 @@ class EIQ extends Component {
       currentColor: "purple",
       timePeriodValue: "allTime"
     }
+  }
+
+  updateCurrentMonth = (x) => {
+    this.setState({selectedMonth: x}, this.setChangedMonth)
   }
 
   componentDidMount() {
@@ -49,7 +54,6 @@ class EIQ extends Component {
   }
 
   getEIQData = props => {
-   
     let data = this.props.rawData
     let eiqData = []
 
@@ -59,25 +63,13 @@ class EIQ extends Component {
       }
     })
 
-    this.setState({ eiqData }, this.getFullData)
-  }
-
-  getFullData = props => {
-    let data = this.props.rawData
-    let ausData = []
-    data.forEach((line) => {
-      if(line.territory === "AUS") {
-        ausData.push(line)
-      }
-    })
-
-    this.createEIQMonths()
+    this.setState({ eiqData }, this.createEIQMonths)
   }
 
   createEIQMonths = () => {
     const numberOfMonths = this.state.numberOfMonths
 
-    let year = 2018
+    let year = 2015
     let yearStep = 12
     let months = []
 
@@ -105,12 +97,47 @@ class EIQ extends Component {
 
       months.push(month + "/" + year)
     }
+
     if(this.state.timePeriodValue === "eiqLaunch") {
       months = months.slice(42)
     }
 
-    this.setState({ months }, this.getAUSTotals)
+    this.setState({ months }, this.setStartingMonth)
   }
+
+  setStartingMonth = () => {
+    let monthsOfYear = [
+      "January", "February", "March", "April", "May", "June", "July",
+      "August", "September", "October", "November", "December"
+    ]
+
+    let selectedMonth = this.state.months.length - 2 
+
+    let m = monthsOfYear[parseInt(this.state.months[this.state.months.length-2].substring(0,2)) - 1]
+
+    let y = this.state.months[this.state.months.length - 2].substring(3)
+
+    this.setState((prevState) => ({ currentMonth: m + " " + y, selectedMonth }), this.getAUSTotals)
+  }
+
+  setChangedMonth = () => {
+    let monthsOfYear = [
+      "January", "February", "March", "April", "May", "June", "July",
+      "August", "September", "October", "November", "December"
+    ]
+
+    let selectedMonth = this.state.selectedMonth
+
+    if(this.state.timePeriodValue === "eiqLaunch") {
+      selectedMonth -= 42
+    } 
+
+
+    let m = monthsOfYear[parseInt(this.state.months[selectedMonth].substring(0,2)) - 1]
+    let y = this.state.months[selectedMonth].substring(3)
+    this.setState((prevState) => ({ currentMonth: m + " " + y }), this.getAUSTotals)
+  }
+
 
   getAUSTotals = () => {
     let adminsTotalAUS = []
@@ -119,6 +146,12 @@ class EIQ extends Component {
     let onboardingTotalAUS = []
     let supportTotalAUS = []
     let trainingTotalAUS = []
+    let adminsDetAUS = []
+    let advisoryDetAUS = []
+    let conciergeDetAUS = []
+    let onboardingDetAUS = []
+    let supportDetAUS = []
+    let trainingDetAUS = []
     let months = this.state.months
     let eiqData = this.state.eiqData
     let adminsCounter = []
@@ -127,6 +160,12 @@ class EIQ extends Component {
     let onboardingCounter = []
     let supportCounter = []
     let trainingCounter = []
+    let adminsCounterDet = []
+    let advisoryCounterDet = []
+    let conciergeCounterDet = []
+    let onboardingCounterDet = []
+    let supportCounterDet = []
+    let trainingCounterDet = []
   
     months.forEach((month) => {
       adminsCounter = []
@@ -135,71 +174,108 @@ class EIQ extends Component {
       onboardingCounter = []
       supportCounter = []
       trainingCounter = []
+      adminsCounterDet = []
+      advisoryCounterDet = []
+      conciergeCounterDet = []
+      onboardingCounterDet = []
+      supportCounterDet = []
+      trainingCounterDet = []
 
       eiqData.forEach((line) => {
         if(month === line.date.substring(3) && line.territory === "AUS" && line.product === "Admins") {
           adminsCounter.push(line.total)
+          adminsCounterDet.push(line)
         }
 
         if(month === line.date.substring(3) && line.territory === "AUS" && line.product === "Advisory") {
           advisoryCounter.push(line.total)
+          advisoryCounterDet.push(line)
         }
 
         if(month === line.date.substring(3) && line.territory === "AUS" && line.product === "Concierge") {
           conciergeCounter.push(line.total)
+          conciergeCounterDet.push(line)
         }
 
         if(month === line.date.substring(3) && line.territory === "AUS" && line.product === "Onboarding") {
           onboardingCounter.push(line.total)
+          onboardingCounterDet.push(line)
         }
 
         if(month === line.date.substring(3) && line.territory === "AUS" && line.product === "Support") {
           supportCounter.push(line.total)
+          supportCounterDet.push(line)
         }
 
         if(month === line.date.substring(3) && line.territory === "AUS" && line.product === "Training") {
           trainingCounter.push(line.total)
+          trainingCounterDet.push(line)
         }
       })
 
       if(adminsCounter.length < 1) {
         adminsTotalAUS.push(0)
+        adminsDetAUS.push(0)
       } else {
         adminsTotalAUS.push(adminsCounter.reduce((a, b) => a + b, 0))
+        adminsDetAUS.push(adminsCounterDet)
       }
 
       if(advisoryCounter.length < 1) {
         advisoryTotalAUS.push(0)
+        advisoryDetAUS.push(0)
       } else {
         advisoryTotalAUS.push(advisoryCounter.reduce((a, b) => a + b, 0))
+        advisoryDetAUS.push([advisoryCounterDet])
       }
 
       if(conciergeCounter.length < 1) {
         conciergeTotalAUS.push(0)
+        conciergeDetAUS.push(0)
       } else {
         conciergeTotalAUS.push(conciergeCounter.reduce((a, b) => a + b, 0))
+        conciergeDetAUS.push(conciergeCounterDet)
       }
 
       if(onboardingCounter.length < 1) {
         onboardingTotalAUS.push(0)
+        onboardingDetAUS.push(0)
       } else {
         onboardingTotalAUS.push(onboardingCounter.reduce((a, b) => a + b, 0))
+        onboardingDetAUS.push(onboardingCounterDet)
       }
 
       if(supportCounter.length < 1) {
         supportTotalAUS.push(0)
+        supportDetAUS.push(0)
       } else {
         supportTotalAUS.push(supportCounter.reduce((a, b) => a + b, 0))
+        supportDetAUS.push(supportCounterDet)
       }
 
       if(trainingCounter.length < 1) {
         trainingTotalAUS.push(0)
+        trainingDetAUS.push(0)
       } else {
         trainingTotalAUS.push(trainingCounter.reduce((a, b) => a + b, 0))
+        trainingDetAUS.push(trainingCounterDet)
       }
     })
 
-    this.setState({adminsTotalAUS, advisoryTotalAUS, conciergeTotalAUS, onboardingTotalAUS, supportTotalAUS, trainingTotalAUS}, this.getUSATotals)
+    this.setState({
+      adminsTotalAUS, 
+      adminsDetAUS, 
+      advisoryTotalAUS, 
+      advisoryDetAUS,
+      conciergeTotalAUS, 
+      conciergeDetAUS,
+      onboardingTotalAUS,
+      onboardingDetAUS, 
+      supportTotalAUS, 
+      supportDetAUS,
+      trainingTotalAUS,
+      trainingDetAUS
+    }, this.getUSATotals)
   }
 
   getUSATotals = () => {
@@ -576,33 +652,31 @@ class EIQ extends Component {
     let trainingTotals = []
 
     this.state.adminsTotalAUS.forEach((month, index) => {
-      adminsTotals.push(month + this.state.adminsTotalUSA[index] + this.state.adminsTotalCAN[index] + this.state.adminsTotalNZ[index] + this.state.adminsTotalUK[index])
+      adminsTotals.push((month + this.state.adminsTotalUSA[index] + this.state.adminsTotalCAN[index] + this.state.adminsTotalNZ[index] + this.state.adminsTotalUK[index]).toFixed(0))
     })
 
     this.state.advisoryTotalAUS.forEach((month, index) => {
-      advisoryTotals.push(month + this.state.advisoryTotalUSA[index] + this.state.advisoryTotalCAN[index] + this.state.advisoryTotalNZ[index] + this.state.advisoryTotalUK[index])
+      advisoryTotals.push((month + this.state.advisoryTotalUSA[index] + this.state.advisoryTotalCAN[index] + this.state.advisoryTotalNZ[index] + this.state.advisoryTotalUK[index]).toFixed(0))
     })
 
     this.state.conciergeTotalAUS.forEach((month, index) => {
-      conciergeTotals.push(month + this.state.conciergeTotalUSA[index] + this.state.conciergeTotalCAN[index] + this.state.conciergeTotalNZ[index] + this.state.conciergeTotalUK[index])
+      conciergeTotals.push((month + this.state.conciergeTotalUSA[index] + this.state.conciergeTotalCAN[index] + this.state.conciergeTotalNZ[index] + this.state.conciergeTotalUK[index]).toFixed(0))
     })
 
     this.state.onboardingTotalAUS.forEach((month, index) => {
-      onboardingTotals.push(month + this.state.onboardingTotalUSA[index] + this.state.onboardingTotalCAN[index] + this.state.onboardingTotalNZ[index] + this.state.onboardingTotalUK[index])
+      onboardingTotals.push((month + this.state.onboardingTotalUSA[index] + this.state.onboardingTotalCAN[index] + this.state.onboardingTotalNZ[index] + this.state.onboardingTotalUK[index]).toFixed(0))
     })
 
     this.state.supportTotalAUS.forEach((month, index) => {
-      supportTotals.push(month + this.state.supportTotalUSA[index] + this.state.supportTotalCAN[index] + this.state.supportTotalNZ[index] + this.state.supportTotalUK[index])
+      supportTotals.push((month + this.state.supportTotalUSA[index] + this.state.supportTotalCAN[index] + this.state.supportTotalNZ[index] + this.state.supportTotalUK[index]).toFixed(0))
     })
 
     this.state.trainingTotalAUS.forEach((month, index) => {
-      trainingTotals.push(month + this.state.trainingTotalUSA[index] + this.state.trainingTotalCAN[index] + this.state.trainingTotalNZ[index] + this.state.trainingTotalUK[index])
+      trainingTotals.push((month + this.state.trainingTotalUSA[index] + this.state.trainingTotalCAN[index] + this.state.trainingTotalNZ[index] + this.state.trainingTotalUK[index]).toFixed(0))
     })
 
     this.setState({ adminsTotals, advisoryTotals, conciergeTotals, onboardingTotals, supportTotals, trainingTotals })
   }
-
-  
 
 
   render() {
@@ -706,12 +780,12 @@ class EIQ extends Component {
             supportData={this.state.supportTotals}
             trainingData={this.state.trainingTotals}
             dateLabels={this.state.dateLabels}
+            timePeriodValue={this.state.timePeriodValue}
+            updateCurrentMonth={this.updateCurrentMonth.bind(this)}
             // updateCurrentMonth={this.updateCurrentMonth}
           />
         </Segment>
-        <Segment style={{ width: 1079 }} color={this.state.currentColor}>
-          <h3>EIQ Data....</h3>  
-        </Segment>
+        <DisplayMonth currentMonth={this.state.currentMonth} currentColor={this.state.currentColor} />
       </div>
     )
   }

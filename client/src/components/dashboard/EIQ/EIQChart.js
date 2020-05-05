@@ -4,6 +4,15 @@ import { Bar } from 'react-chartjs-2'
 import DataIn from '../DataIn'
 
 const EIQChart = props => {
+
+  const footer = () => {
+    if(props.dataTypeValue === "comparison") {
+      return null
+    } else {
+      return "TOTAL: $" + window.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    }
+  }
+
   const data = {
     labels: props.dateLabels,
     datasets: [
@@ -142,13 +151,44 @@ const EIQChart = props => {
         data={data}
         options={{
           'onClick': (event, item) => {
-            if (item.length > 0) {
-              //props.updateCurrentMonth(item[0]["_index"])
+            if (item.length > 0 && props.timePeriodValue === "eiqLaunch") {
+              props.updateCurrentMonth(item[0]["_index"] + 42)
+            } else if(item.length > 0 && props.timePeriodValue === "allTime") {
+              props.updateCurrentMonth(item[0]["_index"])
             }
           },
           'scales': {
-              xAxes: [{ stacked: true }],
-              yAxes: [{ stacked: true }]
+              xAxes: [{ 
+                stacked: true 
+              }],
+              yAxes: [{ 
+                stacked: true ,
+                ticks: {
+                  beginAtZero: true,
+                  callback: function(value, index, values) {
+                    if(parseInt(value) >= 1000){
+                       return '$' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    } else {
+                       return '$' + value;
+                    }
+                  }     
+                }
+              }]
+          },
+          tooltips: {
+            mode: 'label',
+            callbacks: {
+                afterTitle: function() {
+                    window.total = 0;
+                },
+                label: function(tooltipItem, data) {
+                    var corporation = data.datasets[tooltipItem.datasetIndex].label;
+                    var valor = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                    window.total += parseInt(valor);
+                    return corporation + ": $" + valor.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");             
+                },
+                footer: footer
+              }
           }
         }}
       />
