@@ -150,6 +150,13 @@ const EIQChart = props => {
       <Bar
         data={data}
         options={{
+          title: {
+            display: true,
+            text: 'Combined EIQ Sales per month in AUD',
+            fontSize: 20,
+            fontColor: '#000000',
+            fontFamily: 'Titillium Web'
+        },
           'onClick': (event, item) => {
             if (item.length > 0 && props.timePeriodValue === "eiqLaunch") {
               props.updateCurrentMonth(item[0]["_index"] + 42)
@@ -165,6 +172,7 @@ const EIQChart = props => {
                 stacked: true ,
                 ticks: {
                   beginAtZero: true,
+                  max: 100000,
                   callback: function(value, index, values) {
                     if(parseInt(value) >= 1000){
                        return '$' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");

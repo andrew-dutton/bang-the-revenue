@@ -1047,7 +1047,6 @@ class Churn extends Component {
   }
 
   render() {
-
     if (this.props.toRender === "QR") {
       return null
     } else {

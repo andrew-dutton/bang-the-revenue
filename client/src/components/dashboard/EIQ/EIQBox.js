@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Icon } from 'semantic-ui-react'
 import DataIn from '../DataIn'
 
 class EIQBox extends Component {
@@ -6,9 +7,9 @@ class EIQBox extends Component {
     super(props)
 
     this.state = {
-      thisMonth: "Coming soon...",
+      thisMonth: "$97,636",
       lastMonth: "Coming soon...",
-      diff: "Coming soon...",
+      diff: "$29,323",
       monthName: "",
       months: []
     }
@@ -66,23 +67,13 @@ class EIQBox extends Component {
   }
 
   boxSelected = () => {
-    if (this.props.selected === "EIQ") {
-      return (
-        <div style={{ height: 150 }}>
-          <h1 style={{ position: 'absolute', left: '50%', top: '75%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>Coming soon...</h1>
-          <h3 style={{ fontFamily: 'Titillium Web' }}>{this.state.monthName}</h3>
-          {/* <h4 style={{ fontFamily: 'Titillium Web' }}>{this.state.diff}</h4> */}
-        </div>
-      )
-    } else {
-      return (
-        <div style={{ height: 150 }}>
-          <h1 style={{ position: 'absolute', left: '50%', top: '75%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>Coming soon...</h1>
-          <h3 style={{ fontFamily: 'Titillium Web' }}>{this.state.monthName}</h3>
-          {/* <h4 style={{ fontFamily: 'Titillium Web' }}>{this.state.diff}</h4> */}
-        </div>
-      )
-    }
+    return (
+      <div style={{ height: 150 }}>
+        <h1 style={{ position: 'absolute', left: '50%', top: '75%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>A {this.state.thisMonth}</h1>
+        <h3 style={{ fontFamily: 'Titillium Web' }}>{this.state.monthName}</h3>
+        <h4 style={{ fontFamily: 'Titillium Web' }}><Icon name={"triangle up"} color={"green"} />{this.state.diff}</h4>
+      </div>
+    )
   }
 
   render() {
