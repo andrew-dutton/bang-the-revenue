@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
 import { Grid, Segment, Button, GridColumn, Radio } from 'semantic-ui-react'
-import DashboardHeading from '../DashboardHeading'
 import DataIn from '../DataIn'
 import EIQChart from './EIQChart'
-import DisplayMonth from '../DisplayMonth'
 import EIQDisplayDetails from './EIQDisplayDetails'
 
 class EIQ extends Component {
@@ -792,8 +790,6 @@ class EIQ extends Component {
     let can = this.state.canDetails
     let uk = this.state.ukDetails
     let nz = this.state.nzDetails
-    let month = this.state.selectedMonth
-
 
     for(let i = 0; i < aus.length; i++) {
       combinedEIQDetails.push(aus[i].concat(usa[i]).concat(can[i]).concat(uk[i]).concat(nz[i])) 
@@ -837,28 +833,18 @@ class EIQ extends Component {
       eiqTableData: tableData, renderSwitch: !prevState.renderSwitch }))
   }
 
-  
   render() {
- 
     return (
       <div style={{ paddingTop: 24, paddingBotton: 24 }}>
-        <DashboardHeading title={"EngagementIQ"} currentColor={this.state.currentColor} />
-        <Segment color={this.state.currentColor} style={{ width: 1079 }} >
-            <div>
-              <div style={{ fontFamily: 'Titillium Web', textAlign: 'center' }}>
-                <Button basic={this.state.selectedTer !== "Global"} primary onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Global</Button>
-                <Button basic={this.state.selectedTer !== "Australia"} color="green" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Australia</Button>
-                <Button basic={this.state.selectedTer !== "Canada"} color="yellow" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Canada</Button>
-                <Button basic={this.state.selectedTer !== "United States"} color="red" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>United States</Button>
-                <Button basic={this.state.selectedTer !== "United Kingdom"} color="teal" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>United Kingdom</Button>
-                <Button basic={this.state.selectedTer !== "New Zealand"} color="purple" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>New Zealand</Button>
-              </div>
-            </div>
-          </Segment>
+        <Segment style={{ width: 1079}} color={this.state.currentColor}>
+              <h1 style={{ fontSize: 40, textAlign: "center", fontFamily: 'Titillium Web' }}>
+                EngagementIQ
+            </h1>
+            </Segment>
           <Segment style={{ width: 1079 }}>
             <Grid columns={2}>
                 <GridColumn>
-                  <Segment color={this.state.currentColor}>
+                  <Segment style={{ height: 104 }} color={this.state.currentColor}>
                     Select Data to Display:
                     <br />
                     <br />
@@ -885,45 +871,27 @@ class EIQ extends Component {
                       </GridColumn>
                     </Grid>
                   </Segment>
-                </GridColumn>
-                {/* <GridColumn>
+                </GridColumn> 
+                <GridColumn>
                   <Segment color={this.state.currentColor}>
-                    Display Data by:
-                    <br />
-                    <br />
-                    <Grid columns={2}>
-                      <GridColumn>
-                      <Radio
-                          label="EIQ Data Only"
-                          name="eiqOnly"
-                          value="eiqOnly"
-                          checked={this.state.value === "eiqOnly"}
-                          onChange={this.handleComparisonChange}
-                          enabled="true"
-                        />
-                      </GridColumn>
-                      <GridColumn>
-                      <Radio
-                          label="EIQ as added to EHQ"
-                          name="eiqVehq"
-                          value="eiqVehq"
-                          checked={this.state.value === "eiqVehq"}
-                          onChange={this.handleComparisonChange}
-                          enabled="true"
-                        />
-                      </GridColumn>
-                    </Grid>
+                    <div>
+                      <div style={{ fontFamily: 'Titillium Web', textAlign: 'center' }}>
+                        <Button basic={this.state.selectedTer !== "Global"} primary onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Global</Button>
+                        <Button basic={this.state.selectedTer !== "Australia"} color="green" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Australia</Button>
+                        <Button basic={this.state.selectedTer !== "Canada"} color="yellow" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Canada</Button>
+                        <Button basic={this.state.selectedTer !== "United States"} color="red" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>United States</Button>
+                        <Button basic={this.state.selectedTer !== "United Kingdom"} color="teal" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>United Kingdom</Button>
+                        <Button basic={this.state.selectedTer !== "New Zealand"} color="purple" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>New Zealand</Button>
+                      </div>
+                    </div>
                   </Segment>
-                </GridColumn> */}
-
+               </GridColumn>
               </Grid>
           </Segment>
         <Segment style={{ width: 1079 }} color={this.state.currentColor}>
           <p style={{textAlign: "right", fontFamily: "Titillium Web"}}>Click on any bar to see the details of that month</p>
           <EIQChart 
             currentColor={this.state.currentColor}
-            // selectedMonth={this.state.selecteMonth}
-            // setChangedMonth={this.setChangedMonth}
             adminsData={this.state.adminsTotals}
             advisoryData={this.state.advisoryTotals}
             conciergeData={this.state.conciergeTotals}
@@ -933,16 +901,14 @@ class EIQ extends Component {
             dateLabels={this.state.dateLabels}
             timePeriodValue={this.state.timePeriodValue}
             updateCurrentMonth={this.updateCurrentMonth.bind(this)}
-            // updateCurrentMonth={this.updateCurrentMonth}
           />
         </Segment>
-        <DisplayMonth currentMonth={this.state.currentMonth} currentColor={this.state.currentColor} />
-
-        <EIQDisplayDetails 
-          currentColor={this.state.currentColor}  
-          data={this.state.eiqTableData}
-        />
-
+        <div style={{ textAlign: 'center', paddingTop: 5, paddingBottom: 12, fontFamily: 'Titillium Web' }}>
+          <Segment color={this.state.currentColor} style={{ width: 1079, fontFamily: 'Titillium Web' }}>
+            <h1 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.currentMonth}</h1>
+          </Segment>
+        </div>
+        <EIQDisplayDetails currentColor={this.state.currentColor} data={this.state.eiqTableData} />
       </div>
     )
   }

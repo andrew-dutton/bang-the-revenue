@@ -1,7 +1,6 @@
 import React from 'react'
 import { Segment } from 'semantic-ui-react'
 import { Bar } from 'react-chartjs-2'
-import DataIn from '../DataIn'
 
 const EIQChart = props => {
 
@@ -153,7 +152,7 @@ const EIQChart = props => {
           title: {
             display: true,
             text: 'Combined EIQ Sales per month in AUD',
-            fontSize: 20,
+            fontSize: 30,
             fontColor: '#000000',
             fontFamily: 'Titillium Web'
         },
@@ -172,7 +171,7 @@ const EIQChart = props => {
                 stacked: true ,
                 ticks: {
                   beginAtZero: true,
-                  max: 100000,
+                  max: 120000,
                   callback: function(value, index, values) {
                     if(parseInt(value) >= 1000){
                        return '$' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");

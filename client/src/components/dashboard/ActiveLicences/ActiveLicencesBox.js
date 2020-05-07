@@ -67,7 +67,6 @@ class ActiveLicencesBox extends Component {
 
   totalClients() {
     const total = []
-    const uniqClients = []
 
     this.state.months.forEach((month) => {
       const counter = []
