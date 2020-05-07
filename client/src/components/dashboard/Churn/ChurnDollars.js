@@ -1,27 +1,38 @@
 import React, { Component } from 'react'
-import { Icon } from 'semantic-ui-react'
+import { Segment, Grid } from 'semantic-ui-react'
+import Chart from 'react-google-charts'
 import DataIn from '../DataIn'
 
-class RecurringRevenueBox extends Component {
-  constructor(props) {
-    super(props)
 
-    this.state = {
-      thisMonth: DataIn.RecurringRevenue.thisMonth,
-      lastMonth: DataIn.RecurringRevenue.lastMonth,
-      diff: DataIn.RecurringRevenue.diff,
-      monthName: "",
-      months: [],
-      forexData: props.forexData
-    };
-  }
+class ChurnDollars extends Component {
+	constructor(props) {
+		super(props)
 
-  componentDidMount() {
-    this.createMonthsArray()
-  }
+		this.state = {
+			chartData: [],
+			chartColor: ["#8CD75C"],
+			months: [],
+			forexData: props.forexData,
+			totalDataRR: [],
+			churnTer: "Global"
+		}
+	}
+
+	componentDidMount = () => {
+		this.createForexArrays()
+	}
+
+	numberWithCommas = (x) => {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+	}
+	
+	createForexArrays = () => {
 
 
-  createMonthsArray = () => {
+		this.createMonthsArray()
+	}
+
+	createMonthsArray = () => {
     const numberOfMonths = DataIn.MonthNumber
 
     let year = 2015
@@ -61,13 +72,9 @@ class RecurringRevenueBox extends Component {
     let fullDate = month + " " + theYear
 
     this.setState((prevState) => ({ monthName: fullDate }), this.revenueTotals)
-  }
+	}
 
-  numberWithCommas = (x) => {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-  }
-
-  revenueTotals() {
+	revenueTotals() {
     const ausTotal = []
     const canTotal = []
     const usaTotal = []
@@ -239,41 +246,244 @@ class RecurringRevenueBox extends Component {
         (nzTotal[i] * nzRates[i])
       ))
 
+		}
 
+		this.setState({totalDataRR}, this.totalGlobalClients)
+	}
+
+	totalGlobalClients = () => {
+    const total = []
+
+    this.state.months.forEach((month) => {
+      let counter = []
+
+      this.props.rawData.forEach((invoice) => {
+        let startString = invoice["start"]
+        let startDateParts = startString.split("/")
+        let start = new Date(startDateParts[2], startDateParts[1] - 1, +startDateParts[0])
+        let endString = invoice["end"]
+
+        let endDateParts = endString.split("/")
+        let end = new Date(endDateParts[2], endDateParts[1] - 1, +endDateParts[0])
+
+        if (start <= month && end >= month && (
+          invoice["product"] === "Annual" ||
+          invoice["product"] === "Project" ||
+          invoice["product"] === "Static" ||
+          invoice["product"] === "Budget Allocator"
+        )) {
+          counter.push(invoice["client"])
+        }
+      })
+
+      const onlyUnique = (value, index, self) => {
+        return self.indexOf(value) === index;
+      }
+
+      let uniqClients = counter.filter(onlyUnique)
+
+      total.push(uniqClients)
+    })
+
+    this.setState(prevState => ({
+      clients: [...total]
+    }), this.getGlobalClientDetail)
+  }
+
+
+	getGlobalClientDetail = () => {
+    const total = []
+
+    this.state.months.forEach((month) => {
+      let counter = []
+
+      this.props.rawData.forEach((invoice) => {
+        let startString = invoice["start"]
+        let startDateParts = startString.split("/")
+        let start = new Date(startDateParts[2], startDateParts[1] - 1, +startDateParts[0])
+        let endString = invoice["end"]
+        let endDateParts = endString.split("/")
+        let end = new Date(endDateParts[2], endDateParts[1] - 1, +endDateParts[0])
+		
+        if (start <= month && end >= month && (
+          invoice["product"] === "Annual" ||
+          invoice["product"] === "Project" ||
+          invoice["product"] === "Static" ||
+          invoice["product"] === "Budget Allocator"
+        )) {
+          counter.push(invoice)
+        }
+      })
+
+      total.push(counter)
+    })
+
+    this.setState(prevState => ({ globalClientDetail: [...total]}), this.getGlobalLostClients)
+
+  }
+
+	getGlobalLostClients = () => {
+    let lostClients = []
+    let lostClientsArray = []
+
+    for (let i = 0; i < this.state.months.length - 1; i++) {
+      lostClients = []
+      this.state.clients[i].forEach((client) => this.state.clients[i + 1].includes(client) ? null : lostClients.push(client))
+      lostClientsArray.push(lostClients)
     }
 
-    if(totalDataRR[DataIn.MonthNumber-2] > totalDataRR[DataIn.MonthNumber-3]) {
-      this.setState({arrow: "triangle up", arrowColor: "green"})
-    } else if(totalDataRR[DataIn.MonthNumber-2] < totalDataRR[DataIn.MonthNumber-3]) {
-      this.setState({arrow: "triangle down", arrowColor: "red"})
-    } else {
-      this.setState({arrow: "", arrowColor: ""})
+    let holdingArray = []
+    for (let k = 0; k < lostClientsArray.length - 1; k++) {
+      holdingArray.push([k + 1, lostClientsArray[k].length])
     }
 
-    let thisMonth = this.numberWithCommas(totalDataRR[DataIn.MonthNumber - 2])
-    let diff = this.numberWithCommas(totalDataRR[DataIn.MonthNumber - 2] - totalDataRR[DataIn.MonthNumber - 3])
-     
-    this.setState({thisMonth, diff})
-  }
+    this.setState(previous => ({lost: [...lostClientsArray]}), this.getLostClientsValues)
+	}
+	
 
-  boxSelected = () => {
-      return (
-        <div style={{ height: 150 }}>
-          <h1 style={{ position: 'absolute', left: '50%', top: '75%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>A ${this.state.thisMonth}</h1>
-          <h3 style={{ fontFamily: 'Titillium Web' }}>{this.state.monthName}</h3>
-          <h4 style={{ fontFamily: 'Titillium Web' }}><Icon name={this.state.arrow} color={this.state.arrowColor} />A ${this.state.diff}</h4>
-        </div>
-      )
-  }
 
-  render() {
-    // {console.log(this.state)}
-    return (
-      <div>
-        {this.boxSelected()}
-      </div >
-    )
-  }
+
+
+
+	getLostClientsValues = () => {
+		let lostClients = this.state.lost
+		let clientDetails = this.state.globalClientDetail
+		let lostValuesArray = []
+
+		for(let i = 0; i < lostClients.length -1; i++) {
+			let holder = []
+			let holderTwo = []
+			for(let k = 0; k < lostClients[i].length; k++) {
+				clientDetails[i].forEach(array => {
+					if(array["client"] === lostClients[i][k]) {
+						if(array["currency"] === "AUD") {
+							holder.push(array["valuepermonth"])
+						}
+						
+						if(array["currency"] === "CAD") {}
+
+						if(array["currency"] === "USD") {}
+
+						if(array["currency"] === "GBP") {}
+
+						if(array["currency"] === "NZD") {}
+
+					}
+				})
+				holderTwo.push(holder)
+			}
+			lostValuesArray.push(holderTwo.pop().reduce((a, b) => a + b, 0))
+		}	
+
+		console.log(lostValuesArray)
+
+
+		this.getNewClients()
+	}
+
+
+
+
+
+
+
+
+
+
+	getNewClients = () => {
+		let newClients = []
+    let newClientsArray = []
+
+    for (let i = 0; i < this.state.months.length - 1; i++) {
+      newClients = []
+      this.state.clients[i + 1].forEach((client) => {
+        if (!this.state.clients[i].includes(client)) {
+          newClients.push(client)
+        }
+      })
+      newClientsArray.push(newClients)
+    }
+
+    let holdingArray = []
+    for (let i = 0; i < newClientsArray.length - 1; i++) {
+      holdingArray.push([i + 1, newClientsArray[i].length])
+    }
+
+    this.setState(previous => ({ new: [...newClientsArray] }), this.getPrevTotal)
+	}
+  
+
+	render() {
+
+		// console.log(this.state)
+
+		const chartEvents = [
+      {
+        eventName: "select",
+        options: {
+          tooltip: {
+            trigger: "selection"
+          }
+        },
+        callback: ({ chartWrapper }) => {
+          const chart = chartWrapper.getChart().getSelection()[0].row;
+          this.setState((prevState) => ({ selectedMonth: chart }))
+          this.setChangedMonth()
+        }
+      }
+		]	
+
+		return (
+			<Grid.Column width={15}>
+				<Segment color="blue" style={{ width: 1000, fontFamily: 'Titillium Web' }}>
+					<div style={{ fontFamily: 'Titillium Web' }}>
+						<Chart
+							width={'984px'}
+							height={'484px'}
+							chartEvents={chartEvents}
+							chartType="ScatterChart"
+							crosshair={{ trigger: "selection" }}
+							tooltip={{ trigger: "selection" }}
+							loader={<div>Loading Chart</div>}
+							data={this.state.chartData}
+							options={{
+								'vAxis': {
+									'title': 'Churn %',
+									'titleTextStyle': {
+										fontName: 'Titillium Web'
+									}
+								},
+								'hAxis': {
+									'title': 'Date',
+									'format': 'MMM-yy'
+								},
+								pointSize: 8,
+								legend: 'none',
+								titleTextStyle: { fontName: 'Titillium Web', bold: false },
+								title: 'You can click on any point in the scatter graph to see the churn breakdown for that month',
+								'chartArea': { 'width': '90%', 'height': '80%' },
+								colors: this.state.chartColor,
+								animation: {
+									startup: true,
+									easing: 'linear',
+									duration: 750,
+								},
+								trendlines: {
+									0: {
+										type: 'polynomial',
+										degree: 3,
+										labelInLegend: 'Trend',
+										lineWidth: 7,
+										opacity: .5
+									}
+								}
+							}}
+						/>
+					</div>
+				</Segment>
+			</Grid.Column>
+		)
+	}
 }
 
-export default RecurringRevenueBox
+export default ChurnDollars

@@ -3,6 +3,7 @@ import { Dimmer, Loader, Icon, Flag, Grid, Checkbox, Segment, Button } from 'sem
 import Chart from 'react-google-charts'
 import { HotTable } from '@handsontable/react';
 import DataIn from '../DataIn'
+import ChurnDollars from './ChurnDollars'
 
 import DisplayMonth from '../DisplayMonth'
 
@@ -11,13 +12,14 @@ class Churn extends Component {
     super(props)
 
     this.state = {
+      churnDollars: false,
       clients: [],
       currentColor: "blue",
       renderSwitch: true,
       dimmer: false,
       amounts: [],
       newValues: [],
-      forexData: this.props.forexData,
+      forexData: props.forexData,
       lostValues: [],
       churnTotalInAud: 0,
       addedTotalInAud: 0,
@@ -33,7 +35,6 @@ class Churn extends Component {
       new: [],
       months: [],
       lostTest: [],
-      newTest: [],
       totalTest: [],
       totalText: [],
       annual: "Annual",
@@ -255,6 +256,14 @@ class Churn extends Component {
     }
   }
 
+  handleChartSelection = () => {
+    if(this.state.churnDollars) {
+      this.setState(prevState => ({churnDollars: false, renderSwitch: !prevState.renderSwitch}), this.createMonthsArray)
+    } else {
+      this.setState(prevState => ({churnDollars: true, renderSwitch: !prevState.renderSwitch}), this.createMonthsArray)
+    }
+  }
+
   updateChurnTer = () => {
     if (this.state.churnTer === "Australia") {
       this.setState((prevState) => ({ churnTer: "AUS", terText: "Australia", chartColor: ["#8CD75C"] }), this.totalClients)
@@ -281,7 +290,6 @@ class Churn extends Component {
 
     this.state.months.forEach((month) => {
       let counter = []
-
 
       this.props.rawData.forEach((invoice) => {
         let startString = invoice["start"]
@@ -320,7 +328,7 @@ class Churn extends Component {
 
   totalGlobalClientsDetail = () => {
     const total = []
-
+   
     this.state.months.forEach((month) => {
       let counter = []
 
@@ -443,6 +451,8 @@ class Churn extends Component {
       holdingArray.push([k + 1, lostClientsArray[k].length])
     }
 
+
+
     this.setState(previous => ({
       lost: [...lostClientsArray]
     }), this.getNewClients)
@@ -468,8 +478,7 @@ class Churn extends Component {
     }
 
     this.setState(previous => ({
-      new: [...newClientsArray],
-      newTest: [...holdingArray]
+      new: [...newClientsArray]
     }), this.getPrevTotal)
   }
 
@@ -987,12 +996,15 @@ class Churn extends Component {
               </div>
             </Segment>
           </Grid.Column>
+
+          {this.state.churnDollars ?  <ChurnDollars rawData={this.props.rawData} forexData={this.props.forexData} /> :
+
           <Grid.Column width={15}>
             <Segment color="blue" style={{ width: 1000, fontFamily: 'Titillium Web' }}>
               <div style={{ fontFamily: 'Titillium Web' }}>
                 <Chart
                   width={'984px'}
-                  height={'484px'}
+                  height={'482px'}
                   chartEvents={chartEvents}
                   chartType="ScatterChart"
                   crosshair={{ trigger: "selection" }}
@@ -1034,7 +1046,8 @@ class Churn extends Component {
                 />
               </div>
             </Segment>
-          </Grid.Column>
+          </Grid.Column>         
+         }
         </Grid>
       )
     }
@@ -1047,6 +1060,7 @@ class Churn extends Component {
   }
 
   render() {
+    //  {console.log(this.state)}
     if (this.props.toRender === "QR") {
       return null
     } else {
@@ -1060,19 +1074,29 @@ class Churn extends Component {
             </Segment>
           </div>
           <Segment color="blue" style={{ width: 1079 }} >
-            <div>
-              <div style={{ fontFamily: 'Titillium Web', textAlign: 'center' }}>
-                <Button basic={this.state.churnTer !== "Global"} primary onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Global</Button>
-                <Button basic={this.state.churnTer !== "AUS"} color="green" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Australia</Button>
-                <Button basic={this.state.churnTer !== "CAN"} color="yellow" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Canada</Button>
-                <Button basic={this.state.churnTer !== "USA"} color="red" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>United States</Button>
-                <Button basic={this.state.churnTer !== "UK"} color="teal" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>United Kingdom</Button>
-                <Button basic={this.state.churnTer !== "NZ"} color="purple" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>New Zealand</Button>
+            <Grid columns={2}>
+              <Grid.Column width={12}>
+                <div style={{ fontFamily: 'Titillium Web', textAlign: 'left' }}>
+                  <Button basic={this.state.churnTer !== "Global"} primary onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Global</Button>
+                  <Button basic={this.state.churnTer !== "AUS"} color="green" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Australia</Button>
+                  <Button basic={this.state.churnTer !== "CAN"} color="yellow" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Canada</Button>
+                  <Button basic={this.state.churnTer !== "USA"} color="red" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>United States</Button>
+                  <Button basic={this.state.churnTer !== "UK"} color="teal" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>United Kingdom</Button>
+                  <Button basic={this.state.churnTer !== "NZ"} color="purple" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>New Zealand</Button>
+                </div> 
+                </Grid.Column>
+                <Grid.Column width={4}>
+                <div style={{textAlign: "right"}}>
+                  <Button color="black" basic={this.state.churnDollars} onClick={this.handleChartSelection} style={{ fontFamily: 'Titillium Web' }}>Client Number</Button>
+                  <Button color="black" basic={!this.state.churnDollars} onClick={this.handleChartSelection} style={{ fontFamily: 'Titillium Web' }}>MRR Value</Button>
               </div>
-            </div>
-          </Segment>
+          </Grid.Column>
+        </Grid>
+      </Segment>
 
+         
           {this.displayChart()}
+          
 
           <DisplayMonth currentMonth={this.state.currentMonth} currentColor={this.state.currentColor} />
 
