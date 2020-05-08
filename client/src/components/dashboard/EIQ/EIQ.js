@@ -876,12 +876,12 @@ class EIQ extends Component {
                   <Segment color={this.state.currentColor}>
                     <div>
                       <div style={{ fontFamily: 'Titillium Web', textAlign: 'center' }}>
-                        <Button basic={this.state.selectedTer !== "Global"} primary onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Global</Button>
-                        <Button basic={this.state.selectedTer !== "Australia"} color="green" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Australia</Button>
-                        <Button basic={this.state.selectedTer !== "Canada"} color="yellow" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Canada</Button>
-                        <Button basic={this.state.selectedTer !== "United States"} color="red" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>United States</Button>
-                        <Button basic={this.state.selectedTer !== "United Kingdom"} color="teal" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>United Kingdom</Button>
-                        <Button basic={this.state.selectedTer !== "New Zealand"} color="purple" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>New Zealand</Button>
+                        <Button basic={this.state.selectedTer !== "Global"} color="black" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Global</Button>
+                        <Button basic={this.state.selectedTer !== "Australia"} color="black" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Australia</Button>
+                        <Button basic={this.state.selectedTer !== "Canada"} color="black" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Canada</Button>
+                        <Button basic={this.state.selectedTer !== "United States"} color="black" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>United States</Button>
+                        <Button basic={this.state.selectedTer !== "United Kingdom"} color="black" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>United Kingdom</Button>
+                        <Button basic={this.state.selectedTer !== "New Zealand"} color="black" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>New Zealand</Button>
                       </div>
                     </div>
                   </Segment>

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Segment } from 'semantic-ui-react'
 import { Bar } from 'react-chartjs-2'
+import 'chartjs-plugin-trendline'
 
 const EIQChart = props => {
 
@@ -14,13 +15,13 @@ const EIQChart = props => {
 
   const data = {
     labels: props.dateLabels,
-    datasets: [
+    datasets: [     
       {
-        label: 'Admins',
+        label: 'Training',
         fill: false,
         lineTension: 0.1,
-        backgroundColor: 'rgb(206,222,56)',
-        borderColor: 'rgb(206,222,56)',
+        backgroundColor: '#000099',
+        borderColor: '#000099',
         borderCapStyle: 'butt',
         borderDash: [],
         borderDashOffset: 0.0,
@@ -34,77 +35,14 @@ const EIQChart = props => {
         pointHoverBorderWidth: 2,
         pointRadius: 3,
         pointHitRadius: 10,
-        data: props.adminsData
-      },
-      {
-        label: 'Advisory',
-        fill: false,
-        lineTension: 0.1,
-        backgroundColor: 'rgb(100,178,72)',
-        borderColor: 'rgb(100,178,72)',
-        borderCapStyle: 'butt',
-        borderDash: [],
-        borderDashOffset: 0.0,
-        borderJoinStyle: 'miter',
-        pointBorderColor: 'rgba(75,192,192,1)',
-        pointBackgroundColor: '#fff',
-        pointBorderWidth: 1,
-        pointHoverRadius: 5,
-        pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-        pointHoverBorderColor: 'rgba(220,220,220,1)',
-        pointHoverBorderWidth: 2,
-        pointRadius: 3,
-        pointHitRadius: 10,
-        data: props.advisoryData
-      },
-      {
-        label: 'Concierge',
-        fill: false,
-        lineTension: 0.1,
-        backgroundColor: 'rgb(24,149,206)',
-        borderColor: 'rgb(24,149,206)',
-        borderCapStyle: 'butt',
-        borderDash: [],
-        borderDashOffset: 0.0,
-        borderJoinStyle: 'miter',
-        pointBorderColor: 'rgba(75,192,192,1)',
-        pointBackgroundColor: '#fff',
-        pointBorderWidth: 1,
-        pointHoverRadius: 5,
-        pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-        pointHoverBorderColor: 'rgba(220,220,220,1)',
-        pointHoverBorderWidth: 2,
-        pointRadius: 3,
-        pointHitRadius: 10,
-        data: props.conciergeData
-      },
-      {
-        label: 'Onboarding',
-        fill: false,
-        lineTension: 0.1,
-        backgroundColor: 'rgb(63,95,173)',
-        borderColor: 'rgb(63,95,173)',
-        borderCapStyle: 'butt',
-        borderDash: [],
-        borderDashOffset: 0.0,
-        borderJoinStyle: 'miter',
-        pointBorderColor: 'rgba(75,192,192,1)',
-        pointBackgroundColor: '#fff',
-        pointBorderWidth: 1,
-        pointHoverRadius: 5,
-        pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-        pointHoverBorderColor: 'rgba(220,220,220,1)',
-        pointHoverBorderWidth: 2,
-        pointRadius: 3,
-        pointHitRadius: 10,
-        data: props.onboardingData
+        data: props.trainingData
       },
       {
         label: 'Support',
         fill: false,
         lineTension: 0.1,
-        backgroundColor: 'rgb(72,50,144)',
-        borderColor: 'rgb(72,50,144)',
+        backgroundColor: '#0066CC',
+        borderColor: '#0066CC',
         borderCapStyle: 'butt',
         borderDash: [],
         borderDashOffset: 0.0,
@@ -121,11 +59,11 @@ const EIQChart = props => {
         data: props.supportData
       },
       {
-        label: 'Training',
+        label: 'Onboarding',
         fill: false,
         lineTension: 0.1,
-        backgroundColor: 'rgb(126,56,151)',
-        borderColor: 'rgb(126,56,151)',
+        backgroundColor: '#009900',
+        borderColor: '#009900',
         borderCapStyle: 'butt',
         borderDash: [],
         borderDashOffset: 0.0,
@@ -139,13 +77,75 @@ const EIQChart = props => {
         pointHoverBorderWidth: 2,
         pointRadius: 3,
         pointHitRadius: 10,
-        data: props.trainingData
+        data: props.onboardingData
+      },
+      {
+        label: 'Concierge',
+        fill: false,
+        lineTension: 0.1,
+        backgroundColor: '#CCCC00',
+        borderColor: '#CCCC00',
+        borderCapStyle: 'butt',
+        borderDash: [],
+        borderDashOffset: 0.0,
+        borderJoinStyle: 'miter',
+        pointBorderColor: 'rgba(75,192,192,1)',
+        pointBackgroundColor: '#fff',
+        pointBorderWidth: 1,
+        pointHoverRadius: 5,
+        pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+        pointHoverBorderColor: 'rgba(220,220,220,1)',
+        pointHoverBorderWidth: 2,
+        pointRadius: 3,
+        pointHitRadius: 10,
+        data: props.conciergeData
+      },
+      {
+        label: 'Advisory',
+        fill: false,
+        lineTension: 0.1,
+        backgroundColor: '#FF8000',
+        borderColor: '#FF8000',
+        borderCapStyle: 'butt',
+        borderDash: [],
+        borderDashOffset: 0.0,
+        borderJoinStyle: 'miter',
+        pointBorderColor: 'rgba(75,192,192,1)',
+        pointBackgroundColor: '#fff',
+        pointBorderWidth: 1,
+        pointHoverRadius: 5,
+        pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+        pointHoverBorderColor: 'rgba(220,220,220,1)',
+        pointHoverBorderWidth: 2,
+        pointRadius: 3,
+        pointHitRadius: 10,
+        data: props.advisoryData
+      }, {
+        label: 'Admins',
+        fill: false,
+        lineTension: 0.1,
+        backgroundColor: '#CC0000',
+        borderColor: '#CC0000',
+        borderCapStyle: 'butt',
+        borderDash: [],
+        borderDashOffset: 0.0,
+        borderJoinStyle: 'miter',
+        pointBorderColor: 'rgba(75,192,192,1)',
+        pointBackgroundColor: '#fff',
+        pointBorderWidth: 1,
+        pointHoverRadius: 5,
+        pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+        pointHoverBorderColor: 'rgba(220,220,220,1)',
+        pointHoverBorderWidth: 2,
+        pointRadius: 3,
+        pointHitRadius: 10,
+        data: props.adminsData
       }
     ]
   }
 
   return (
-    <Segment color={props.selectedColor} style={{ width: 1000 }}>
+    <Segment color={props.selectedColor} style={{ width: 1051 }}>
       <Bar
         data={data}
         options={{
@@ -182,7 +182,11 @@ const EIQChart = props => {
                 }
               }]
           },
+          legend: {
+            reverse: true
+          },
           tooltips: {
+            itemSort: function(a, b) { return b.datasetIndex - a.datasetIndex },
             mode: 'label',
             callbacks: {
                 afterTitle: function() {

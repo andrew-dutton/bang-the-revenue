@@ -1074,9 +1074,26 @@ class Churn extends Component {
             </Segment>
           </div>
           <Segment color="blue" style={{ width: 1079 }} >
-            <Grid columns={2}>
-              <Grid.Column width={12}>
-                <div style={{ fontFamily: 'Titillium Web', textAlign: 'left' }}>
+            <Grid>
+              {/* 
+              <Grid columns={2}>
+                <Grid.Column width={12}>
+                  <div style={{ fontFamily: 'Titillium Web', textAlign: 'left' }}>
+                    <Button basic={this.state.churnTer !== "Global"} primary onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Global</Button>
+                    <Button basic={this.state.churnTer !== "AUS"} color="green" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Australia</Button>
+                    <Button basic={this.state.churnTer !== "CAN"} color="yellow" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Canada</Button>
+                    <Button basic={this.state.churnTer !== "USA"} color="red" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>United States</Button>
+                    <Button basic={this.state.churnTer !== "UK"} color="teal" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>United Kingdom</Button>
+                    <Button basic={this.state.churnTer !== "NZ"} color="purple" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>New Zealand</Button>
+                  </div> 
+                  </Grid.Column>
+                  <Grid.Column width={4}>
+                    <div style={{textAlign: "right"}}>
+                      <Button color="black" basic={this.state.churnDollars} onClick={this.handleChartSelection} style={{ fontFamily: 'Titillium Web' }}>Client Number</Button>
+                      <Button color="black" basic={!this.state.churnDollars} onClick={this.handleChartSelection} style={{ fontFamily: 'Titillium Web' }}>MRR Value</Button>
+                    </div> */}
+            <Grid.Column>
+              <div style={{ fontFamily: 'Titillium Web', textAlign: 'center' }}>
                   <Button basic={this.state.churnTer !== "Global"} primary onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Global</Button>
                   <Button basic={this.state.churnTer !== "AUS"} color="green" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Australia</Button>
                   <Button basic={this.state.churnTer !== "CAN"} color="yellow" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Canada</Button>
@@ -1084,12 +1101,6 @@ class Churn extends Component {
                   <Button basic={this.state.churnTer !== "UK"} color="teal" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>United Kingdom</Button>
                   <Button basic={this.state.churnTer !== "NZ"} color="purple" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>New Zealand</Button>
                 </div> 
-                </Grid.Column>
-                <Grid.Column width={4}>
-                <div style={{textAlign: "right"}}>
-                  <Button color="black" basic={this.state.churnDollars} onClick={this.handleChartSelection} style={{ fontFamily: 'Titillium Web' }}>Client Number</Button>
-                  <Button color="black" basic={!this.state.churnDollars} onClick={this.handleChartSelection} style={{ fontFamily: 'Titillium Web' }}>MRR Value</Button>
-              </div>
           </Grid.Column>
         </Grid>
       </Segment>
