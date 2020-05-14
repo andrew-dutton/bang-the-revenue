@@ -5,16 +5,43 @@ import DataIn from '../DataIn'
 
 
 class ChurnDollars extends Component {
+	static getDerivedStateFromProps(props, state) {
+    if (props.annual !== state.annual) {
+      return { annual: props.annual };
+		}
+		if (props.project !== state.project) {
+      return { project: props.project };
+		}
+		if (props.static !== state.static) {
+      return { static: props.static };
+		}
+		if (props.annual !== state.annual) {
+      return { annual: props.annual };
+		}
+		if (props.budget !== state.budget) {
+      return { budget: props.budget };
+		}
+		if (props.churnTer !== state.churnTer) {
+      return { churnTer: props.churnTer };
+    }
+    return null;
+	}
+	
 	constructor(props) {
 		super(props)
 
 		this.state = {
 			chartData: [],
-			chartColor: ["#8CD75C"],
+			chartColor: props.chartColor,
 			months: [],
 			forexData: props.forexData,
 			totalDataRR: [],
-			churnTer: "Global"
+			churnTer: props.churnTer,
+			annual: props.annual,
+			project: props.project,
+			budget: props.budget,
+			static: props.static,
+			renderSwitch: true
 		}
 	}
 
@@ -22,12 +49,38 @@ class ChurnDollars extends Component {
 		this.createForexArrays()
 	}
 
+	componentDidUpdate(prevProps, prevState) {
+    if (this.props !== prevProps) {
+      this.createForexArrays();
+    }
+	}
+
+	updateChurnValueFromParent = () => {
+		if(this.state.selectedMonth) {
+			console.log('child trigger')
+			this.props.setChurnDollarsChurnValue(this.state.chartData[this.state.selectedMonth + 1][1])
+		}
+	}
+	
 	numberWithCommas = (x) => {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 	}
 	
 	createForexArrays = () => {
+		const rates = DataIn.rates
+		let canRates = []
+    let usaRates = []
+		let ukRates = []
+		let nzRates = []
 
+    Object.keys(rates).forEach(month => {
+      canRates.push(rates[month]["AUD/CAD"])
+      usaRates.push(rates[month]["AUD/USD"])
+			ukRates.push(rates[month]["AUD/GBP"])
+			nzRates.push(rates[month]["AUD/NZD"])
+		})
+		
+		this.setState({canRates, usaRates, ukRates, nzRates})
 
 		this.createMonthsArray()
 	}
@@ -36,7 +89,9 @@ class ChurnDollars extends Component {
     const numberOfMonths = DataIn.MonthNumber
 
     let year = 2015
-    let yearStep = 12
+		let yearStep = 12
+		let months = []
+    let monthsText = []
 
     for (let step = 0; step < numberOfMonths; step++) {
       let month = 7
@@ -54,24 +109,47 @@ class ChurnDollars extends Component {
         if (yearStep % 12 === 0) {
           year -= 1
         }
-      }
+			}
+			
+			months.push(new Date(year, month, 0))
+		}
+		this.setState({ months, monthsText }, this.setMonthsOfYear)
+	}
 
-      this.state.months.push(new Date(year, month, 0))
-    }
+	setMonthsOfYear = () => {
+		let monthsOfYear = [
+					"January", "February", "March", "April", "May", "June", "July",
+					"August", "September", "October", "November", "December"
+		]
 
-    let monthsOfYear = [
-      "January", "February", "March", "April", "May", "June", "July",
-      "August", "September", "October", "November", "December"
-    ]
+		let month = this.state.months[this.state.months.length - 2]
+		let theYear = month.getFullYear()
 
-    let month = this.state.months[this.state.months.length - 2]
-    let theYear = month.getFullYear()
+		month = monthsOfYear[month.getMonth()]
 
-    month = monthsOfYear[month.getMonth()]
+		let fullDate = month + " " + theYear
 
-    let fullDate = month + " " + theYear
+		this.setState((prevState) => ({ monthName: fullDate }), this.setStartingRRValues)
+	}
 
-    this.setState((prevState) => ({ monthName: fullDate }), this.revenueTotals)
+	setStartingRRValues = () => {
+		let totalDataRR = 0
+		let churnTer = this.state.churnTer
+
+		if(churnTer === "AUS") {
+			totalDataRR = [284210]
+		} else if(churnTer === "CAN") {
+			totalDataRR = [23311]
+		} else if(churnTer === "USA") {
+			totalDataRR = [0]
+		} else if(churnTer === "UK") {
+			totalDataRR = [784]
+		} else if(churnTer === "NZ") {
+			totalDataRR = [4909]
+		} else {
+			totalDataRR = [313214]
+		}
+		this.setState({totalDataRR}, this.revenueTotals)
 	}
 
 	revenueTotals() {
@@ -110,81 +188,90 @@ class ChurnDollars extends Component {
 
           let thisMonthBegin = new Date(thisYear, thisMonth, 1)
 
+					if(this.state.churnTer === "AUS" || this.state.churnTer === "Global") {
+						if (startContract <= thisMonthEnd && endContract >= thisMonthBegin && (invoice["territory"] === "AUS")) {
+							if (invoice["spreadmonths"] > invoice["months"]) {
+								// INVOICE DATES ARE NOT FIRST AND/OR LAST DAYS OF MONTH SO NEED PARTIAL CALCULATIONS
+								if (actualStartMonth === thisMonthEnd.getMonth() && actualStartYear === thisMonthEnd.getFullYear()) {
+									// CONTRACT START DATE IS THIS MONTH, THEREFORE DIVIDE MONTH AMOUNT BY 30 AND TIMES BY REMAINING DAYS IN MONTH/*
+									// EG INVOICE WITH $1000 MRR AND START DATE OF 24TH OF MONTH = ($1000 / 30) X (30-24) 
 
-          if (startContract <= thisMonthEnd && endContract >= thisMonthBegin && (invoice["territory"] === "AUS")) {
-            if (invoice["spreadmonths"] > invoice["months"]) {
-              // INVOICE DATES ARE NOT FIRST AND/OR LAST DAYS OF MONTH SO NEED PARTIAL CALCULATIONS
-              if (actualStartMonth === thisMonthEnd.getMonth() && actualStartYear === thisMonthEnd.getFullYear()) {
-                // CONTRACT START DATE IS THIS MONTH, THEREFORE DIVIDE MONTH AMOUNT BY 30 AND TIMES BY REMAINING DAYS IN MONTH/*
-                // EG INVOICE WITH $1000 MRR AND START DATE OF 24TH OF MONTH = ($1000 / 30) X (30-24) 
+									ausCounter.push((invoice["valuepermonth"] / 30) * (31 - (startContract.getDate())))
+								} else if (actualEndMonth === thisMonthEnd.getMonth() && actualEndYear === thisMonthEnd.getFullYear()) {
+									ausCounter.push((invoice["valuepermonth"] / 30) * (endContract.getDate()))
+								} else {
+									ausCounter.push(invoice["valuepermonth"])
+								}
+							} else {
+								ausCounter.push(invoice["valuepermonth"])
+							}
+						}
+					}
 
-                ausCounter.push((invoice["valuepermonth"] / 30) * (31 - (startContract.getDate())))
-              } else if (actualEndMonth === thisMonthEnd.getMonth() && actualEndYear === thisMonthEnd.getFullYear()) {
-                ausCounter.push((invoice["valuepermonth"] / 30) * (endContract.getDate()))
-              } else {
-                ausCounter.push(invoice["valuepermonth"])
-              }
-            } else {
-              ausCounter.push(invoice["valuepermonth"])
-            }
-          }
+					if(this.state.churnTer === "CAN" || this.state.churnTer === "Global") {
+						if (startContract <= thisMonthEnd && endContract >= thisMonthBegin && (invoice["territory"] === "CAN")) {
+							if (invoice["spreadmonths"] > invoice["months"]) {
+								if (actualStartMonth === thisMonthEnd.getMonth() && actualStartYear === thisMonthEnd.getFullYear()) {
+									canCounter.push((invoice["valuepermonth"] / 30) * (31 - (startContract.getDate())))
+								} else if (actualEndMonth <= thisMonthEnd.getMonth() && actualEndYear === thisMonthEnd.getFullYear()) {
+									canCounter.push((invoice["valuepermonth"] / 30) * (endContract.getDate()))
+								} else {
+									canCounter.push(invoice["valuepermonth"])
+								}
+							} else {
+								canCounter.push(invoice["valuepermonth"])
+							}
+						}
+					}
 
-          if (startContract <= thisMonthEnd && endContract >= thisMonthBegin && (invoice["territory"] === "CAN")) {
-            if (invoice["spreadmonths"] > invoice["months"]) {
-              if (actualStartMonth === thisMonthEnd.getMonth() && actualStartYear === thisMonthEnd.getFullYear()) {
-                canCounter.push((invoice["valuepermonth"] / 30) * (31 - (startContract.getDate())))
-              } else if (actualEndMonth <= thisMonthEnd.getMonth() && actualEndYear === thisMonthEnd.getFullYear()) {
-                canCounter.push((invoice["valuepermonth"] / 30) * (endContract.getDate()))
-              } else {
-                canCounter.push(invoice["valuepermonth"])
-              }
-            } else {
-              canCounter.push(invoice["valuepermonth"])
-            }
-          }
+					if(this.state.churnTer === "USA" || this.state.churnTer === "Global") {
+						if (startContract <= thisMonthEnd && endContract >= thisMonthBegin && (invoice["territory"] === "USA")) {
+							if (invoice["spreadmonths"] > invoice["months"]) {
+								if (actualStartMonth === thisMonthEnd.getMonth() && actualStartYear === thisMonthEnd.getFullYear()) {
+									usaCounter.push((invoice["valuepermonth"] / 30) * (31 - (startContract.getDate())))
+								} else if (actualEndMonth <= thisMonthEnd.getMonth() && actualEndYear === thisMonthEnd.getFullYear()) {
+									usaCounter.push((invoice["valuepermonth"] / 30) * (endContract.getDate()))
+								} else {
+									usaCounter.push(invoice["valuepermonth"])
+								}
+							} else {
+								usaCounter.push(invoice["valuepermonth"])
+							}
+						}
+					}
 
-          if (startContract <= thisMonthEnd && endContract >= thisMonthBegin && (invoice["territory"] === "USA")) {
-            if (invoice["spreadmonths"] > invoice["months"]) {
-              if (actualStartMonth === thisMonthEnd.getMonth() && actualStartYear === thisMonthEnd.getFullYear()) {
-                usaCounter.push((invoice["valuepermonth"] / 30) * (31 - (startContract.getDate())))
-              } else if (actualEndMonth <= thisMonthEnd.getMonth() && actualEndYear === thisMonthEnd.getFullYear()) {
-                usaCounter.push((invoice["valuepermonth"] / 30) * (endContract.getDate()))
-              } else {
-                usaCounter.push(invoice["valuepermonth"])
-              }
-            } else {
-              usaCounter.push(invoice["valuepermonth"])
-            }
-          }
+					if(this.state.churnTer === "UK" || this.state.churnTer === "Global") {
+						if (startContract <= thisMonthEnd && endContract >= thisMonthBegin && (invoice["territory"] === "UK")) {
+							if (invoice["spreadmonths"] > invoice["months"]) {
+								if (actualStartMonth === thisMonthEnd.getMonth() && actualStartYear === thisMonthEnd.getFullYear()) {
+									ukCounter.push((invoice["valuepermonth"] / 30) * (31 - (startContract.getDate())))
+								} else if (actualEndMonth <= thisMonthEnd.getMonth() && actualEndYear === thisMonthEnd.getFullYear()) {
+									ukCounter.push((invoice["valuepermonth"] / 30) * (endContract.getDate()))
+								} else {
+									ukCounter.push(invoice["valuepermonth"])
+								}
+							} else {
+								ukCounter.push(invoice["valuepermonth"])
+							}
+						}
+					}
 
-          if (startContract <= thisMonthEnd && endContract >= thisMonthBegin && (invoice["territory"] === "UK")) {
-            if (invoice["spreadmonths"] > invoice["months"]) {
-              if (actualStartMonth === thisMonthEnd.getMonth() && actualStartYear === thisMonthEnd.getFullYear()) {
-                ukCounter.push((invoice["valuepermonth"] / 30) * (31 - (startContract.getDate())))
-              } else if (actualEndMonth <= thisMonthEnd.getMonth() && actualEndYear === thisMonthEnd.getFullYear()) {
-                ukCounter.push((invoice["valuepermonth"] / 30) * (endContract.getDate()))
-              } else {
-                ukCounter.push(invoice["valuepermonth"])
-              }
-            } else {
-              ukCounter.push(invoice["valuepermonth"])
-            }
-          }
-
-          if (startContract <= thisMonthEnd && endContract >= thisMonthBegin && (invoice["territory"] === "NZ")) {
-            if (invoice["spreadmonths"] > invoice["months"]) {
-              if (actualStartMonth === thisMonthEnd.getMonth() && actualStartYear === thisMonthEnd.getFullYear()) {
-                nzCounter.push((invoice["valuepermonth"] / 30) * (31 - (startContract.getDate())))
-              } else if (actualEndMonth <= thisMonthEnd.getMonth() && actualEndYear === thisMonthEnd.getFullYear()) {
-                nzCounter.push((invoice["valuepermonth"] / 30) * (endContract.getDate()))
-              } else {
-                nzCounter.push(invoice["valuepermonth"])
-              }
-            } else {
-              nzCounter.push(invoice["valuepermonth"])
-            }
-          }
-        }
+					if(this.state.churnTer === "NZ" || this.state.churnTer === "Global") {
+						if (startContract <= thisMonthEnd && endContract >= thisMonthBegin && (invoice["territory"] === "NZ")) {
+							if (invoice["spreadmonths"] > invoice["months"]) {
+								if (actualStartMonth === thisMonthEnd.getMonth() && actualStartYear === thisMonthEnd.getFullYear()) {
+									nzCounter.push((invoice["valuepermonth"] / 30) * (31 - (startContract.getDate())))
+								} else if (actualEndMonth <= thisMonthEnd.getMonth() && actualEndYear === thisMonthEnd.getFullYear()) {
+									nzCounter.push((invoice["valuepermonth"] / 30) * (endContract.getDate()))
+								} else {
+									nzCounter.push(invoice["valuepermonth"])
+								}
+							} else {
+								nzCounter.push(invoice["valuepermonth"])
+							}
+						}
+					}
+				}
       })
 
       ausTotal.push(Math.round(ausCounter.reduce((a, b) => a + b, 0)))
@@ -214,8 +301,7 @@ class ChurnDollars extends Component {
       nzData: [...nzTotal]
     }))
 
-
-    const totalDataRR = []
+    let totalDataRR = this.state.totalDataRR
     let canRates = []
     let usaRates = []
     let ukRates = []
@@ -235,7 +321,7 @@ class ChurnDollars extends Component {
 
     Object.keys(this.state.forexData).forEach(key => {
       nzRates.push(this.state.forexData[key]["AUD/NZD"])
-    })
+		})
 
     for (let i = 0; i < ausTotal.length; i++) {
       totalDataRR.push(Math.round(
@@ -267,10 +353,11 @@ class ChurnDollars extends Component {
         let end = new Date(endDateParts[2], endDateParts[1] - 1, +endDateParts[0])
 
         if (start <= month && end >= month && (
-          invoice["product"] === "Annual" ||
-          invoice["product"] === "Project" ||
-          invoice["product"] === "Static" ||
-          invoice["product"] === "Budget Allocator"
+          invoice["product"] === this.state.annual ||
+          invoice["product"] === this.state.project ||
+          invoice["product"] === this.state.static ||
+					invoice["product"] === this.state.budget ||
+					invoice["product"] === "Support"
         )) {
           counter.push(invoice["client"])
         }
@@ -290,7 +377,6 @@ class ChurnDollars extends Component {
     }), this.getGlobalClientDetail)
   }
 
-
 	getGlobalClientDetail = () => {
     const total = []
 
@@ -306,10 +392,11 @@ class ChurnDollars extends Component {
         let end = new Date(endDateParts[2], endDateParts[1] - 1, +endDateParts[0])
 		
         if (start <= month && end >= month && (
-          invoice["product"] === "Annual" ||
-          invoice["product"] === "Project" ||
-          invoice["product"] === "Static" ||
-          invoice["product"] === "Budget Allocator"
+          invoice["product"] === this.state.annual ||
+          invoice["product"] === this.state.project ||
+          invoice["product"] === this.state.static ||
+          invoice["product"] === this.state.budget ||
+					invoice["product"] === "Support"
         )) {
           counter.push(invoice)
         }
@@ -335,20 +422,21 @@ class ChurnDollars extends Component {
     let holdingArray = []
     for (let k = 0; k < lostClientsArray.length - 1; k++) {
       holdingArray.push([k + 1, lostClientsArray[k].length])
-    }
-
-    this.setState(previous => ({lost: [...lostClientsArray]}), this.getLostClientsValues)
-	}
+		}
 	
 
-
-
-
+		this.setState(previous => ({lost: [...lostClientsArray]}), this.getLostClientsValues)
+	}
 
 	getLostClientsValues = () => {
 		let lostClients = this.state.lost
 		let clientDetails = this.state.globalClientDetail
+		let cad = this.state.canRates
+		let usd = this.state.usaRates
+		let gbp = this.state.ukRates
+		let nzd = this.state.nzRates
 		let lostValuesArray = []
+		let churnTer = this.state.churnTer
 
 		for(let i = 0; i < lostClients.length -1; i++) {
 			let holder = []
@@ -356,42 +444,38 @@ class ChurnDollars extends Component {
 			for(let k = 0; k < lostClients[i].length; k++) {
 				clientDetails[i].forEach(array => {
 					if(array["client"] === lostClients[i][k]) {
-						if(array["currency"] === "AUD") {
+						if(array["territory"] === "AUS" && (churnTer === "AUS" || churnTer === "Global")) {
 							holder.push(array["valuepermonth"])
 						}
 						
-						if(array["currency"] === "CAD") {}
+						if(array["territory"] === "CAN" && (churnTer === "CAN" || churnTer === "Global")) {
+							holder.push(array["valuepermonth"] * cad[i+1])
+						}
 
-						if(array["currency"] === "USD") {}
+						if(array["territory"] === "USA" && (churnTer === "USA" || churnTer === "Global")) {
+							holder.push(array["valuepermonth"] * usd[i+1])
+						}
 
-						if(array["currency"] === "GBP") {}
+						if(array["territory"] === "UK" && (churnTer === "UK" || churnTer === "Global")) {
+							holder.push(array["valuepermonth"] * gbp[i+1])
+						}
 
-						if(array["currency"] === "NZD") {}
-
+						if(array["territory"] === "NZ" && (churnTer === "NZ" || churnTer === "Global")) {
+							holder.push(array["valuepermonth"] * nzd[i+1])
+						}
 					}
 				})
 				holderTwo.push(holder)
 			}
-			lostValuesArray.push(holderTwo.pop().reduce((a, b) => a + b, 0))
+			lostValuesArray.push(Math.round(holderTwo.pop().reduce((a, b) => a + b, 0)))
 		}	
 
-		console.log(lostValuesArray)
+		this.setState({lostValuesArray}, this.getGlobalNewClients)
 
-
-		this.getNewClients()
 	}
 
-
-
-
-
-
-
-
-
-
-	getNewClients = () => {
-		let newClients = []
+	getGlobalNewClients = () => {
+    let newClients = []
     let newClientsArray = []
 
     for (let i = 0; i < this.state.months.length - 1; i++) {
@@ -404,18 +488,105 @@ class ChurnDollars extends Component {
       newClientsArray.push(newClients)
     }
 
-    let holdingArray = []
-    for (let i = 0; i < newClientsArray.length - 1; i++) {
-      holdingArray.push([i + 1, newClientsArray[i].length])
-    }
-
-    this.setState(previous => ({ new: [...newClientsArray] }), this.getPrevTotal)
+    this.setState(previous => ({ new: [...newClientsArray] }), this.getNewClientsValues)
 	}
-  
 
-	render() {
+	getNewClientsValues = () => {
+		let newClients = this.state.new
+		let clientDetails = this.state.globalClientDetail
+		let cad = this.state.canRates
+		let usd = this.state.usaRates
+		let gbp = this.state.ukRates
+		let nzd = this.state.nzRates
+		let newValuesArray = []
+		let churnTer = this.state.churnTer
 
-		// console.log(this.state)
+		for(let i = 0; i < newClients.length -1; i++) {
+			let holder = []
+			let holderTwo = []
+			for(let k = 0; k < newClients[i].length; k++) {
+				clientDetails[i+1].forEach(array => {
+
+		
+					if(array["client"] === newClients[i][k]) {
+						if(array["territory"] === "AUS" && (churnTer === "AUS" || churnTer === "Global")) {
+							holder.push(array["valuepermonth"])
+
+						}
+						if(array["territory"] === "CAN" && (churnTer === "CAN" || churnTer === "Global")) {
+							holder.push(array["valuepermonth"] * cad[i+1])
+						}
+
+						if(array["territory"] === "USA" && (churnTer === "USA" || churnTer === "Global")) {
+							holder.push(array["valuepermonth"] * usd[i+1])
+						}
+
+						if(array["territory"] === "UK" && (churnTer === "UK" || churnTer === "Global")) {
+							holder.push(array["valuepermonth"] * gbp[i+1])
+						}
+
+						if(array["territory"] === "NZ" && (churnTer === "NZ" || churnTer === "Global")) {
+							holder.push(array["valuepermonth"] * nzd[i+1])
+						}
+					}
+				})
+
+				holderTwo.push(holder)
+
+			}
+			newValuesArray.push(Math.round(holderTwo.pop().reduce((a, b) => a + b, 0)))
+		}	
+
+
+		this.setState({newValuesArray}, this.createGlobalChurndDollarArray)
+	}
+	
+	createGlobalChurndDollarArray = () => {
+		let globalChurnDollarArray = [["Date", "Global"]]
+		for(let i = 0; i < this.state.newValuesArray.length; i++) {
+			globalChurnDollarArray.push( [ this.state.months[i+1], ( this.state.lostValuesArray[i] / (this.state.newValuesArray[i] + this.state.totalDataRR[i]) ) * 100  ] )
+		}
+
+		// console.log(this.state.lostValuesArray)
+		// console.log(this.state.newValuesArray)
+
+		// console.log(this.state.totalDataRR)
+
+
+		this.setState({chartData: globalChurnDollarArray}, this.updateGraphColor)
+	}
+
+	updateGraphColor = () => {
+		if(this.state.churnTer === "Global") {
+			this.setState({chartColor: ["#2B85D0"]})
+		}
+
+		if(this.state.churnTer === "AUS") {
+			this.setState({chartColor: ["#8CD75C"]})
+		}
+
+		if(this.state.churnTer === "CAN") {
+			this.setState({chartColor: ["#fcba03"]})
+		}
+
+		if(this.state.churnTer === "USA") {
+			this.setState({chartColor: ["#F28E7C"]})
+		}
+
+		if(this.state.churnTer === "UK") {
+			this.setState({chartColor: ["#03fcd7"]})
+		}
+
+		if(this.state.churnTer === "NZ") {
+			this.setState({chartColor: ["#F27CEA"]})
+		}
+
+		this.updateChurnValueFromParent()
+	}
+
+	
+
+	render(props) {
 
 		const chartEvents = [
       {
@@ -427,8 +598,9 @@ class ChurnDollars extends Component {
         },
         callback: ({ chartWrapper }) => {
           const chart = chartWrapper.getChart().getSelection()[0].row;
-          this.setState((prevState) => ({ selectedMonth: chart }))
-          this.setChangedMonth()
+					this.setState((prevState) => ({ selectedMonth: chart }))
+					this.props.setChurnDollarsChurnValue(this.state.chartData[this.state.selectedMonth + 1][1])
+					this.props.updateMonthInParent(chart)
         }
       }
 		]	

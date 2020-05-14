@@ -12,6 +12,7 @@ class Churn extends Component {
     super(props)
 
     this.state = {
+      churnDollarsChurnValue: 0,
       churnDollars: false,
       clients: [],
       currentColor: "blue",
@@ -91,13 +92,19 @@ class Churn extends Component {
 
     this.totalClients = this.totalClients.bind(this)
     this.totalClientsDetail = this.totalClientsDetail.bind(this)
-    this.getLostValue = this.getLostValue.bind(this)
-    this.getExpansion = this.getExpansion.bind(this)
-    this.handleSelection = this.handleSelection.bind(this)
+    this.handleTerSelection = this.handleTerSelection.bind(this)
     this.handleClickAnnual = this.handleClickAnnual.bind(this)
     this.handleClickProject = this.handleClickProject.bind(this)
     this.handleClickStatic = this.handleClickStatic.bind(this)
     this.handleClickBudget = this.handleClickBudget.bind(this)
+    this.updateMonthInParent = this.updateMonthInParent.bind(this)
+    this.setChurnDollarsChurnValue = this.setChurnDollarsChurnValue.bind(this)
+  }
+
+   shouldComponentUpdate(nextProps, nextState) {
+    if (nextState.renderSwitch !== this.state.renderSwitch)
+      return true
+    return false
   }
 
   componentDidMount() {
@@ -105,19 +112,18 @@ class Churn extends Component {
     this.updateChurnTer()
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    if (nextState.renderSwitch !== this.state.renderSwitch)
-      return true
-    return false
+  setChurnDollarsChurnValue = (data) => {
+    this.setState({churnDollarsChurnValue: data})
   }
 
-  checkTableToggle = () => {
-    if (this.state.annualOn === false && this.state.projectOn === false && this.state.staticOn === false && this.state.budgetOn === false) {
-      this.setState((prevState) => ({ showTable: false, renderSwitch: !prevState.renderSwitch }), this.setStartingMonth)
-    } else {
-      this.setState((prevState) => ({ showTable: true, renderSwitch: !prevState.renderSwitch }), this.getData)
-    }
+  updateMonthInParent = (month) => {
+    this.setState((prevState) => ({selectedMonth: month}), this.setChangedMonth)
   }
+
+  // let churnDollarsTableValues = values[this.state.selectedMonth + 1][1]
+ 
+
+
 
   createMonthsArray = () => {
     const numberOfMonths = DataIn.MonthNumber
@@ -170,101 +176,17 @@ class Churn extends Component {
     let theDate = month + " " + year
     let thePrevDate = prevMonth + " " + prevYear
 
-    this.setState((prevState) => ({ currentMonth: theDate, currentPrevMonth: thePrevDate, selectedMonth: startingMonthNumber }), this.getData)
-  }
-
-  setChangedMonth = () => {
-    let monthsOfYear = [
-      "January", "February", "March", "April", "May", "June", "July",
-      "August", "September", "October", "November", "December"
-    ]
-
-    let month = this.state.selectedMonth
-    let year = this.state.months[this.state.selectedMonth].getFullYear()
-
-    let prevMonth = this.state.selectedMonth - 1
-
-    let monthDisp
-    let prevMonthDisp
-    let prevYear
-
-    if (this.state.selectedMonth > -1) {
-      monthDisp = monthsOfYear[this.state.months[month + 1].getMonth()]
-      prevMonthDisp = monthsOfYear[this.state.months[prevMonth + 1].getMonth()]
-      prevYear = this.state.months[this.state.selectedMonth].getFullYear()
-    }
-
-    if (monthDisp === "January") {
-      year++
-    }
-
-    let theDate = monthDisp + " " + year
-    let thePrevDate = prevMonthDisp + " " + prevYear
-
-    this.setState((prevState) => ({ currentMonth: theDate, currentPrevMonth: thePrevDate }), this.getValuesForLostClients)
-  }
-
-  handleClickAnnual = () => {
-    if (this.state.annualOn) {
-      this.setState((prevState) => ({ annual: "" }))
-    } else {
-      this.setState((prevState) => ({ annual: "Annual" }))
-    }
-    if (this.state.churnTer === "Global") {
-      this.setState((prevState) => ({ annualActive: !prevState.annualActive, annualOn: !prevState.annualOn, showTable: true }), this.totalGlobalClients)
-    } else {
-      this.setState((prevState) => ({ annualActive: !prevState.annualActive, annualOn: !prevState.annualOn, loadButtonActive: true, showTable: true }), this.totalClients)
-    }
-  }
-
-  handleClickProject = () => {
-    if (this.state.projectOn) {
-      this.setState((prevState) => ({ project: "" }))
-    } else {
-      this.setState((prevState) => ({ project: "Project" }))
-    }
-    if (this.state.churnTer === "Global") {
-      this.setState((prevState) => ({ projectActive: !prevState.projectActive, projectOn: !prevState.projectOn, loadButtonActive: true, showTable: true }), this.totalGlobalClients)
-    } else {
-      this.setState((prevState) => ({ projectActive: !prevState.projectActive, projectOn: !prevState.projectOn, loadButtonActive: true, showTable: true }), this.totalClients)
-    }
-  }
-
-  handleClickStatic = () => {
-    if (this.state.staticOn) {
-      this.setState((prevState) => ({ static: "" }))
-    } else {
-      this.setState((prevState) => ({ static: "Static" }))
-    }
-    if (this.state.churnTer === "Global") {
-      this.setState((prevState) => ({ staticActive: !prevState.staticActive, staticOn: !prevState.staticOn, loadButtonActive: true, showTable: true }), this.totalGlobalClients)
-    } else {
-      this.setState((prevState) => ({ staticActive: !prevState.staticActive, staticOn: !prevState.staticOn, loadButtonActive: true, showTable: true }), this.totalClients)
-    }
-  }
-
-  handleClickBudget = () => {
-    if (this.state.budgetOn) {
-      this.setState((prevState) => ({ budget: "" }))
-    } else {
-      this.setState((prevState) => ({ budget: "Budget Allocator" }))
-    }
-    if (this.state.churnTer === "Global") {
-      this.setState((prevState) => ({ budgetActive: !prevState.budgetActive, budgetOn: !prevState.budgetOn, loadButtonActive: true, showTable: true }), this.totalGlobalClients)
-    } else {
-      this.setState((prevState) => ({ budgetActive: !prevState.budgetActive, budgetOn: !prevState.budgetOn, loadButtonActive: true, showTable: true }), this.totalClients)
-    }
-  }
-
-  handleChartSelection = () => {
-    if(this.state.churnDollars) {
-      this.setState(prevState => ({churnDollars: false, renderSwitch: !prevState.renderSwitch}), this.createMonthsArray)
-    } else {
-      this.setState(prevState => ({churnDollars: true, renderSwitch: !prevState.renderSwitch}), this.createMonthsArray)
-    }
+    this.setState((prevState) => ({ currentMonth: theDate, currentPrevMonth: thePrevDate, selectedMonth: startingMonthNumber }))
   }
 
   updateChurnTer = () => {
+
+    if(this.state.churnDollars) {
+      console.log('trigger')
+
+    }
+
+
     if (this.state.churnTer === "Australia") {
       this.setState((prevState) => ({ churnTer: "AUS", terText: "Australia", chartColor: ["#8CD75C"] }), this.totalClients)
     }
@@ -284,6 +206,10 @@ class Churn extends Component {
       this.setState((prevState) => ({ churnTer: "Global", terText: "Global", chartColor: ["#2B85D0"] }), this.totalGlobalClients)
     }
   }
+
+
+
+  // totalClients or totalGlobaClients swtich here 
 
   totalGlobalClients = () => {
     const total = []
@@ -436,6 +362,11 @@ class Churn extends Component {
     return null
   }
 
+
+
+
+  // back to normal program from her
+
   getLostClients = () => {
     let lostClients = []
     let lostClientsArray = []
@@ -558,6 +489,41 @@ class Churn extends Component {
     this.setState((prevState) => ({ lostValues: holderArray }), this.getChurnTotalInAud)
   }
 
+  getChurnTotalInAud = () => {
+    let total = 0
+    if (typeof this.state.monthsText[this.state.selectedMonth + 1] !== "undefined") {
+      let forexMonth = this.state.monthsText[this.state.selectedMonth + 1].substring(3)
+      let forex = this.state.forexData
+      let data = this.state.lostValues[this.state.selectedMonth]
+      let audArray = []
+      let audcad = forex[forexMonth]["AUD/CAD"]
+      let audusd = forex[forexMonth]["AUD/USD"]
+      let audgbp = forex[forexMonth]["AUD/GBP"]
+      let audnzd = forex[forexMonth]["AUD/NZD"]
+
+      if (typeof data !== 'undefined') {
+        data.forEach((invoice) => {
+          if (invoice[4] === "CAD") {
+            audArray.push(invoice[2] * audcad)
+          } else if (invoice[4] === "USD") {
+            audArray.push(invoice[2] * audusd)
+          } else if (invoice[4] === "GBP") {
+            audArray.push(invoice[2] * audgbp)
+          } else if (invoice[4] === "NZD") {
+            audArray.push(invoice[2] * audnzd)
+          } else {
+            audArray.push(invoice[2])
+          }
+        })
+
+        total = Math.round(audArray.reduce((a, b) => a + b, 0).toFixed(2))
+      }
+
+    }
+
+    this.setState((prevState) => ({ churnTotalInAud: total }), this.getValuesForNewClients)
+  }
+
   getValuesForNewClients = () => {
     let selectedMonth = this.state.selectedMonth
     let startfThisMonth = this.state.months[selectedMonth + 1]
@@ -597,46 +563,156 @@ class Churn extends Component {
     this.setState((prevState) => ({ newValues: holderArray }), this.getAddedTotalInAud)
   }
 
-  getLostValue = () => {
-    let lostValue = []
-    let lostValueArray = []
+  getAddedTotalInAud = () => {
+    let total = 0
 
-    if (this.state.lost.length > 0) {
-      for (let i = 0; i < this.state.months.length - 1; i++) {
-        lostValue = []
-        this.state.lost[i].forEach((lostClient) => {
-          let pos = this.state.detail[i].findIndex(i => i.client === lostClient)
-          lostValue.push(this.state.detail[i][pos]["valuepermonth"])
+    if (typeof this.state.monthsText[this.state.selectedMonth + 1] !== "undefined") {
+      let forexMonth = this.state.monthsText[this.state.selectedMonth + 1].substring(3)
+      let forex = this.state.forexData
+      let data = this.state.newValues[this.state.selectedMonth]
+      let audArray = []
+      let audcad = forex[forexMonth]["AUD/CAD"]
+      let audusd = forex[forexMonth]["AUD/USD"]
+      let audgbp = forex[forexMonth]["AUD/GBP"]
+      let audnzd = forex[forexMonth]["AUD/NZD"]
+
+      if (typeof data !== 'undefined') {
+        data.forEach((invoice) => {
+          if (invoice[3] === "CAD") {
+            audArray.push(invoice[1] * audcad)
+          } else if (invoice[3] === "USD") {
+            audArray.push(invoice[1] * audusd)
+          } else if (invoice[3] === "GBP") {
+            audArray.push(invoice[1] * audgbp)
+          } else if (invoice[3] === "NZD") {
+            audArray.push(invoice[1] * audnzd)
+          } else {
+            audArray.push(invoice[1])
+          }
         })
-        lostValueArray.push(+lostValue.reduce((a, b) => a + b, 0).toFixed(2))
+
+        total = Math.round(audArray.reduce((a, b) => a + b, 0).toFixed(2))
       }
+
+    }
+    this.setState((prevState) => ({ addedTotalInAud: total }), this.checkTableToggle)
+  }
+
+  checkTableToggle = () => {
+    if (this.state.annualOn === false && this.state.projectOn === false && this.state.staticOn === false && this.state.budgetOn === false) {
+      this.setState((prevState) => ({ showTable: false, renderSwitch: !prevState.renderSwitch }))
+    } else {
+      this.setState((prevState) => ({ showTable: true, renderSwitch: !prevState.renderSwitch }))
     }
   }
 
-  getExpansion = () => {
-    let expanseValue = []
-    let expanseValueArray = []
+  // end of program
 
-    if (this.state.new.length > 0) {
-      for (let i = 0; i < this.state.months.length - 1; i++) {
 
-        expanseValue = []
-        this.state.new[i].forEach((newClient) => {
-          let pos = this.state.detail[i + 1].findIndex(i => i.client === newClient)
 
-          expanseValue.push(this.state.detail[i + 1][pos]["valuepermonth"])
-        })
 
-        expanseValueArray.push(+expanseValue.reduce((a, b) => a + b, 0).toFixed(2))
-      }
+  // options
+
+  setChangedMonth = () => {
+    let monthsOfYear = [
+      "January", "February", "March", "April", "May", "June", "July",
+      "August", "September", "October", "November", "December"
+    ]
+
+    let month = this.state.selectedMonth
+    let year = this.state.months[this.state.selectedMonth].getFullYear()
+
+    let prevMonth = this.state.selectedMonth - 1
+
+    let monthDisp
+    let prevMonthDisp
+    let prevYear
+
+    if (this.state.selectedMonth > -1) {
+      monthDisp = monthsOfYear[this.state.months[month + 1].getMonth()]
+      prevMonthDisp = monthsOfYear[this.state.months[prevMonth + 1].getMonth()]
+      prevYear = this.state.months[this.state.selectedMonth].getFullYear()
+    }
+
+    if (monthDisp === "January") {
+      year++
+    }
+
+    let theDate = monthDisp + " " + year
+    let thePrevDate = prevMonthDisp + " " + prevYear
+
+    this.setState((prevState) => ({ currentMonth: theDate, currentPrevMonth: thePrevDate }), this.getValuesForLostClients)
+  }
+
+  handleClickAnnual = () => {
+    if (this.state.annualOn) {
+      this.setState((prevState) => ({ annual: "" }))
+    } else {
+      this.setState((prevState) => ({ annual: "Annual" }))
+    }
+
+    if (this.state.churnTer === "Global") {
+      this.setState((prevState) => ({ annualActive: !prevState.annualActive, annualOn: !prevState.annualOn, showTable: true }), this.totalGlobalClients)
+    } else {
+      this.setState((prevState) => ({ annualActive: !prevState.annualActive, annualOn: !prevState.annualOn, loadButtonActive: true, showTable: true }), this.totalClients)
     }
   }
 
-  handleSelection = (event, data) => {
-    this.setStartingMonth()
+  handleClickProject = () => {
+    if (this.state.projectOn) {
+      this.setState((prevState) => ({ project: "" }))
+    } else {
+      this.setState((prevState) => ({ project: "Project" }))
+    }
+    if (this.state.churnTer === "Global") {
+      this.setState((prevState) => ({ projectActive: !prevState.projectActive, projectOn: !prevState.projectOn, loadButtonActive: true, showTable: true }), this.totalGlobalClients)
+    } else {
+      this.setState((prevState) => ({ projectActive: !prevState.projectActive, projectOn: !prevState.projectOn, loadButtonActive: true, showTable: true }), this.totalClients)
+    }
+  }
+
+  handleClickStatic = () => {
+    if (this.state.staticOn) {
+      this.setState((prevState) => ({ static: "" }))
+    } else {
+      this.setState((prevState) => ({ static: "Static" }))
+    }
+    if (this.state.churnTer === "Global") {
+      this.setState((prevState) => ({ staticActive: !prevState.staticActive, staticOn: !prevState.staticOn, loadButtonActive: true, showTable: true }), this.totalGlobalClients)
+    } else {
+      this.setState((prevState) => ({ staticActive: !prevState.staticActive, staticOn: !prevState.staticOn, loadButtonActive: true, showTable: true }), this.totalClients)
+    }
+  }
+
+  handleClickBudget = () => {
+    if (this.state.budgetOn) {
+      this.setState((prevState) => ({ budget: "" }))
+    } else {
+      this.setState((prevState) => ({ budget: "Budget Allocator" }))
+    }
+    if (this.state.churnTer === "Global") {
+      this.setState((prevState) => ({ budgetActive: !prevState.budgetActive, budgetOn: !prevState.budgetOn, loadButtonActive: true, showTable: true }), this.totalGlobalClients)
+    } else {
+      this.setState((prevState) => ({ budgetActive: !prevState.budgetActive, budgetOn: !prevState.budgetOn, loadButtonActive: true, showTable: true }), this.totalClients)
+    }
+  }
+
+  handleChurnStyleChartSelection = () => {
+    if(this.state.churnDollars) {
+      this.setState(prevState => ({churnDollars: false, renderSwitch: !prevState.renderSwitch}), this.createMonthsArray)
+    } else {
+      this.setState(prevState => ({churnDollars: true, renderSwitch: !prevState.renderSwitch}), this.createMonthsArray)
+    }
+  }
+ 
+  handleTerSelection = (event, data) => {
     event.persist()
     this.setState((prevState) => ({ churnTer: event.target.textContent }), this.updateChurnTer)
   }
+
+
+
+  // rendering displays
 
   displayChurnTable = () => {
     return (
@@ -721,77 +797,6 @@ class Churn extends Component {
     )
   }
 
-  getChurnTotalInAud = () => {
-    let total = 0
-    if (typeof this.state.monthsText[this.state.selectedMonth + 1] !== "undefined") {
-      let forexMonth = this.state.monthsText[this.state.selectedMonth + 1].substring(3)
-      let forex = this.state.forexData
-      let data = this.state.lostValues[this.state.selectedMonth]
-      let audArray = []
-      let audcad = forex[forexMonth]["AUD/CAD"]
-      let audusd = forex[forexMonth]["AUD/USD"]
-      let audgbp = forex[forexMonth]["AUD/GBP"]
-      let audnzd = forex[forexMonth]["AUD/NZD"]
-
-      if (typeof data !== 'undefined') {
-        data.forEach((invoice) => {
-          if (invoice[4] === "CAD") {
-            audArray.push(invoice[2] * audcad)
-          } else if (invoice[4] === "USD") {
-            audArray.push(invoice[2] * audusd)
-          } else if (invoice[4] === "GBP") {
-            audArray.push(invoice[2] * audgbp)
-          } else if (invoice[4] === "NZD") {
-            audArray.push(invoice[2] * audnzd)
-          } else {
-            audArray.push(invoice[2])
-          }
-        })
-
-        total = Math.round(audArray.reduce((a, b) => a + b, 0).toFixed(2))
-      }
-
-    }
-
-    this.setState((prevState) => ({ churnTotalInAud: total }), this.getValuesForNewClients)
-  }
-
-  getAddedTotalInAud = () => {
-    let total = 0
-
-    if (typeof this.state.monthsText[this.state.selectedMonth + 1] !== "undefined") {
-      let forexMonth = this.state.monthsText[this.state.selectedMonth + 1].substring(3)
-      let forex = this.state.forexData
-      let data = this.state.newValues[this.state.selectedMonth]
-      let audArray = []
-      let audcad = forex[forexMonth]["AUD/CAD"]
-      let audusd = forex[forexMonth]["AUD/USD"]
-      let audgbp = forex[forexMonth]["AUD/GBP"]
-      let audnzd = forex[forexMonth]["AUD/NZD"]
-
-      if (typeof data !== 'undefined') {
-        data.forEach((invoice) => {
-          if (invoice[3] === "CAD") {
-            audArray.push(invoice[1] * audcad)
-          } else if (invoice[3] === "USD") {
-            audArray.push(invoice[1] * audusd)
-          } else if (invoice[3] === "GBP") {
-            audArray.push(invoice[1] * audgbp)
-          } else if (invoice[3] === "NZD") {
-            audArray.push(invoice[1] * audnzd)
-          } else {
-            audArray.push(invoice[1])
-          }
-        })
-
-        total = Math.round(audArray.reduce((a, b) => a + b, 0).toFixed(2))
-      }
-
-    }
-    this.setState((prevState) => ({ addedTotalInAud: total }), this.checkTableToggle)
-  }
-
-
   displayTable = () => {
     if (this.state.showTable) {
       return (
@@ -821,17 +826,18 @@ class Churn extends Component {
               </Grid.Column>
               <Grid.Column width={4}>
                 <div>
+                {!this.state.churnDollars ? 
                   <Segment color="blue">
-                    <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Churn Calculation<br />{this.state.currentMonth} </h3>
-                    {/* <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.forChurnForumla[this.state.selectedMonth][0]} ÷ ({this.state.forChurnForumla[this.state.selectedMonth][1]} + {this.state.forChurnForumla[this.state.selectedMonth][2]})</h2> */}
-                    {/* <h1 style={{ textAlign: "center" }}>({this.state.forChurnForumla[this.state.forChurnForumla.length - 2][1]} + {this.state.forChurnForumla[this.state.forChurnForumla.length - 4][2]})</h1> */}
+                    <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Churn Client Calculation<br />{this.state.currentMonth} </h3>
                     <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.chartData[this.state.selectedMonth + 1][1].toFixed(2)}%</h2>
-                    {/* <div style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>
-                      <Popup position={'bottom center'}
-                        content='The Monthly Churn rate is calculated by dividing the number of clients we lost last month by the number of new clients added to the number of clients we had before the month started.' trigger={<Button icon='calculator' />}
-                      />
-                    </div> */}
                   </Segment>
+
+                  :
+
+                  <Segment color="black">
+                    <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Churn Value Calculation<br />{this.state.currentMonth} </h3>
+                    <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.churnDollarsChurnValue.toFixed(2)}%</h2>
+                  </Segment>}
                 </div>
               </Grid.Column>
             </Grid>
@@ -924,10 +930,6 @@ class Churn extends Component {
     }
   }
 
-  numberWithCommas = (x) => {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-  }
-
   displayChart = () => {
     const headingStyle = {
       textAlign: 'center'
@@ -997,7 +999,21 @@ class Churn extends Component {
             </Segment>
           </Grid.Column>
 
-          {this.state.churnDollars ?  <ChurnDollars rawData={this.props.rawData} forexData={this.props.forexData} /> :
+          {this.state.churnDollars ?  
+          <ChurnDollars 
+            rawData={this.props.rawData} 
+            forexData={this.props.forexData}
+            annual={this.state.annual}
+            project={this.state.project}
+            static={this.state.static}
+            budget={this.state.budget}
+            churnTer={this.state.churnTer}
+            chartColor={this.state.chartColor}
+            updateMonthInParent={this.updateMonthInParent}
+            setChurnDollarsChurnValue={this.setChurnDollarsChurnValue}
+          />  
+          
+          :
 
           <Grid.Column width={15}>
             <Segment color="blue" style={{ width: 1000, fontFamily: 'Titillium Web' }}>
@@ -1022,6 +1038,12 @@ class Churn extends Component {
                       'title': 'Date',
                       'format': 'MMM-yy'
                     },
+								pointSize: 8,
+								animation: {
+									duration: 1000,
+									easing: 'out',
+									startup: true
+							},
                     pointSize: 8,
                     legend: 'none',
                     titleTextStyle: { fontName: 'Titillium Web', bold: false },
@@ -1053,15 +1075,13 @@ class Churn extends Component {
     }
   }
 
-  getData = () => {
-    if (this.props.toRender === "QR") {
-      this.props.getDataFromChurn(this.state)
-    }
+  numberWithCommas = (x) => {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
   }
-
+ 
   render() {
-    //  {console.log(this.state)}
-    if (this.props.toRender === "QR") {
+   
+    if (this.state.toRender === "QR") {
       return null
     } else {
       return (
@@ -1074,34 +1094,34 @@ class Churn extends Component {
             </Segment>
           </div>
           <Segment color="blue" style={{ width: 1079 }} >
-            <Grid>
-              {/* 
+            <Grid></Grid>
+              
               <Grid columns={2}>
                 <Grid.Column width={12}>
                   <div style={{ fontFamily: 'Titillium Web', textAlign: 'left' }}>
-                    <Button basic={this.state.churnTer !== "Global"} primary onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Global</Button>
-                    <Button basic={this.state.churnTer !== "AUS"} color="green" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Australia</Button>
-                    <Button basic={this.state.churnTer !== "CAN"} color="yellow" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Canada</Button>
-                    <Button basic={this.state.churnTer !== "USA"} color="red" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>United States</Button>
-                    <Button basic={this.state.churnTer !== "UK"} color="teal" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>United Kingdom</Button>
-                    <Button basic={this.state.churnTer !== "NZ"} color="purple" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>New Zealand</Button>
+                    <Button basic={this.state.churnTer !== "Global"} primary onClick={this.handleTerSelection} style={{ fontFamily: 'Titillium Web' }}>Global</Button>
+                    <Button basic={this.state.churnTer !== "AUS"} color="green" onClick={this.handleTerSelection} style={{ fontFamily: 'Titillium Web' }}>Australia</Button>
+                    <Button basic={this.state.churnTer !== "CAN"} color="yellow" onClick={this.handleTerSelection} style={{ fontFamily: 'Titillium Web' }}>Canada</Button>
+                    <Button basic={this.state.churnTer !== "USA"} color="red" onClick={this.handleTerSelection} style={{ fontFamily: 'Titillium Web' }}>United States</Button>
+                    <Button basic={this.state.churnTer !== "UK"} color="teal" onClick={this.handleTerSelection} style={{ fontFamily: 'Titillium Web' }}>United Kingdom</Button>
+                    <Button basic={this.state.churnTer !== "NZ"} color="purple" onClick={this.handleTerSelection} style={{ fontFamily: 'Titillium Web' }}>New Zealand</Button>
                   </div> 
                   </Grid.Column>
                   <Grid.Column width={4}>
                     <div style={{textAlign: "right"}}>
-                      <Button color="black" basic={this.state.churnDollars} onClick={this.handleChartSelection} style={{ fontFamily: 'Titillium Web' }}>Client Number</Button>
-                      <Button color="black" basic={!this.state.churnDollars} onClick={this.handleChartSelection} style={{ fontFamily: 'Titillium Web' }}>MRR Value</Button>
-                    </div> */}
-            <Grid.Column>
-              <div style={{ fontFamily: 'Titillium Web', textAlign: 'center' }}>
-                  <Button basic={this.state.churnTer !== "Global"} primary onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Global</Button>
-                  <Button basic={this.state.churnTer !== "AUS"} color="green" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Australia</Button>
-                  <Button basic={this.state.churnTer !== "CAN"} color="yellow" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>Canada</Button>
-                  <Button basic={this.state.churnTer !== "USA"} color="red" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>United States</Button>
-                  <Button basic={this.state.churnTer !== "UK"} color="teal" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>United Kingdom</Button>
-                  <Button basic={this.state.churnTer !== "NZ"} color="purple" onClick={this.handleSelection} style={{ fontFamily: 'Titillium Web' }}>New Zealand</Button>
-                </div> 
-          </Grid.Column>
+                      <Button color="black" basic={this.state.churnDollars} onClick={this.handleChurnStyleChartSelection} style={{ fontFamily: 'Titillium Web' }}>Client Number</Button>
+                      <Button color="black" basic={!this.state.churnDollars} onClick={this.handleChurnStyleChartSelection} style={{ fontFamily: 'Titillium Web' }}>MRR Value</Button>
+                    </div>
+          
+               {/* <div style={{ fontFamily: 'Titillium Web', textAlign: 'center' }}>
+                  <Button basic={this.state.churnTer !== "Global"} primary onClick={this.handleTerSelection} style={{ fontFamily: 'Titillium Web' }}>Global</Button>
+                  <Button basic={this.state.churnTer !== "AUS"} color="green" onClick={this.handleTerSelection} style={{ fontFamily: 'Titillium Web' }}>Australia</Button>
+                  <Button basic={this.state.churnTer !== "CAN"} color="yellow" onClick={this.handleTerSelection} style={{ fontFamily: 'Titillium Web' }}>Canada</Button>
+                  <Button basic={this.state.churnTer !== "USA"} color="red" onClick={this.handleTerSelection} style={{ fontFamily: 'Titillium Web' }}>United States</Button>
+                  <Button basic={this.state.churnTer !== "UK"} color="teal" onClick={this.handleTerSelection} style={{ fontFamily: 'Titillium Web' }}>United Kingdom</Button>
+                  <Button basic={this.state.churnTer !== "NZ"} color="purple" onClick={this.handleTerSelection} style={{ fontFamily: 'Titillium Web' }}>New Zealand</Button>
+                </div> */}
+          </Grid.Column> 
         </Grid>
       </Segment>
 
