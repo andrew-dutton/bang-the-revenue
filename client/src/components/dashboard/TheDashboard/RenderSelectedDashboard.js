@@ -8,11 +8,15 @@ import Cashflow from '../../dashboard/Cashflow/Cashflow'
 import Search from '../../dashboard/Search/Search'
 import Forecasts from '../../dashboard/Forecasts/Forecasts'
 import EIQ from '../../dashboard/EIQ/EIQ'
+import Churn2 from '../../dashboard/NonRecurringRevenue/Churn2'
 
 
 const renderSelectedDashboard = props => {
   let toDisplay;
 
+  if (props.selected === "Non Recurring") {
+    toDisplay = <Churn2 forexData={props.forexData} rawData={props.rawData} />
+  }
 
   if (props.selected === "Active Licences") {
     toDisplay = <ActiveLicences toRender={"AL"} rawData={props.rawData} rawSpend={props.rawSpend}/>

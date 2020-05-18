@@ -112,19 +112,6 @@ class Churn extends Component {
     this.updateChurnTer()
   }
 
-  setChurnDollarsChurnValue = (data) => {
-    this.setState({churnDollarsChurnValue: data})
-  }
-
-  updateMonthInParent = (month) => {
-    this.setState((prevState) => ({selectedMonth: month}), this.setChangedMonth)
-  }
-
-  // let churnDollarsTableValues = values[this.state.selectedMonth + 1][1]
- 
-
-
-
   createMonthsArray = () => {
     const numberOfMonths = DataIn.MonthNumber
 
@@ -178,38 +165,6 @@ class Churn extends Component {
 
     this.setState((prevState) => ({ currentMonth: theDate, currentPrevMonth: thePrevDate, selectedMonth: startingMonthNumber }))
   }
-
-  updateChurnTer = () => {
-
-    if(this.state.churnDollars) {
-      console.log('trigger')
-
-    }
-
-
-    if (this.state.churnTer === "Australia") {
-      this.setState((prevState) => ({ churnTer: "AUS", terText: "Australia", chartColor: ["#8CD75C"] }), this.totalClients)
-    }
-    if (this.state.churnTer === "Canada") {
-      this.setState((prevState) => ({ churnTer: "CAN", terText: "Canada", chartColor: ["#fcba03"] }), this.totalClients)
-    }
-    if (this.state.churnTer === "United States") {
-      this.setState((prevState) => ({ churnTer: "USA", terText: "United States", chartColor: ["#F28E7C"] }), this.totalClients)
-    }
-    if (this.state.churnTer === "United Kingdom") {
-      this.setState((prevState) => ({ churnTer: "UK", terText: "U.K.", chartColor: ["#03fcd7"] }), this.totalClients)
-    }
-    if (this.state.churnTer === "New Zealand") {
-      this.setState((prevState) => ({ churnTer: "NZ", terText: "New Zealand", chartColor: ["#F27CEA"] }), this.totalClients)
-    }
-    if (this.state.churnTer === "Global") {
-      this.setState((prevState) => ({ churnTer: "Global", terText: "Global", chartColor: ["#2B85D0"] }), this.totalGlobalClients)
-    }
-  }
-
-
-
-  // totalClients or totalGlobaClients swtich here 
 
   totalGlobalClients = () => {
     const total = []
@@ -286,87 +241,6 @@ class Churn extends Component {
     return null
   }
 
-  totalClients() {
-    const total = []
-
-    this.state.months.forEach((month) => {
-      let counter = []
-
-      this.props.rawData.forEach((invoice) => {
-        let startString = invoice["start"]
-        let startDateParts = startString.split("/")
-        let start = new Date(startDateParts[2], startDateParts[1] - 1, +startDateParts[0])
-        let endString = invoice["end"]
-        let endDateParts = endString.split("/")
-        let end = new Date(endDateParts[2], endDateParts[1] - 1, +endDateParts[0])
-
-        if (start <= month && end >= month && (invoice["territory"] === this.state.churnTer) && (
-          invoice["product"] === this.state.annual ||
-          invoice["product"] === this.state.project ||
-          invoice["product"] === this.state.static ||
-          invoice["product"] === this.state.budget
-        )) {
-          counter.push(invoice["client"])
-        }
-      })
-
-      const onlyUnique = (value, index, self) => {
-        return self.indexOf(value) === index;
-      }
-
-      let uniqClients = counter.filter(onlyUnique)
-
-      total.push(uniqClients)
-    })
-
-    this.setState(prevState => ({
-      clients: [...total]
-    }), this.totalClientsDetail)
-
-    return null
-  }
-
-  totalClientsDetail() {
-    const total = []
-
-    this.state.months.forEach((month) => {
-      let counter = []
-
-      this.props.rawData.forEach((invoice) => {
-        let startString = invoice["start"]
-        let startDateParts = startString.split("/")
-        let start = new Date(startDateParts[2], startDateParts[1] - 1, +startDateParts[0])
-        let endString = invoice["end"]
-        let endDateParts = endString.split("/")
-        let end = new Date(endDateParts[2], endDateParts[1] - 1, +endDateParts[0])
-
-        if (start <= month && end >= month
-          && (invoice["territory"] === this.state.churnTer) && (
-            invoice["product"] === this.state.annual ||
-            invoice["product"] === this.state.project ||
-            invoice["product"] === this.state.static ||
-            invoice["product"] === this.state.budget
-          )
-        ) {
-          counter.push(invoice)
-        }
-      })
-
-      total.push(counter)
-    })
-
-    this.setState(prevState => ({
-      detail: [...total]
-    }), this.getLostClients)
-
-    return null
-  }
-
-
-
-
-  // back to normal program from her
-
   getLostClients = () => {
     let lostClients = []
     let lostClientsArray = []
@@ -377,10 +251,10 @@ class Churn extends Component {
       lostClientsArray.push(lostClients)
     }
 
-    let holdingArray = []
-    for (let k = 0; k < lostClientsArray.length - 1; k++) {
-      holdingArray.push([k + 1, lostClientsArray[k].length])
-    }
+    // let holdingArray = []
+    // for (let k = 0; k < lostClientsArray.length - 1; k++) {
+    //   holdingArray.push([k + 1, lostClientsArray[k].length])
+    // }
 
 
 
@@ -612,6 +486,118 @@ class Churn extends Component {
 
 
   // options
+
+  setChurnDollarsChurnValue = (data) => {
+    this.setState({churnDollarsChurnValue: data})
+  }
+
+  updateMonthInParent = (month) => {
+    this.setState((prevState) => ({selectedMonth: month}), this.setChangedMonth)
+  }
+
+
+  updateChurnTer = () => {
+    if(this.state.churnDollars) {
+      console.log('trigger')
+    }
+
+    if (this.state.churnTer === "Australia") {
+      this.setState((prevState) => ({ churnTer: "AUS", terText: "Australia", chartColor: ["#8CD75C"] }), this.totalClients)
+    }
+    if (this.state.churnTer === "Canada") {
+      this.setState((prevState) => ({ churnTer: "CAN", terText: "Canada", chartColor: ["#fcba03"] }), this.totalClients)
+    }
+    if (this.state.churnTer === "United States") {
+      this.setState((prevState) => ({ churnTer: "USA", terText: "United States", chartColor: ["#F28E7C"] }), this.totalClients)
+    }
+    if (this.state.churnTer === "United Kingdom") {
+      this.setState((prevState) => ({ churnTer: "UK", terText: "U.K.", chartColor: ["#03fcd7"] }), this.totalClients)
+    }
+    if (this.state.churnTer === "New Zealand") {
+      this.setState((prevState) => ({ churnTer: "NZ", terText: "New Zealand", chartColor: ["#F27CEA"] }), this.totalClients)
+    }
+    if (this.state.churnTer === "Global") {
+      this.setState((prevState) => ({ churnTer: "Global", terText: "Global", chartColor: ["#2B85D0"] }), this.totalGlobalClients)
+    }
+  }
+
+  totalClients() {
+    const total = []
+
+    this.state.months.forEach((month) => {
+      let counter = []
+
+      this.props.rawData.forEach((invoice) => {
+        let startString = invoice["start"]
+        let startDateParts = startString.split("/")
+        let start = new Date(startDateParts[2], startDateParts[1] - 1, +startDateParts[0])
+        let endString = invoice["end"]
+        let endDateParts = endString.split("/")
+        let end = new Date(endDateParts[2], endDateParts[1] - 1, +endDateParts[0])
+
+        if (start <= month && end >= month && (invoice["territory"] === this.state.churnTer) && (
+          invoice["product"] === this.state.annual ||
+          invoice["product"] === this.state.project ||
+          invoice["product"] === this.state.static ||
+          invoice["product"] === this.state.budget
+        )) {
+          counter.push(invoice["client"])
+        }
+      })
+
+      const onlyUnique = (value, index, self) => {
+        return self.indexOf(value) === index;
+      }
+
+      let uniqClients = counter.filter(onlyUnique)
+
+      total.push(uniqClients)
+    })
+
+    this.setState(prevState => ({
+      clients: [...total]
+    }), this.totalClientsDetail)
+
+    return null
+  }
+
+  totalClientsDetail() {
+    const total = []
+
+    this.state.months.forEach((month) => {
+      let counter = []
+
+      this.props.rawData.forEach((invoice) => {
+        let startString = invoice["start"]
+        let startDateParts = startString.split("/")
+        let start = new Date(startDateParts[2], startDateParts[1] - 1, +startDateParts[0])
+        let endString = invoice["end"]
+        let endDateParts = endString.split("/")
+        let end = new Date(endDateParts[2], endDateParts[1] - 1, +endDateParts[0])
+
+        if (start <= month && end >= month
+          && (invoice["territory"] === this.state.churnTer) && (
+            invoice["product"] === this.state.annual ||
+            invoice["product"] === this.state.project ||
+            invoice["product"] === this.state.static ||
+            invoice["product"] === this.state.budget
+          )
+        ) {
+          counter.push(invoice)
+        }
+      })
+
+      total.push(counter)
+    })
+
+    this.setState(prevState => ({
+      detail: [...total]
+    }), this.getLostClients)
+
+    return null
+  }
+
+
 
   setChangedMonth = () => {
     let monthsOfYear = [
@@ -1080,7 +1066,7 @@ class Churn extends Component {
   }
  
   render() {
-   
+    {console.log(this.state.new)}
     if (this.state.toRender === "QR") {
       return null
     } else {
