@@ -107,7 +107,7 @@ const renderFullDashboard = props => {
                 </div>
               </Grid.Column>
               <Grid.Column>
-                <div id="Non Recurring" onMouseEnter={() => props.onMouseEnterNonRecurring()} onMouseLeave={() => props.onMouseLeaveNonRecurring()} onClick={dashActive}>
+                <div id="Non Recurring" onMouseEnter={() => props.onMouseEnterNonRecurring()} onMouseLeave={() => props.onMouseLeaveNonRecurring()} >
                   <Segment inverted={props.selected === "Non Recurring"} raised={props.raised === "Non Recurring"}>
                     <h1 style={{ fontFamily: 'Titillium Web' }}>Non Recurring Revenue</h1>
                     <NonRecurringBox selected={props.selected} rawData={props.rawData} />

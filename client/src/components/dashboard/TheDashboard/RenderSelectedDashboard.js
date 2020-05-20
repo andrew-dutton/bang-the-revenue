@@ -1,21 +1,21 @@
 import React from 'react'
 import ActiveLicences from '../../dashboard/ActiveLicences/ActiveLicences'
 import RecurringRevenueGraph from '../../dashboard/RecurringRevenue/RecurringRevenueGraph'
-import Churn from '../../dashboard/Churn/Churn'
+import Churn from '../Churn/Churn'
 import QR from '../../dashboard/QuarterlyReporting/QR'
 import Budget from '../../dashboard/Budget/Budget'
 import Cashflow from '../../dashboard/Cashflow/Cashflow'
 import Search from '../../dashboard/Search/Search'
 import Forecasts from '../../dashboard/Forecasts/Forecasts'
 import EIQ from '../../dashboard/EIQ/EIQ'
-import Churn2 from '../../dashboard/NonRecurringRevenue/Churn2'
+import NonRecurringRevenue from '../../dashboard/NonRecurringRevenue/NonRecurringRevenue'
 
 
 const renderSelectedDashboard = props => {
   let toDisplay;
 
   if (props.selected === "Non Recurring") {
-    toDisplay = <Churn2 forexData={props.forexData} rawData={props.rawData} />
+    toDisplay = <NonRecurringRevenue forexData={props.forexData} rawData={props.rawData} />
   }
 
   if (props.selected === "Active Licences") {

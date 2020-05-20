@@ -40,7 +40,7 @@ const displayTable = props => {
 
                   <Segment color="black">
                     <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Churn Value Calculation<br />{props.currentMonth} </h3>
-                    {/* <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{props.churnDollarsChurnValue.toFixed(2)}%</h2> */}
+                    <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{props.churnArray[props.selectedMonth + 1][1].toFixed(2)}%</h2>
                   </Segment>}
                 </div>
               </Grid.Column>
