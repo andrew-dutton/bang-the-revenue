@@ -26,7 +26,7 @@ const displayMRRTable = props => {
 		let churn = props.churnTotalInAud
 		let net = Math.round((added - churn).toFixed(2))
 		let displayTotal = numberWithCommas(net)
-		let MRRTotal = numberWithCommas(props.totalDataRR[props.selectedMonth])
+		let MRRTotal = props.MRRTotal
 		let arrow = ""
 		let color = ""
 		if ((added - churn) < 0) {
@@ -51,18 +51,34 @@ const displayMRRTable = props => {
 					<Grid>
 						<Grid.Column width={4}>
 							<div>
+							{!props.churnDollars ? 
 								<Segment color="blue">
 									<h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{boxOneText}</h3>
 									<h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>A${numberWithCommas(props.churnTotalInAud)}</h2>
 								</Segment>
+
+								:
+
+								<Segment inverted color="blue">
+								<h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{boxOneText}</h3>
+								<h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>A${numberWithCommas(props.churnTotalInAud)}</h2>
+							</Segment>}
 							</div>
 						</Grid.Column>
 						<Grid.Column width={4}>
 							<div>
+							{!props.churnDollars ? 
 								<Segment color="blue">
 									<h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{boxTwoText}</h3>
 									<h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>A${numberWithCommas(props.addedTotalInAud)}</h2>
 								</Segment>
+
+								:
+
+							<Segment inverted color="blue">
+								<h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{boxTwoText}</h3>
+								<h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>A${numberWithCommas(props.addedTotalInAud)}</h2>
+							</Segment>}
 							</div>
 						</Grid.Column>
 						<Grid.Column width={4}>
@@ -75,7 +91,7 @@ const displayMRRTable = props => {
 
 								:
 
-								<Segment color="black">
+								<Segment inverted color="blue">
 									<h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{boxThreeTextB}</h3>
 									<h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>A${MRRTotal}</h2>
 								</Segment>

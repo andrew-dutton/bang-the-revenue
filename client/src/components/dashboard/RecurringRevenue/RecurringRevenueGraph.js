@@ -17,6 +17,11 @@ class RecurringRevenueGraph extends Component {
       forexData: props.forexData,
       totalAUD: 0,
       selectedMonth: 0,
+      annual: "Annual",
+      project: "Project",
+      static: "Static",
+      budget: "Budget Allocator",
+      support: "Support",
       months: [],
       monthsText: [],
       currentMonth: "",
@@ -282,13 +287,18 @@ class RecurringRevenueGraph extends Component {
           let thisMonthBegin = new Date(thisYear, thisMonth, 1)
 
 
-          if (startContract <= thisMonthEnd && endContract >= thisMonthBegin && (invoice["territory"] === "AUS")) {
+          if (startContract <= thisMonthEnd && endContract >= thisMonthBegin && (invoice["territory"] === "AUS") && (
+            invoice["product"] === this.state.annual ||
+            invoice["product"] === this.state.project ||
+            invoice["product"] === this.state.static ||
+            invoice["product"] === this.state.budget ||
+            invoice["product"] === this.state.support
+          )) {
             if (invoice["spreadmonths"] > invoice["months"]) {
               // INVOICE DATES ARE NOT FIRST AND/OR LAST DAYS OF MONTH SO NEED PARTIAL CALCULATIONS
-              if (actualStartMonth === thisMonthEnd.getMonth() && actualStartYear === thisMonthEnd.getFullYear()) {
+              if (actualStartMonth === thisMonthEnd.getMonth() && actualStartYear === thisMonthEnd.getFullYear() ) {
                 // CONTRACT START DATE IS THIS MONTH, THEREFORE DIVIDE MONTH AMOUNT BY 30 AND TIMES BY REMAINING DAYS IN MONTH/*
                 // EG INVOICE WITH $1000 MRR AND START DATE OF 24TH OF MONTH = ($1000 / 30) X (30-24) 
-
                 ausCounter.push((invoice["valuepermonth"] / 30) * (31 - (startContract.getDate())))
                 allDet.push([
                   invoice["client"],
@@ -303,7 +313,6 @@ class RecurringRevenueGraph extends Component {
                   invoice["total"]
                 ])
               } else if (actualEndMonth === thisMonthEnd.getMonth() && actualEndYear === thisMonthEnd.getFullYear()) {
-
                 ausCounter.push((invoice["valuepermonth"] / 30) * (endContract.getDate()))
                 allDet.push([
                   invoice["client"],
@@ -351,7 +360,13 @@ class RecurringRevenueGraph extends Component {
             }
           }
 
-          if (startContract <= thisMonthEnd && endContract >= thisMonthBegin && (invoice["territory"] === "CAN")) {
+          if (startContract <= thisMonthEnd && endContract >= thisMonthBegin && (invoice["territory"] === "CAN") && (
+            invoice["product"] === this.state.annual ||
+            invoice["product"] === this.state.project ||
+            invoice["product"] === this.state.static ||
+            invoice["product"] === this.state.budget ||
+            invoice["product"] === this.state.support
+          )) {
             if (invoice["spreadmonths"] > invoice["months"]) {
               if (actualStartMonth === thisMonthEnd.getMonth() && actualStartYear === thisMonthEnd.getFullYear()) {
                 canCounter.push((invoice["valuepermonth"] / 30) * (31 - (startContract.getDate())))
@@ -413,7 +428,13 @@ class RecurringRevenueGraph extends Component {
             }
           }
 
-          if (startContract <= thisMonthEnd && endContract >= thisMonthBegin && (invoice["territory"] === "USA")) {
+          if (startContract <= thisMonthEnd && endContract >= thisMonthBegin && (invoice["territory"] === "USA") && (
+            invoice["product"] === this.state.annual ||
+            invoice["product"] === this.state.project ||
+            invoice["product"] === this.state.static ||
+            invoice["product"] === this.state.budget ||
+            invoice["product"] === this.state.support
+          )) {
             if (invoice["spreadmonths"] > invoice["months"]) {
               if (actualStartMonth === thisMonthEnd.getMonth() && actualStartYear === thisMonthEnd.getFullYear()) {
                 usaCounter.push((invoice["valuepermonth"] / 30) * (31 - (startContract.getDate())))
@@ -476,7 +497,13 @@ class RecurringRevenueGraph extends Component {
             }
           }
 
-          if (startContract <= thisMonthEnd && endContract >= thisMonthBegin && (invoice["territory"] === "UK")) {
+          if (startContract <= thisMonthEnd && endContract >= thisMonthBegin && (invoice["territory"] === "UK") && (
+            invoice["product"] === this.state.annual ||
+            invoice["product"] === this.state.project ||
+            invoice["product"] === this.state.static ||
+            invoice["product"] === this.state.budget ||
+            invoice["product"] === this.state.support
+          )) {
             if (invoice["spreadmonths"] > invoice["months"]) {
               if (actualStartMonth === thisMonthEnd.getMonth() && actualStartYear === thisMonthEnd.getFullYear()) {
                 ukCounter.push((invoice["valuepermonth"] / 30) * (31 - (startContract.getDate())))
@@ -539,7 +566,13 @@ class RecurringRevenueGraph extends Component {
             }
           }
 
-          if (startContract <= thisMonthEnd && endContract >= thisMonthBegin && (invoice["territory"] === "NZ")) {
+          if (startContract <= thisMonthEnd && endContract >= thisMonthBegin && (invoice["territory"] === "NZ") && (
+            invoice["product"] === this.state.annual ||
+            invoice["product"] === this.state.project ||
+            invoice["product"] === this.state.static ||
+            invoice["product"] === this.state.budget ||
+            invoice["product"] === this.state.support
+          )) {
             if (invoice["spreadmonths"] > invoice["months"]) {
               if (actualStartMonth === thisMonthEnd.getMonth() && actualStartYear === thisMonthEnd.getFullYear()) {
 
@@ -1087,8 +1120,47 @@ class RecurringRevenueGraph extends Component {
     }
   }
 
+  handleClickAnnual = () => {
+    if (this.state.annual === "Annual") {
+      this.setState((prevState) => ({ annual: "" }), this.createMonthsArray)
+    } else {
+      this.setState((prevState) => ({ annual: "Annual" }), this.createMonthsArray)
+    }
+  }
+
+  handleClickProject = () => {
+    if (this.state.project === "Project") {
+      this.setState((prevState) => ({ project: "" }), this.createMonthsArray)
+    } else {
+      this.setState((prevState) => ({ project: "Project" }), this.createMonthsArray)
+    }
+  }
+
+  handleClickStatic = () => {
+    if (this.state.static === "Static") {
+      this.setState((prevState) => ({ static: "" }), this.createMonthsArray)
+    } else {
+      this.setState((prevState) => ({ static: "Static" }), this.createMonthsArray)
+    }
+  }
+
+  handleClickBudget = () => {
+    if (this.state.budget === "Budget Allocator") {
+      this.setState((prevState) => ({ budget: "" }), this.createMonthsArray)
+    } else {
+      this.setState((prevState) => ({ budget: "Budget Allocator" }), this.createMonthsArray)
+    }
+  }
+  
+  handleClickSupport = () => {
+    if (this.state.support === "Support") {
+      this.setState((prevState) => ({ support: "" }), this.createMonthsArray)
+    } else {
+      this.setState((prevState) => ({ support: "Support" }), this.createMonthsArray)
+    }
+	}
+
   render(props) {
-    
     if (this.props.toRender === "QR") {
       return null
     } else {
@@ -1289,7 +1361,58 @@ class RecurringRevenueGraph extends Component {
               </GridColumn>
             </Grid>
           </Segment>
-          <Segment color="orange" style={{ width: 1079 }} >
+          <Grid columns='equal' style={{ width: 1300, paddingTop: 12, fontFamily: 'Titillium Web' }}>
+          <Grid.Column>
+            <Segment color="orange" style={{ width: 70, height: 513 }}>
+              <br />
+              <br />
+              <div>
+                Annual
+                <br />
+                <br />
+                <Checkbox toggle defaultChecked onClick={this.handleClickAnnual} />
+              </div>
+              <br />
+              <div>
+                Project
+                <br />
+                <br />
+                <Checkbox toggle defaultChecked onClick={this.handleClickProject} />
+              </div>
+              <br />
+              <div>
+                Static
+                <br />
+                <br />
+                <Checkbox toggle defaultChecked onClick={this.handleClickStatic} />
+              </div>
+              <br />
+
+              <div>
+                Budget
+                <br />
+                <br />
+                <Checkbox toggle defaultChecked onClick={this.handleClickBudget} />
+              </div>
+              <br />
+
+              <div>
+                Support
+                <br />
+                <br />
+                <Checkbox toggle defaultChecked onClick={this.handleClickSupport} />
+              </div>
+
+
+              <br />
+              <div>
+                <br />
+                <br />
+              </div>
+            </Segment>
+			  	</Grid.Column>
+         <Grid.Column width={15}>
+          <Segment color="orange" style={{ width: 1000 }} >
             <Line
               data={data}
               options={{
@@ -1333,6 +1456,8 @@ class RecurringRevenueGraph extends Component {
               }}
             />
           </Segment>
+          </Grid.Column>
+          </Grid>
           <div>
             <DisplayMonth currentMonth={this.state.currentMonth} currentColor={this.state.currentColor} />
           </div>

@@ -416,7 +416,8 @@ export const getChurnTotalInAud = (months, monthsText, selectedMonth, forexData,
     return detail
   }
   
-export const revenueTotals = (months, rawData, churnTer, forexData) => {
+export const revenueTotals = (months, rawData, churnTer, forexData, annual, project, statics, budget) => {
+
   const ausTotal = []
   const canTotal = []
   const usaTotal = []
@@ -453,8 +454,14 @@ export const revenueTotals = (months, rawData, churnTer, forexData) => {
         let thisMonthBegin = new Date(thisYear, thisMonth, 1)
 
         if(churnTer === "AUS" || churnTer === "Global") {
-          if (startContract <= thisMonthEnd && endContract >= thisMonthBegin && (invoice["territory"] === "AUS")) {
-            if (invoice["spreadmonths"] > invoice["months"]) {
+          if (startContract <= thisMonthEnd && endContract >= thisMonthBegin && (invoice["territory"] === "AUS") && (
+            invoice["product"] === annual ||
+            invoice["product"] === project ||
+            invoice["product"] === statics ||
+            invoice["product"] === budget ||
+            invoice["product"] === "Support"
+          )) {
+            if (invoice["spreadmonths"] > invoice["months"]) { 
               // INVOICE DATES ARE NOT FIRST AND/OR LAST DAYS OF MONTH SO NEED PARTIAL CALCULATIONS
               if (actualStartMonth === thisMonthEnd.getMonth() && actualStartYear === thisMonthEnd.getFullYear()) {
                 // CONTRACT START DATE IS THIS MONTH, THEREFORE DIVIDE MONTH AMOUNT BY 30 AND TIMES BY REMAINING DAYS IN MONTH/*
@@ -473,7 +480,13 @@ export const revenueTotals = (months, rawData, churnTer, forexData) => {
         }
 
         if(churnTer === "CAN" || churnTer === "Global") {
-          if (startContract <= thisMonthEnd && endContract >= thisMonthBegin && (invoice["territory"] === "CAN")) {
+          if (startContract <= thisMonthEnd && endContract >= thisMonthBegin && (invoice["territory"] === "CAN") && (
+            invoice["product"] === annual ||
+            invoice["product"] === project ||
+            invoice["product"] === statics ||
+            invoice["product"] === budget ||
+            invoice["product"] === "Support"
+          )) {
             if (invoice["spreadmonths"] > invoice["months"]) {
               if (actualStartMonth === thisMonthEnd.getMonth() && actualStartYear === thisMonthEnd.getFullYear()) {
                 canCounter.push((invoice["valuepermonth"] / 30) * (31 - (startContract.getDate())))
@@ -489,7 +502,13 @@ export const revenueTotals = (months, rawData, churnTer, forexData) => {
         }
 
         if(churnTer === "USA" || churnTer === "Global") {
-          if (startContract <= thisMonthEnd && endContract >= thisMonthBegin && (invoice["territory"] === "USA")) {
+          if (startContract <= thisMonthEnd && endContract >= thisMonthBegin && (invoice["territory"] === "USA") && (
+            invoice["product"] === annual ||
+            invoice["product"] === project ||
+            invoice["product"] === statics ||
+            invoice["product"] === budget || 
+            invoice["product"] === "Support"
+          )) {
             if (invoice["spreadmonths"] > invoice["months"]) {
               if (actualStartMonth === thisMonthEnd.getMonth() && actualStartYear === thisMonthEnd.getFullYear()) {
                 usaCounter.push((invoice["valuepermonth"] / 30) * (31 - (startContract.getDate())))
@@ -505,7 +524,13 @@ export const revenueTotals = (months, rawData, churnTer, forexData) => {
         }
 
         if(churnTer === "UK" || churnTer === "Global") {
-          if (startContract <= thisMonthEnd && endContract >= thisMonthBegin && (invoice["territory"] === "UK")) {
+          if (startContract <= thisMonthEnd && endContract >= thisMonthBegin && (invoice["territory"] === "UK") && (
+            invoice["product"] === annual ||
+            invoice["product"] === project ||
+            invoice["product"] === statics ||
+            invoice["product"] === budget ||
+            invoice["product"] === "Support"
+          )) {
             if (invoice["spreadmonths"] > invoice["months"]) {
               if (actualStartMonth === thisMonthEnd.getMonth() && actualStartYear === thisMonthEnd.getFullYear()) {
                 ukCounter.push((invoice["valuepermonth"] / 30) * (31 - (startContract.getDate())))
@@ -521,7 +546,13 @@ export const revenueTotals = (months, rawData, churnTer, forexData) => {
         }
 
         if(churnTer === "NZ" || churnTer === "Global") {
-          if (startContract <= thisMonthEnd && endContract >= thisMonthBegin && (invoice["territory"] === "NZ")) {
+          if (startContract <= thisMonthEnd && endContract >= thisMonthBegin && (invoice["territory"] === "NZ") && (
+            invoice["product"] === annual ||
+            invoice["product"] === project ||
+            invoice["product"] === statics ||
+            invoice["product"] === budget ||
+            invoice["product"] === "Support"
+          )) {
             if (invoice["spreadmonths"] > invoice["months"]) {
               if (actualStartMonth === thisMonthEnd.getMonth() && actualStartYear === thisMonthEnd.getFullYear()) {
                 nzCounter.push((invoice["valuepermonth"] / 30) * (31 - (startContract.getDate())))
@@ -585,6 +616,8 @@ export const revenueTotals = (months, rawData, churnTer, forexData) => {
         (nzTotal[i] * nzRates[i])
       ))
     }
+
+
     return totalDataRR
   }
 

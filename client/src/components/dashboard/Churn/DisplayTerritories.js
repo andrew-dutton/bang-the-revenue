@@ -19,8 +19,8 @@ const displayChart = props => {
 				</Grid.Column>
 				<Grid.Column width={4}>
 					<div style={{textAlign: "right"}}>
-							<Button color="black" basic={props.churnDollars} onClick={props.handleChurnStyleChartSelection} style={{ fontFamily: 'Titillium Web' }}>Client Number</Button>
-							<Button color="black" basic={!props.churnDollars} onClick={props.handleChurnStyleChartSelection} style={{ fontFamily: 'Titillium Web' }}>MRR Value</Button>
+							<Button color="blue" basic={props.churnDollars} onClick={props.handleChurnStyleChartSelection} style={{ fontFamily: 'Titillium Web' }}>Client Number</Button>
+							<Button color="blue" basic={!props.churnDollars} onClick={props.handleChurnStyleChartSelection} style={{ fontFamily: 'Titillium Web' }}>MRR Value</Button>
 					</div>
 				</Grid.Column> 
 			</Grid>

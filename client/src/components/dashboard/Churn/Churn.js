@@ -41,15 +41,7 @@ class Churn extends Component {
 	}
 
 	componentDidMount() {
-		this.checkIfChurnDollars()
-	}
-
-	checkIfChurnDollars = () => {
-		if(!this.state.churnDollars) {
-			this.setupChurnData()
-		} else {
-			this.setupChurnDataDollars()
-		}
+		this.setupChurnData()
 	}
 
 	setupChurnData(props) {
@@ -70,7 +62,7 @@ class Churn extends Component {
 		let currentMonth = this.state.currentMonth
 		let currentPrevMonth = this.state.currentPrevMonth
 		let selectedMonth = this.state.selectedMonth
-		let totalDataRR = CH.revenueTotals(months, rawData, churnTer, forexData)
+		let totalDataRR = CH.revenueTotals(months, rawData, churnTer, forexData, annual, project, statics, budget)
 
 		if(!this.state.wasSelectedMonthChanged) {
 			[currentMonth, currentPrevMonth, selectedMonth] = CH.setStartingMonth(months)
@@ -96,6 +88,8 @@ class Churn extends Component {
 		let addedTotalInAud = CH.getAddedTotalInAud(monthsText, selectedMonth, forexData, newValues)
 		let showTable = CH.checkTableToggle(annualOn, projectOn, staticOn, budgetOn)
 
+		let MRRTotal = CH.numberWithCommas(totalDataRR[selectedMonth])
+
 		let churnArray = []
 		if(!this.state.churnDollars) {
 			churnArray = CH.calculateChurn(churnDataArray, churnTer)
@@ -104,10 +98,9 @@ class Churn extends Component {
 		}
 	
 		this.setState({
-			currentMonth, selectedMonth, lostValues, newValues, showTable, lost, newClients, monthsText,
+			currentMonth, selectedMonth, lostValues, newValues, showTable, lost, newClients, monthsText, MRRTotal,
 			churnDataArray, currentPrevMonth, churnArray, churnTotalInAud, detail, addedTotalInAud, months, totalDataRR
 		})
-
 	}
 
   handleTerSelection = (event) => {
@@ -149,16 +142,16 @@ class Churn extends Component {
 
     let year = this.state.months[month].getFullYear()
 
-    let prevMonth = this.state.selectedMonth - 1
+		let prevMonth = month - 1
 
     let monthDisp
     let prevMonthDisp
-    let prevYear
-
+		let prevYear
+		
     if (this.state.selectedMonth > -1) {
       monthDisp = monthsOfYear[this.state.months[month + 1].getMonth()]
-      prevMonthDisp = monthsOfYear[this.state.months[prevMonth + 1].getMonth()]
-      prevYear = this.state.months[this.state.selectedMonth].getFullYear()
+      prevMonthDisp = monthsOfYear[this.state.months[month].getMonth()]
+      prevYear = this.state.months[month].getFullYear()
     }
 
     if (monthDisp === "January") {
@@ -166,7 +159,7 @@ class Churn extends Component {
     }
 
     let theDate = monthDisp + " " + year
-    let thePrevDate = prevMonthDisp + " " + prevYear
+		let thePrevDate = prevMonthDisp + " " + prevYear
 
     this.setState((prevState) => ({ currentMonth: theDate, currentPrevMonth: thePrevDate, selectedMonth: month, wasSelectedMonthChanged: true }), this.setupChurnData)
   }
@@ -200,9 +193,9 @@ class Churn extends Component {
 
   handleClickStatic = () => {
     if (this.state.staticOn) {
-      this.setState((prevState) => ({ static: "" }))
+      this.setState((prevState) => ({ statics: "" }))
     } else {
-      this.setState((prevState) => ({ static: "Static" }))
+      this.setState((prevState) => ({ statics: "Static" }))
     }
     if (this.state.churnTer === "Global") {
       this.setState((prevState) => ({ staticActive: !prevState.staticActive, staticOn: !prevState.staticOn, loadButtonActive: true, showTable: true }), this.setupChurnData)
@@ -236,7 +229,6 @@ class Churn extends Component {
 
 
 	render() {
-
 		return (
 			<div style={{ paddingTop: 24, fontFamily: 'Titillium Web' }}>
 				<DashboardHeading 
@@ -291,6 +283,7 @@ class Churn extends Component {
 					totalDataRR={this.state.totalDataRR}
 					currentMonth={this.state.currentMonth}
 					currentPrevMonth={this.state.currentPrevMonth}
+					MRRTotal={this.state.MRRTotal}
 				/>
 				<ChurnTable 
 					currentMonth={this.state.currentMonth}

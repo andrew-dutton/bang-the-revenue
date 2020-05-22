@@ -11,34 +11,58 @@ const displayTable = props => {
             </Dimmer>
             <Grid>
               <Grid.Column width={4}>
-                <Segment color="blue">
+              {!props.churnDollars ? 
+                <Segment inverted color="blue">
                   <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Total Clients Lost in<br />{props.currentMonth}</h3>
                   <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{props.lost[props.selectedMonth].length}</h2>
                 </Segment>
+
+                :
+
+                <Segment color="blue">
+                  <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Total Clients Lost in<br />{props.currentMonth}</h3>
+                  <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{props.lost[props.selectedMonth].length}</h2>
+                </Segment>}
               </Grid.Column>
               <Grid.Column width={4}>
-                <Segment color="blue">
+              {!props.churnDollars ? 
+                <Segment inverted color="blue">
                   <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Total Clients Added in<br />{props.currentMonth}</h3>
                   <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{props.newClients[props.selectedMonth].length}</h2>
                 </Segment>
+
+                :
+
+                <Segment color="blue">
+                  <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Total Clients Added in<br />{props.currentMonth}</h3>
+                  <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{props.newClients[props.selectedMonth].length}</h2>
+                </Segment>}
               </Grid.Column>
               <Grid.Column width={4}>
-                <Segment color="blue">
+              {!props.churnDollars ? 
+                <Segment inverted color="blue">
                   <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Total Clients At End of<br />{props.currentPrevMonth}</h3>
                   <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{props.churnDataArray[props.selectedMonth][2]}</h2>
                 </Segment>
+
+                :
+
+              <Segment color="blue">
+                <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Total Clients At End of<br />{props.currentPrevMonth}</h3>
+                <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{props.churnDataArray[props.selectedMonth][2]}</h2>
+              </Segment>}
               </Grid.Column>
               <Grid.Column width={4}>
                 <div>
                 {!props.churnDollars ? 
-                  <Segment color="blue">
+                  <Segment inverted color="blue">
                     <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Churn Client Calculation<br />{props.currentMonth} </h3>
                     <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{props.churnArray[props.selectedMonth + 1][1].toFixed(2)}%</h2>
                   </Segment>
 
                   :
 
-                  <Segment color="black">
+                  <Segment inverted color="blue">
                     <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Churn Value Calculation<br />{props.currentMonth} </h3>
                     <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{props.churnArray[props.selectedMonth + 1][1].toFixed(2)}%</h2>
                   </Segment>}
