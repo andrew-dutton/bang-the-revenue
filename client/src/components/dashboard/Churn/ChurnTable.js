@@ -1,6 +1,6 @@
 import React from 'react'
 import { HotTable } from '@handsontable/react';
-import { Dimmer, Loader, Icon, Flag, Grid, Checkbox, Segment, Button } from 'semantic-ui-react'
+import { Segment } from 'semantic-ui-react'
 
 const ChurnTable = props => {
 	if(props.lostValues) {

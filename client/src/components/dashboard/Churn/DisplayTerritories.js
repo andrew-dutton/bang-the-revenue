@@ -7,8 +7,8 @@ const displayChart = props => {
 		<Segment color="blue" style={{ width: 1079 }} >
 			<Grid></Grid>
 				<Grid columns={2}>
-				<Grid.Column width={12}>
-					<div style={{ fontFamily: 'Titillium Web', textAlign: 'left' }}>
+				<Grid.Column width={7}>
+					<div style={{ fontFamily: 'Titillium Web', textAlign: 'center' }}>
 						<Button basic={props.churnTer !== "Global"} primary onClick={props.handleTerSelection} style={{ fontFamily: 'Titillium Web' }}>Global</Button>
 						<Button basic={props.churnTer !== "AUS"} color="green" onClick={props.handleTerSelection} style={{ fontFamily: 'Titillium Web' }}>Australia</Button>
 						<Button basic={props.churnTer !== "CAN"} color="yellow" onClick={props.handleTerSelection} style={{ fontFamily: 'Titillium Web' }}>Canada</Button>
@@ -17,8 +17,14 @@ const displayChart = props => {
 						<Button basic={props.churnTer !== "NZ"} color="purple" onClick={props.handleTerSelection} style={{ fontFamily: 'Titillium Web' }}>New Zealand</Button>
 					</div> 
 				</Grid.Column>
+				<Grid.Column width={5}>
+					<div style={{textAlign: "center"}}>
+						<Button color="black" basic={props.scatter} onClick={props.handleChartTypeSelection} style={{ fontFamily: 'Titillium Web' }}>Rolling Annual</Button>
+						<Button color="black" basic={!props.scatter} onClick={props.handleChartTypeSelection} style={{ fontFamily: 'Titillium Web' }}>Monthly Scatter</Button>
+					</div>
+				</Grid.Column> 
 				<Grid.Column width={4}>
-					<div style={{textAlign: "right"}}>
+					<div style={{textAlign: "center"}}>
 							<Button color="blue" basic={props.churnDollars} onClick={props.handleChurnStyleChartSelection} style={{ fontFamily: 'Titillium Web' }}>Client Number</Button>
 							<Button color="blue" basic={!props.churnDollars} onClick={props.handleChurnStyleChartSelection} style={{ fontFamily: 'Titillium Web' }}>MRR Value</Button>
 					</div>

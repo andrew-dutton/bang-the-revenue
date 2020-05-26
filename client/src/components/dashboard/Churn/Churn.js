@@ -14,7 +14,12 @@ class Churn extends Component {
 		super(props)
 
 		this.state = {
+			rollingAnnualChurnArray: [],
+			rgbColor: "rgb(33,133,208,0.8)",
+			terText: "Global",
 			currentColor: "blue",
+			scatter: false,
+			rollingAnnual: false,
 			wasSelectedMonthChanged: false,
 			churnTer: "Global",
 			churnDollars: false,
@@ -23,7 +28,6 @@ class Churn extends Component {
       statics: "Static",
 			budget: "Budget Allocator",
 			support: "Support",
-			churnTer: "Global",
 			annualOn: true,
       projectOn: true,
       staticOn: true,
@@ -45,6 +49,7 @@ class Churn extends Component {
 	}
 
 	setupChurnData(props) {
+		let churnDollars = this.state.churnDollars
 		let rawData = this.props.rawData
 		let annual = this.state.annual
 		let project = this.state.project
@@ -91,15 +96,20 @@ class Churn extends Component {
 		let MRRTotal = CH.numberWithCommas(totalDataRR[selectedMonth])
 
 		let churnArray = []
-		if(!this.state.churnDollars) {
+		
+		if(!churnDollars) {
 			churnArray = CH.calculateChurn(churnDataArray, churnTer)
 		} else {
 			churnArray = CH.createGlobalChurndDollarArray(newClientsValues, lostClientsValues, months, totalDataRR)
 		}
+
+		let rollingAnnualChurnArray
+
+		rollingAnnualChurnArray = CH.getRollingAnnualChurnArray(selectedMonth, lost, newClients, totalDataRR, clients, lostClientsValues, newClientsValues, churnDollars)
 	
 		this.setState({
-			currentMonth, selectedMonth, lostValues, newValues, showTable, lost, newClients, monthsText, MRRTotal,
-			churnDataArray, currentPrevMonth, churnArray, churnTotalInAud, detail, addedTotalInAud, months, totalDataRR
+			currentMonth, selectedMonth, lostValues, newValues, showTable, lost, newClients, monthsText, MRRTotal, rollingAnnualChurnArray,
+			churnDataArray, currentPrevMonth, churnArray, churnTotalInAud, detail, addedTotalInAud, months, totalDataRR, newClientsValues, lostClientsValues
 		})
 	}
 
@@ -109,28 +119,23 @@ class Churn extends Component {
 	}
 
 	updateChurnTer = () => {
-    if(this.state.churnDollars) {
-
-
-    }
-
     if (this.state.churnTer === "Australia") {
-      this.setState((prevState) => ({ churnTer: "AUS", terText: "Australia", chartColor: ["#8CD75C"] }), this.setupChurnData)
+      this.setState((prevState) => ({ churnTer: "AUS", rgbColor: "rgba(75,192,1,0.8)", terText: "Australia", chartColor: ["#8CD75C"] }), this.setupChurnData)
     }
     if (this.state.churnTer === "Canada") {
-      this.setState((prevState) => ({ churnTer: "CAN", terText: "Canada", chartColor: ["#fcba03"] }), this.setupChurnData)
+      this.setState((prevState) => ({ churnTer: "CAN", rgbColor: "rgba(222,213,42,0.8)", terText: "Canada", chartColor: ["#fcba03"] }), this.setupChurnData)
     }
     if (this.state.churnTer === "United States") {
-      this.setState((prevState) => ({ churnTer: "USA", terText: "United States", chartColor: ["#F28E7C"] }), this.setupChurnData)
+      this.setState((prevState) => ({ churnTer: "USA", rgbColor: "rgba(234,77,49,0.8)", terText: "United States", chartColor: ["#F28E7C"] }), this.setupChurnData)
     }
     if (this.state.churnTer === "United Kingdom") {
-      this.setState((prevState) => ({ churnTer: "UK", terText: "U.K.", chartColor: ["#03fcd7"] }), this.setupChurnData)
+      this.setState((prevState) => ({ churnTer: "UK", rgbColor: "rgba(49,234,212,0.8)", terText: "U.K.", chartColor: ["#03fcd7"] }), this.setupChurnData)
     }
     if (this.state.churnTer === "New Zealand") {
-      this.setState((prevState) => ({ churnTer: "NZ", terText: "New Zealand", chartColor: ["#F27CEA"] }), this.setupChurnData)
+      this.setState((prevState) => ({ churnTer: "NZ", rgbColor: "rgba(234,49,223,0.8)", terText: "New Zealand", chartColor: ["#F27CEA"] }), this.setupChurnData)
     }
     if (this.state.churnTer === "Global") {
-      this.setState((prevState) => ({ churnTer: "Global", terText: "Global", chartColor: ["#2B85D0"] }), this.setupChurnData)
+      this.setState((prevState) => ({ churnTer: "Global", rgbColor: "rgb(33,133,208,0.8)",  terText: "Global", chartColor: ["#2B85D0"] }), this.setupChurnData)
     }
 	}
 	
@@ -142,7 +147,6 @@ class Churn extends Component {
 
     let year = this.state.months[month].getFullYear()
 
-		let prevMonth = month - 1
 
     let monthDisp
     let prevMonthDisp
@@ -225,7 +229,17 @@ class Churn extends Component {
 		if(!this.state.churnDollars) {
       this.setState(prevState => ({churnDollars: true }), this.setupChurnData)
     }
-  }
+	}
+	
+	handleChartTypeSelection = () => {
+		if(this.state.scatter) {
+      this.setState(prevState => ({scatter: false, rollingAnnual: true }), this.setupChurnData)
+		}
+
+		if(!this.state.scatter) {
+      this.setState(prevState => ({scatter: true, rollingAnnual: false }), this.setupChurnData)
+    }
+	}
 
 
 	render() {
@@ -240,6 +254,9 @@ class Churn extends Component {
 					handleTerSelection={this.handleTerSelection}
 					handleChurnStyleChartSelection={this.handleChurnStyleChartSelection}
 					churnDollars={this.state.churnDollars}
+					scatter={this.state.scatter}
+					rollingAnnual={this.state.rollingAnnual}
+					handleChartTypeSelection={this.handleChartTypeSelection}
 				/>
 				<DisplayChart 
 					annualActive={this.state.annualActive}
@@ -254,6 +271,14 @@ class Churn extends Component {
 					handleClickProject={this.handleClickProject}
 					handleClickStatic={this.handleClickStatic}
 					churnDollars={this.state.churnDollars}
+					scatter={this.state.scatter}
+					rollingAnnualChurnArray={this.state.rollingAnnualChurnArray}
+					newClientsValues={this.state.newClientsValues}
+					lostClientsValues={this.state.lostClientsValues}
+					totalDataRR={this.state.totalDataRR}
+					churnTer={this.state.churnTer}
+					rgbColor={this.state.rgbColor}
+					terText={this.state.terText}
 				/>
 				<DisplayMonth 
 					currentMonth={this.state.currentMonth} 
@@ -270,6 +295,7 @@ class Churn extends Component {
 					churnDataArray={this.state.churnDataArray}
 					churnDollars={this.state.churnDollars}
 					churnArray={this.state.churnArray}
+					rollingAnnualChurnArray={this.state.rollingAnnualChurnArray}
 				/>
 				<DisplayMRRTable 
 					monthsText={this.state.monthsText}

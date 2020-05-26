@@ -576,12 +576,6 @@ export const revenueTotals = (months, rawData, churnTer, forexData, annual, proj
     nzTotal.push(Math.round(nzCounter.reduce((a, b) => a + b, 0)))
   })
 
-  let ausData = [...ausTotal]
-  let canData = [...canTotal]
-  let usaData = [usaTotal]
-  let ukData = [...ukTotal]
-  let nzData = [...nzTotal]
-
 
   let canRates = []
   let usaRates = []
@@ -788,17 +782,17 @@ export const getNewClientsValues = (newClients, churnTer, detail, forexData) => 
           }
         }
       })
-
       holderTwo.push(holder)
     }
 
-    if(holderTwo.length > 0) {
-      newValuesArray.push(Math.round(holderTwo.pop().reduce((a, b) => a + b, 0)))
+   
+
+    if(holderTwo[0] && holderTwo[0].length > 0) {
+      newValuesArray.push(Math.round(holderTwo[0].reduce((a, b) => a + b, 0)))
     }	else {
       newValuesArray.push(0)
     }
   }	
-
 
   return newValuesArray
 }
@@ -810,10 +804,68 @@ export const createGlobalChurndDollarArray = (newValuesArray, lostValuesArray, m
     globalChurnDollarArray.push( [ months[i+1], ( lostValuesArray[i] / (newValuesArray[i] + totalDataRR[i]) ) * 100  ] )
   }
 
-  // console.log(this.state.lostValuesArray)
-  // console.log(this.state.newValuesArray)
-
-  // console.log(this.state.totalDataRR)
-
   return globalChurnDollarArray
+}
+
+export const getRollingAnnualChurnArray = (selectedMonth, lost, newClients, totalDataRR, clients, lostClientsValues, newClientsValues, churnDollars) => {
+  let rollingLostArray = []
+  let rollingNewArray = []
+  let rollingLostDollarsArray = []
+  let rollingNewDollarsArray = []
+  let lostValuesArray = lostClientsValues
+  let newValuesArray = newClientsValues
+  let clientsArray = []
+
+  let rollingAnnualChurnArray = []
+  let rollingAnnualDollarsChurnArray = []
+
+ 
+
+  for(let i = 0; i <= lostClientsValues.length; i++) {
+    rollingLostArray.push(lost[i].length)
+    rollingNewArray.push(newClients[i].length)
+    clientsArray.push(clients[i].length)
+    rollingLostDollarsArray.push(lostValuesArray[i])
+    rollingNewDollarsArray.push(newValuesArray[i])
+    }
+
+    
+  // I now have 6 arrays of all the churn details for all options ready to go.
+  // need to add rolling groups of 12 summed up to a new array for two rolling churn arrays
+  // one for churn by client number and one for churn by dollar values
+
+  let lostForForumula = []
+  let newForFormula = []
+ 
+  let lostValuesForFormula = []
+  let newValuesForFormula = []
+  let mrrValueForFormula = totalDataRR.slice(11)
+
+  for(let i = lostClientsValues.length; i > 11; i--) {
+    lostForForumula.push(rollingLostArray.slice(i-12, i).reduce((a,b) => a + b, 0))
+    newForFormula.push(rollingNewArray.slice(i-12, i).reduce((a,b) => a + b, 0))
+    lostValuesForFormula.push(rollingLostDollarsArray.slice(i-12, i).reduce((a,b) => a + b,0))
+    newValuesForFormula.push(rollingNewDollarsArray.slice(i-12,i).reduce((a,b) => a + b, 0))
+  }
+
+  lostValuesForFormula.reverse()
+  newValuesForFormula.reverse()
+
+  lostForForumula.reverse()
+  newForFormula.reverse()
+
+  for (let k=0; k < lostForForumula.length; k++) {
+    rollingAnnualChurnArray.push(parseFloat(((lostForForumula[k] / (newForFormula[k] + clientsArray[k]))*100).toFixed(2)))
+    rollingAnnualDollarsChurnArray.push(parseFloat(((lostValuesForFormula[k] / (newValuesForFormula[k] + mrrValueForFormula[k]))*100).toFixed(2)))
+  }
+
+
+  let result
+
+  if(!churnDollars) {
+    result = rollingAnnualChurnArray
+  } else {
+    result = rollingAnnualDollarsChurnArray
+  }
+  return result
 }
