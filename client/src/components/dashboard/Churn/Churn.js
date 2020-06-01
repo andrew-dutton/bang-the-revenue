@@ -320,7 +320,7 @@ class Churn extends Component {
 				<AddedTable 
 					currentMonth={this.state.currentMonth}
 					selectedMonth={this.state.selectedMonth}
-					colHeadersNew={this.state.table.colHeadersLost}
+					colHeadersNew={this.state.table.colHeadersNew}
 					newValues={this.state.newValues}
 				/>
 			</div>	
