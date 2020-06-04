@@ -829,11 +829,6 @@ export const getRollingAnnualChurnArray = (selectedMonth, lost, newClients, tota
     rollingNewDollarsArray.push(newValuesArray[i])
     }
 
-    
-  // I now have 6 arrays of all the churn details for all options ready to go.
-  // need to add rolling groups of 12 summed up to a new array for two rolling churn arrays
-  // one for churn by client number and one for churn by dollar values
-
   let lostForForumula = []
   let newForFormula = []
  
@@ -868,4 +863,16 @@ export const getRollingAnnualChurnArray = (selectedMonth, lost, newClients, tota
     result = rollingAnnualDollarsChurnArray
   }
   return result
+}
+
+export const getARPUValuesArray = (totalDataRR, churnDataArray) => {
+  let ARPUValuesArray = []
+
+  churnDataArray.forEach((dataMonth, index) => {
+    if(index>11) {
+    ARPUValuesArray.push(Math.round((totalDataRR[index] / dataMonth[2]*12)))
+    }
+  })
+
+   return ARPUValuesArray
 }

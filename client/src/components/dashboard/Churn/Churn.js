@@ -107,8 +107,11 @@ class Churn extends Component {
 
 		rollingAnnualChurnArray = CH.getRollingAnnualChurnArray(selectedMonth, lost, newClients, totalDataRR, clients, lostClientsValues, newClientsValues, churnDollars)
 	
+		let ARPUValuesArray = CH.getARPUValuesArray(totalDataRR, churnDataArray)
+		console.log(rollingAnnualChurnArray)
+
 		this.setState({
-			currentMonth, selectedMonth, lostValues, newValues, showTable, lost, newClients, monthsText, MRRTotal, rollingAnnualChurnArray,
+			currentMonth, selectedMonth, lostValues, newValues, showTable, lost, newClients, monthsText, MRRTotal, rollingAnnualChurnArray, ARPUValuesArray,
 			churnDataArray, currentPrevMonth, churnArray, churnTotalInAud, detail, addedTotalInAud, months, totalDataRR, newClientsValues, lostClientsValues
 		})
 	}
@@ -272,7 +275,7 @@ class Churn extends Component {
 					handleClickStatic={this.handleClickStatic}
 					churnDollars={this.state.churnDollars}
 					scatter={this.state.scatter}
-					rollingAnnualChurnArray={this.state.rollingAnnualChurnArray}
+					rollingAnnualChurnArray={this.state.ARPUValuesArray}
 					newClientsValues={this.state.newClientsValues}
 					lostClientsValues={this.state.lostClientsValues}
 					totalDataRR={this.state.totalDataRR}
