@@ -275,7 +275,7 @@ class Churn extends Component {
 					handleClickStatic={this.handleClickStatic}
 					churnDollars={this.state.churnDollars}
 					scatter={this.state.scatter}
-					rollingAnnualChurnArray={this.state.ARPUValuesArray}
+					rollingAnnualChurnArray={this.state.rollingAnnualChurnArray}
 					newClientsValues={this.state.newClientsValues}
 					lostClientsValues={this.state.lostClientsValues}
 					totalDataRR={this.state.totalDataRR}
