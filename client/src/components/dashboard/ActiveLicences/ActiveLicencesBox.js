@@ -106,7 +106,7 @@ class ActiveLicencesBox extends Component {
   }
 
   getTotalForCurrentMonth = () => {
-    console.log(this.state)
+
   }
 
   boxSelected = () => {
