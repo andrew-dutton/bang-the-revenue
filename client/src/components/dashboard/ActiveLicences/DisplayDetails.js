@@ -5,16 +5,16 @@ import { HotTable } from '@handsontable/react';
 const displayDetails = (props) => {
 
   const displayTotal = () => {
-    if (props.loadButtonActive === false) {
-      return (
-        props.ausData[props.selectedMonth] +
+    if (props.loadButtonActive === false && props.displaySelection === "licences") {
+      return ("Total: " +
+        parseInt(props.ausData[props.selectedMonth] +
         props.canData[props.selectedMonth] +
         props.usaData[props.selectedMonth] +
         props.ukData[props.selectedMonth] +
-        props.nzData[props.selectedMonth]
+        props.nzData[props.selectedMonth])
       )
     } else {
-      return ("...")
+
     }
   }
 
@@ -23,7 +23,7 @@ const displayDetails = (props) => {
       <Grid columns='equal' style={{ width: 1109, paddingBottom: 50, color: 'black' }}>
         <Grid.Column>
           <Segment color={props.currentColor}>
-            <h3><strong>Total: {displayTotal()}</strong></h3>
+            <h3><strong>{displayTotal()}</strong></h3>
             <div id="hot-app">
               <HotTable
                 licenseKey="non-commercial-and-evaluation"
@@ -54,7 +54,7 @@ const displayDetails = (props) => {
                 rowHeaders={true}
                 dateFormat={'DD/MM/YYYY'}
                 colHeaders={props.table.colHeaders}
-                data={props.ausDetail[props.selectedMonth]} />
+                data={props.details[props.selectedMonth]} />
             </div>
           </Segment>
         </Grid.Column>

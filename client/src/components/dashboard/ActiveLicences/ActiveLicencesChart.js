@@ -116,7 +116,7 @@ const activeLicencesChart = props => {
   }
 
   return (
-    <Segment color={props.selectedColor} style={{ width: 1000 }}>
+    <Segment color={props.currentColor} style={{ width: 1000 }}>
       <Line
         data={data}
         options={{
@@ -135,10 +135,28 @@ const activeLicencesChart = props => {
                     var corporation = data.datasets[tooltipItem.datasetIndex].label;
                     var valor = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
                     window.total += parseInt(valor);
-                    return corporation + "  " + valor           
+                    return corporation + "  " + valor.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")           
                 }
               }
-          }
+          },
+          scales: {
+            xAxes: [{ 
+              stacked: false 
+            }],
+            yAxes: [{ 
+              stacked: false ,
+              ticks: {
+                beginAtZero: true,
+                callback: function(value, index, values) {
+                  if(parseInt(value) >= 1000){
+                     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                  } else {
+                     return value;
+                  }
+                }     
+              }
+            }]
+        }
         }}
       />
     </Segment>

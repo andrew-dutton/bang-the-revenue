@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Grid } from 'semantic-ui-react'
+import { Grid, Segment, GridColumn, Checkbox, Radio } from 'semantic-ui-react'
 import DisplayMonth from '../DisplayMonth'
 import DisplayDetails from './DisplayDetails'
 import LicenceToggles from '../LicenceToggles'
@@ -12,18 +12,14 @@ class ActiveLicences extends Component {
     super(props)
 
     this.state = {
+      value: "licences",
+      toggleActive: false,
       currentColor: 'green',
       ausData: [],
       canData: [],
       usaData: [],
       ukData: [],
       nzData: [],
-      ausDetail: [],
-      canDetail: [],
-      usaDetail: [],
-      ukDetail: [],
-      nzDetai: [],
-      months: [],
       annualOn: true,
       projectOn: true,
       staticOn: true,
@@ -45,7 +41,7 @@ class ActiveLicences extends Component {
       budgetActive: true,
       currentTotal: "Reload Chart",
       table: {
-        colHeaders: ["Client", "Location", "Invoice", "Date", "Licence", "Start", "End", "Value"]
+        colHeaders: ["Client", "Location", "Invoice", "Date", "Licence", "Start", "End", "MRR"]
       }
     }
 
@@ -80,7 +76,7 @@ class ActiveLicences extends Component {
     let theDate = month + " " + year
     let thePrevDate = prevMonth + " " + prevYear
 
-    this.setState((prevState) => ({ currentMonth: theDate, currentPrevMonth: thePrevDate, selectedMonth: startingMonthNumber }), this.getData())
+    this.setState((prevState) => ({ currentMonth: theDate, currentPrevMonth: thePrevDate, selectedMonth: startingMonthNumber }), this.checkDisplaySelection())
   }
 
   setChangedMonth = () => {
@@ -202,7 +198,7 @@ class ActiveLicences extends Component {
     const ukTotal = []
     const nzTotal = []
 
-    let ausDetLogged = []
+    let detailsLogged = []
 
     this.state.months.forEach((month) => {
       const allDet = []
@@ -243,6 +239,7 @@ class ActiveLicences extends Component {
             invoice["product"],
             invoice["start"],
             invoice["end"],
+            invoice["valuepermonth"],
             invoice["total"]
           ])
         }
@@ -263,6 +260,7 @@ class ActiveLicences extends Component {
             invoice["product"],
             invoice["start"],
             invoice["end"],
+            invoice["valuepermonth"],
             invoice["total"]
           ])
         }
@@ -283,6 +281,7 @@ class ActiveLicences extends Component {
             invoice["product"],
             invoice["start"],
             invoice["end"],
+            invoice["valuepermonth"],
             invoice["total"]
           ])
         }
@@ -303,6 +302,7 @@ class ActiveLicences extends Component {
             invoice["product"],
             invoice["start"],
             invoice["end"],
+            invoice["valuepermonth"],
             invoice["total"]
           ])
         }
@@ -323,6 +323,7 @@ class ActiveLicences extends Component {
             invoice["product"],
             invoice["start"],
             invoice["end"],
+            invoice["valuepermonth"],
             invoice["total"]
           ])
         }
@@ -344,7 +345,7 @@ class ActiveLicences extends Component {
       ukTotal.push(uniqUkClients.length)
       nzTotal.push(uniqNzClients.length)
 
-      ausDetLogged.push(allDet)
+      detailsLogged.push(allDet)
 
     })
 
@@ -360,7 +361,7 @@ class ActiveLicences extends Component {
       nzData: [...nzTotal],
       currentNz: nzTotal[nzTotal.length - 2],
       loadButtonActive: false,
-      ausDetail: ausDetLogged
+      details: detailsLogged
     }), this.setStartingMonth)
 
 
@@ -371,20 +372,153 @@ class ActiveLicences extends Component {
     this.setState(prevState => ({ selectedMonth: month }), this.setChangedMonth)
   }
 
-  getData = () => {
-    if (this.props.toRender === "QR") {
-      this.props.getDataFromAL(this.state)
+  handleDisplayChange = (e, { value }) => this.setState({ value }, this.totalClients)
+
+  checkDisplaySelection = () => {
+    if(this.state.value !== "licences") {
+      this.calculateAverageValues()
+    } 
+  }
+
+  calculateAverageValues = () => {
+    if(this.state.value === "averages")
+ 
+    console.log(this.state)
+
+    let ausData = []
+    let canData = []
+    let usaData = []
+    let ukData = []
+    let nzData = []
+    let ausHolder = []
+    let canHolder = []
+    let usaHolder = []
+    let ukHolder = []
+    let nzHolder = []
+
+    console.log(this.state)
+
+    for(let i = 0; i < this.state.ausData.length; i++) {
+
+      let data = this.state.details[i]
+      ausHolder = []
+      canHolder = []
+      usaHolder = []
+      ukHolder = []
+      nzHolder = []
+
+      data.forEach(line => {
+        if(line[1] === "AUS") {
+          ausHolder.push(line[7])
+        }
+
+        if(line[1] === "CAN") {
+          canHolder.push(line[7])
+        }
+
+        if(line[1] === "USA") {
+          usaHolder.push(line[7])
+        }
+
+        if(line[1] === "UK") {
+          ukHolder.push(line[7])
+        }
+
+        if(line[1] === "NZ") {
+          nzHolder.push(line[7])
+        }
+      }
+    )
+
+    if(this.state.value === "averages") {
+      ausData.push(Math.floor((ausHolder.reduce((a,b)=>a+b,0)/ausHolder.length)*12))
+      canData.push(Math.floor((canHolder.reduce((a,b)=>a+b,0)/canHolder.length)*12/.9))
+      usaData.push(Math.floor((usaHolder.reduce((a,b)=>a+b,0)/usaHolder.length)*12/.65))
+      ukData.push(Math.floor((ukHolder.reduce((a,b)=>a+b,0)/ukHolder.length)*12/.5))
+      nzData.push(Math.floor((nzHolder.reduce((a,b)=>a+b,0)/nzHolder.length)*12/1.05))
+    } else {
+      ausData.push(Math.floor((ausHolder.reduce((a,b)=>a+b,0)/ausHolder.length)*12))
+      canData.push(Math.floor((canHolder.reduce((a,b)=>a+b,0)/canHolder.length)*12))
+      usaData.push(Math.floor((usaHolder.reduce((a,b)=>a+b,0)/usaHolder.length)*12))
+      ukData.push(Math.floor((ukHolder.reduce((a,b)=>a+b,0)/ukHolder.length)*12))
+      nzData.push(Math.floor((nzHolder.reduce((a,b)=>a+b,0)/nzHolder.length)*12))
     }
   }
 
+  this.setState(prevState => ({
+    ausData, canData, usaData, nzData, ukData
+  }))
+
+
+}
 
   render(props) {
+
+    const { toggleActive } = this.state
+
     if (this.props.toRender === "QR") {
       return null
     } else {
       return (
         <div style={{ paddingTop: 24, paddingBotton: 24 }}>
           <DashboardHeading title={"Active Licences"} currentColor={this.state.currentColor} />
+
+          <div style={{ paddingTop: 14, paddingBottom: 12, fontFamily: 'Titillium Web' }}>
+            <Segment style={{ width: 1079, fontFamily: 'Titillium Web' }}> 
+              <Grid columns={2}>
+                <GridColumn>
+                  <Segment color="green">
+                    <Grid columns={3}>
+                      <GridColumn>
+                        <Radio
+                          label="Number of Licences"
+                          name="licences"
+                          value="licences"
+                          checked={this.state.value === "licences"}
+                          onChange={this.handleDisplayChange}
+                          
+                        />
+                      </GridColumn>
+                      <GridColumn>
+                        <Radio
+                          label="Average Licence Value in Local Currency"
+                          name="averagesInLocal"
+                          value="averagesInLocal"
+                          checked={this.state.value === "averagesInLocal"}
+                          onChange={this.handleDisplayChange}
+                          
+                        />
+                      </GridColumn>
+                      <GridColumn>
+                        <Radio
+                          label="Average Licence Value in AUD"
+                          name="averages"
+                          value="averages"
+                          checked={this.state.value === "averages"}
+                          onChange={this.handleDisplayChange}
+                        />
+                      </GridColumn>
+                    </Grid>
+                  </Segment>
+                </GridColumn>
+                <GridColumn>
+                {this.state.value === "averages" ? 
+                  <Segment color="green" style={{ textAlign: "center"}}>
+                    <p>Note: Have just hardcoded average exchange rates for now:</p>
+                    <p>USD: 0.65 &nbsp; &nbsp; &nbsp; CAD: 0.90   &nbsp; &nbsp; &nbsp;  GBP: 0.50  &nbsp; &nbsp; &nbsp;   NZD: 1.05</p>
+                 </Segment>
+                
+                :
+
+              <div></div>
+                
+                }
+                </GridColumn>
+              </Grid>
+            </Segment>
+          </div>
+
+
           <Grid columns='equal' style={{ width: 1300 }}>
             <Grid.Column width={1}>
               <LicenceToggles
@@ -429,13 +563,14 @@ class ActiveLicences extends Component {
             displayTotal={this.displayTotal}
             table={this.state.table}
             selectedMonth={this.state.selectedMonth}
-            ausDetail={this.state.ausDetail}
+            details={this.state.details}
             loadButtonActive={this.state.loadButtonActive}
             ausData={this.state.ausData}
             canData={this.state.canData}
             usaData={this.state.usaData}
             ukData={this.state.ukData}
             nzData={this.state.nzData}
+            displaySelection={this.state.value}
           />
         </div>
       )
