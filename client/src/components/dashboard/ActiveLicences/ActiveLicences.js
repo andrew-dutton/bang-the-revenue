@@ -383,7 +383,6 @@ class ActiveLicences extends Component {
   calculateAverageValues = () => {
     if(this.state.value === "averages")
  
-    console.log(this.state)
 
     let ausData = []
     let canData = []
@@ -396,7 +395,7 @@ class ActiveLicences extends Component {
     let ukHolder = []
     let nzHolder = []
 
-    console.log(this.state)
+
 
     for(let i = 0; i < this.state.ausData.length; i++) {
 
