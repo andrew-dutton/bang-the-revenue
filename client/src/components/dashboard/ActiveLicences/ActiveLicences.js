@@ -515,7 +515,7 @@ class ActiveLicences extends Component {
                 <GridColumn>
                 {this.state.value === "averages" ? 
                   <Segment color="green" style={{ textAlign: "center"}}>
-                    <p>Note: Used five year average exchange rates to avoid distorting comparisons:</p>
+                    <p>Note: Used five year average exchange rates to avoid distorting comparisons</p>
                     <p>USD: 0.72 &nbsp; &nbsp; &nbsp; CAD: 0.95   &nbsp; &nbsp; &nbsp;  GBP: 0.55  &nbsp; &nbsp; &nbsp;   NZD: 1.07</p>
                  </Segment>
                 
