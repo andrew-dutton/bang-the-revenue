@@ -24,10 +24,12 @@ class ActiveLicences extends Component {
       projectOn: true,
       staticOn: true,
       budgetOn: true,
+      supportOn: true,
       annual: "Annual",
       project: "Project",
       static: "Static",
       budget: "Budget Allocator",
+      support: "Support",
       currentMonth: "",
       currentAus: 0,
       currentCan: 0,
@@ -39,6 +41,7 @@ class ActiveLicences extends Component {
       projectActive: true,
       staticActive: true,
       budgetActive: true,
+      supportActive: true,
       currentTotal: "Reload Chart",
       table: {
         colHeaders: ["Client", "Location", "Invoice", "Date", "Licence", "Start", "End", "MRR"]
@@ -137,6 +140,16 @@ class ActiveLicences extends Component {
     }
     this.setState((prevState) => ({ budgetActive: !prevState.budgetActive, budgetOn: !prevState.budgetOn, loadButtonActive: true, currentTotal: "Reload" }), this.totalClients)
   }
+  
+  handleClickSupport = () => {
+    if (this.state.supportOn) {
+      this.setState((prevState) => ({ support: "" }))
+    } else {
+      this.setState((prevState) => ({ support: "Support" }))
+    }
+    this.setState((prevState) => ({ supportActive: !prevState.supportActive, supportOn: !prevState.supportOn, loadButtonActive: true, currentTotal: "Reload" }), this.totalClients)
+  }
+
 
   getNumberOfMonthsSinceJuly2015 = () => {
 
@@ -227,7 +240,8 @@ class ActiveLicences extends Component {
           invoice["product"] === this.state.annual ||
           invoice["product"] === this.state.project ||
           invoice["product"] === this.state.static ||
-          invoice["product"] === this.state.budget
+          invoice["product"] === this.state.budget ||
+          invoice["product"] === this.state.support
         )) {
           ausCounter.push(invoice["client"])
           ausType.push(invoice["product"])
@@ -248,7 +262,8 @@ class ActiveLicences extends Component {
           invoice["product"] === this.state.annual ||
           invoice["product"] === this.state.project ||
           invoice["product"] === this.state.static ||
-          invoice["product"] === this.state.budget
+          invoice["product"] === this.state.budget ||
+          invoice["product"] === this.state.support
         )) {
           canCounter.push(invoice["client"])
           canType.push(invoice["product"])
@@ -269,7 +284,8 @@ class ActiveLicences extends Component {
           invoice["product"] === this.state.annual ||
           invoice["product"] === this.state.project ||
           invoice["product"] === this.state.static ||
-          invoice["product"] === this.state.budget
+          invoice["product"] === this.state.budget ||
+          invoice["product"] === this.state.support
         )) {
           usaCounter.push(invoice["client"])
           usaType.push(invoice["product"])
@@ -290,7 +306,8 @@ class ActiveLicences extends Component {
           invoice["product"] === this.state.annual ||
           invoice["product"] === this.state.project ||
           invoice["product"] === this.state.static ||
-          invoice["product"] === this.state.budget
+          invoice["product"] === this.state.budget ||
+          invoice["product"] === this.state.support
         )) {
           ukCounter.push(invoice["client"])
           ukType.push(invoice["product"])
@@ -311,7 +328,8 @@ class ActiveLicences extends Component {
           invoice["product"] === this.state.annual ||
           invoice["product"] === this.state.project ||
           invoice["product"] === this.state.static ||
-          invoice["product"] === this.state.budget
+          invoice["product"] === this.state.budget ||
+          invoice["product"] === this.state.support
         )) {
           nzCounter.push(invoice["client"])
           nzType.push(invoice["product"])
@@ -381,8 +399,6 @@ class ActiveLicences extends Component {
   }
 
   calculateAverageValues = () => {
-    if(this.state.value === "averages")
- 
 
     let ausData = []
     let canData = []
@@ -394,8 +410,6 @@ class ActiveLicences extends Component {
     let usaHolder = []
     let ukHolder = []
     let nzHolder = []
-
-
 
     for(let i = 0; i < this.state.ausData.length; i++) {
 
@@ -431,10 +445,10 @@ class ActiveLicences extends Component {
 
     if(this.state.value === "averages") {
       ausData.push(Math.floor((ausHolder.reduce((a,b)=>a+b,0)/ausHolder.length)*12))
-      canData.push(Math.floor((canHolder.reduce((a,b)=>a+b,0)/canHolder.length)*12/.9))
-      usaData.push(Math.floor((usaHolder.reduce((a,b)=>a+b,0)/usaHolder.length)*12/.65))
-      ukData.push(Math.floor((ukHolder.reduce((a,b)=>a+b,0)/ukHolder.length)*12/.5))
-      nzData.push(Math.floor((nzHolder.reduce((a,b)=>a+b,0)/nzHolder.length)*12/1.05))
+      canData.push(Math.floor((canHolder.reduce((a,b)=>a+b,0)/canHolder.length)*12/.95))
+      usaData.push(Math.floor((usaHolder.reduce((a,b)=>a+b,0)/usaHolder.length)*12/.72))
+      ukData.push(Math.floor((ukHolder.reduce((a,b)=>a+b,0)/ukHolder.length)*12/.55))
+      nzData.push(Math.floor((nzHolder.reduce((a,b)=>a+b,0)/nzHolder.length)*12/1.07))
     } else {
       ausData.push(Math.floor((ausHolder.reduce((a,b)=>a+b,0)/ausHolder.length)*12))
       canData.push(Math.floor((canHolder.reduce((a,b)=>a+b,0)/canHolder.length)*12))
@@ -447,8 +461,6 @@ class ActiveLicences extends Component {
   this.setState(prevState => ({
     ausData, canData, usaData, nzData, ukData
   }))
-
-
 }
 
   render(props) {
@@ -503,8 +515,8 @@ class ActiveLicences extends Component {
                 <GridColumn>
                 {this.state.value === "averages" ? 
                   <Segment color="green" style={{ textAlign: "center"}}>
-                    <p>Note: Have just hardcoded average exchange rates for now:</p>
-                    <p>USD: 0.65 &nbsp; &nbsp; &nbsp; CAD: 0.90   &nbsp; &nbsp; &nbsp;  GBP: 0.50  &nbsp; &nbsp; &nbsp;   NZD: 1.05</p>
+                    <p>Note: Used five year average exchange rates to avoid distorting comparisons:</p>
+                    <p>USD: 0.72 &nbsp; &nbsp; &nbsp; CAD: 0.95   &nbsp; &nbsp; &nbsp;  GBP: 0.55  &nbsp; &nbsp; &nbsp;   NZD: 1.07</p>
                  </Segment>
                 
                 :
@@ -527,10 +539,12 @@ class ActiveLicences extends Component {
                 projectActive={this.state.projectActive}
                 staticActive={this.state.staticActive}
                 budgetActive={this.state.budgetActive}
+                supportActive={this.state.supportActive}
                 handleClickAnnual={this.handleClickAnnual}
                 handleClickProject={this.handleClickProject}
                 handleClickBudget={this.handleClickBudget}
                 handleClickStatic={this.handleClickStatic}
+                handleClickSupport={this.handleClickSupport}
                 headingStyle={this.headingStyle}
               />
             </Grid.Column>

@@ -13,8 +13,6 @@ const displayDetails = (props) => {
         props.ukData[props.selectedMonth] +
         props.nzData[props.selectedMonth])
       )
-    } else {
-
     }
   }
 

@@ -34,6 +34,13 @@ const licenceToggles = props => {
           <Checkbox defaultChecked toggle active={props.budgetActive.toString()} onClick={props.handleClickBudget} />
         </div>
         <br />
+        <div>
+          Support
+        <br />
+          <br />
+          <Checkbox defaultChecked toggle active={props.supportActive.toString()} onClick={props.handleClickSupport} />
+        </div>
+        <br />
         <br />
         <div style={props.headingStyle}>
           <br />
