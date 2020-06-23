@@ -79,7 +79,7 @@ class CashflowBox extends Component {
       return (
         <div style={{ height: 150 }}>
           <h2 style={{ position: 'absolute', left: '50%', top: '52%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>A {this.state.thisFY}</h2>
-          <h3 style={{ fontFamily: 'Titillium Web' }}>Invoiced to April 2020</h3>
+      <h3 style={{ fontFamily: 'Titillium Web' }}>Invoiced to {this.state.monthName}</h3>
           <h4 style={{ position: 'absolute', left: '50%', top: '70%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}><Icon name="triangle up" color="green" />A {this.state.diff}</h4>
           <p style={{ fontSize: "10px", position: 'absolute', left: '50%', top: '90%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>on same time at previous financial year</p>
         </div>

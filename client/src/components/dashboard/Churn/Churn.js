@@ -24,22 +24,22 @@ class Churn extends Component {
 			churnTer: "Global",
 			churnDollars: false,
 			annual: "Annual",
-      project: "Project",
-      statics: "Static",
+			project: "Project",
+			statics: "Static",
 			budget: "Budget Allocator",
 			support: "Support",
 			annualOn: true,
-      projectOn: true,
-      staticOn: true,
+			projectOn: true,
+			staticOn: true,
 			budgetOn: true,
 			annualActive: true,
-      projectActive: true,
-      budgetActive: true,
-      staticActive: true,
+			projectActive: true,
+			budgetActive: true,
+			staticActive: true,
 			dimmer: false,
 			table: {
-        colHeadersLost: ["Client", "Status", "MRR", "Location", "Currency", "Invoice", "Date", "Licence", "Start", "End", "Total"],
-        colHeadersNew: ["Client", "MRR", "Location", "Currency", "Invoice", "Date", "Licence", "Start", "End", "Total"]
+				colHeadersLost: ["Client", "Status", "MRR", "Location", "Currency", "Invoice", "Date", "Licence", "Start", "End", "Total"],
+        		colHeadersNew: ["Client", "MRR", "Location", "Currency", "Invoice", "Date", "Licence", "Start", "End", "Total"]
       }
 		}
 	}

@@ -21,7 +21,8 @@ const cashflowChart = props => {
     return "Spent in AUD"
     }
   }
-  
+
+
 
   const options = {
     scales: {
@@ -32,6 +33,7 @@ const cashflowChart = props => {
             stacked: true,
             ticks: {
               beginAtZero:true,
+              max: props.graphMax,
               callback: function(value, index, values) {
                   if(parseInt(value) >= 1000){
                     return '$' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -254,7 +256,7 @@ const cashflowChart = props => {
         label: 'ANZ',
         fill: false,
         lineTension: 0.1,
-        backgroundColor: props.dataTypeValue === "invoiced" ? 'rgba(75,192,1,1)' : 'rgba(75,192,1,0.5)',
+        backgroundColor: props.dataTypeValue === "invoiced" ? 'rgba(75,192,1,1)' : 'rgb(1,210,127)',
         borderColor: 'rgba(75,192,1,0.4)',
         borderCapStyle: 'butt',
         borderDash: [],
@@ -275,7 +277,7 @@ const cashflowChart = props => {
         label: 'Canada',
         fill: false,
         lineTension: 0.1,
-        backgroundColor: props.dataTypeValue === "invoiced" ? 'rgba(222,213,42,1)' : 'rgba(222,213,42,0.5)',
+        backgroundColor: props.dataTypeValue === "invoiced" ? 'rgba(222,213,42,1)' : 'rgb(238,178,28)',
         borderColor: 'rgba(222,213,42,0.4)',
         borderCapStyle: 'butt',
         borderDash: [],
@@ -296,7 +298,7 @@ const cashflowChart = props => {
         label: 'USA',
         fill: false,
         lineTension: 0.1,
-        backgroundColor: props.dataTypeValue === "invoiced" ? 'rgba(234,77,49,1)' : 'rgba(234,77,49,0.5)',
+        backgroundColor: props.dataTypeValue === "invoiced" ? 'rgba(234,77,49,1)' : 'rgb(146,0,23)',
         borderColor: 'rgba(234,77,49,0.4)',
         borderCapStyle: 'butt',
         borderDash: [],
@@ -317,7 +319,7 @@ const cashflowChart = props => {
         label: 'UK',
         fill: false,
         lineTension: 0.1,
-        backgroundColor: props.dataTypeValue === "invoiced" ? 'rgba(49,234,212,1)' : 'rgba(49,234,212,0.5)',
+        backgroundColor: props.dataTypeValue === "invoiced" ? 'rgba(49,234,212,1)' : 'rgb(21,85,103)',
         borderColor: 'rgba(49,234,212,0.4)',
         borderCapStyle: 'butt',
         borderDash: [],

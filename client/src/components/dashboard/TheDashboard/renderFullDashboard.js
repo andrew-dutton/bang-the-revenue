@@ -107,20 +107,20 @@ const renderFullDashboard = props => {
                 </div>
               </Grid.Column>
               <Grid.Column>
-                <div id="Non Recurring" onMouseEnter={() => props.onMouseEnterNonRecurring()} onMouseLeave={() => props.onMouseLeaveNonRecurring()} >
-                  <Segment inverted={props.selected === "Non Recurring"} raised={props.raised === "Non Recurring"}>
-                    <h1 style={{ fontFamily: 'Titillium Web' }}>Non Recurring Revenue</h1>
-                    <NonRecurringBox selected={props.selected} rawData={props.rawData} />
+                <div id="CAC" onMouseEnter={() => props.onMouseEnterCAC()} onMouseLeave={() => props.onMouseLeaveCAC()} onClick={dashActive}>
+                  <Segment inverted={props.selected === "CAC"} raised={props.raised === "CAC"}>
+                    <h1 style={{ fontFamily: 'Titillium Web' }}>Cost of Acquiring Clients</h1>
+                    <CACBox selected={props.selected} rawData={props.rawData} />
                   </Segment>
                 </div>
               </Grid.Column>
             </Grid.Row>
             <Grid.Row style={{ color: '#E0E0E0' }} columns={3}>
-              <Grid.Column>
-                <div id="CAC" onMouseEnter={() => props.onMouseEnterCAC()} onMouseLeave={() => props.onMouseLeaveCAC()}>
-                  <Segment inverted={props.selected === "CAC"} raised={props.raised === "CAC"}>
-                    <h1 style={{ fontFamily: 'Titillium Web' }}>Cost of Acquiring Clients</h1>
-                    <CACBox selected={props.selected} rawData={props.rawData} />
+            <Grid.Column>
+                <div id="Non Recurring" onMouseEnter={() => props.onMouseEnterNonRecurring()} onMouseLeave={() => props.onMouseLeaveNonRecurring()} >
+                  <Segment inverted={props.selected === "Non Recurring"} raised={props.raised === "Non Recurring"}>
+                    <h1 style={{ fontFamily: 'Titillium Web' }}>Non Recurring Revenue</h1>
+                    <NonRecurringBox selected={props.selected} rawData={props.rawData} />
                   </Segment>
                 </div>
               </Grid.Column>
@@ -144,7 +144,7 @@ const renderFullDashboard = props => {
           </Grid>
         </Segment>
         <div>
-    <p style={{fontStyle: "italic"}}> Last updated {DataIn.Updated}</p>
+        <p style={{fontStyle: "italic"}}> Last updated {DataIn.Updated}</p>
         </div>
         <div>
           {/* <Button id="Forecasts" onClick={e => props.handleSelection(e.currentTarget.id)} color="teal">Forecasts</Button> */}

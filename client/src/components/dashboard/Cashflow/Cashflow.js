@@ -10,13 +10,15 @@ class Cashflow extends Component {
     this.state = {
       currentColor: "yellow",
       value: "monthly",
-      dataTypeValue: "invoiced"
+      dataTypeValue: "invoiced",
+      dataTimeValue: "all"
     }
   }
 
   componentDidMount() {
       this.loadAusData()
       this.loadSpendAusData()
+      this.setGraphMax()
   }
 
   loadSpendAusData = () => {
@@ -133,7 +135,7 @@ class Cashflow extends Component {
 
   checkSpendTimeframe = () => {
     if(this.state.value === "monthly") {
-      return null
+      this.checkTimeValue()
     } else if(this.state.value === "quarterly") {
       this.showQuarterlySpendData()
     } else {
@@ -336,7 +338,7 @@ class Cashflow extends Component {
 
   checkInvoicedTimeFrame = () => {
     if(this.state.value === "monthly") {
-      return null
+      this.checkTimeValue()
     } else if(this.state.value === "quarterly") {
       this.showQuarterlyData()
     } else {
@@ -438,9 +440,102 @@ class Cashflow extends Component {
     })
   }
 
+  checkTimeValue = () => {
+    if(this.state.dataTimeValue === "all") {
+      return null
+    }
+
+    if(this.state.dataTimeValue === "14/15") {
+      let anzi = this.state.anzi.slice(0,12)
+      let cani = this.state.cani.slice(0,12)
+      let usai = this.state.usai.slice(0,12)
+      let uki = this.state.uki.slice(0,12)
+      let anzs = this.state.anzs.slice(0,12)
+      let cans = this.state.cans.slice(0,12)
+      let usas = this.state.usas.slice(0,12)
+      let uks = this.state.uks.slice(0,12)
+      let labels = this.state.labels.slice(0,12)
+      this.setState({anzi, cani, usai, uki, anzs, cans, usas, uks, labels})
+    }
+
+    if(this.state.dataTimeValue === "15/16") {
+      let anzi = this.state.anzi.slice(12,24)
+      let cani = this.state.cani.slice(12,24)
+      let usai = this.state.usai.slice(12,24)
+      let uki = this.state.uki.slice(12,24)
+      let anzs = this.state.anzs.slice(12,24)
+      let cans = this.state.cans.slice(12,24)
+      let usas = this.state.usas.slice(12,24)
+      let uks = this.state.uks.slice(12,24)
+      let labels = this.state.labels.slice(12,24)
+      this.setState({anzi, cani, usai, uki, anzs, cans, usas, uks, labels})
+    }
+
+    if(this.state.dataTimeValue === "16/17") {
+      let anzi = this.state.anzi.slice(24,36)
+      let cani = this.state.cani.slice(24,36)
+      let usai = this.state.usai.slice(24,36)
+      let uki = this.state.uki.slice(24,36)
+      let anzs = this.state.anzs.slice(24,36)
+      let cans = this.state.cans.slice(24,36)
+      let usas = this.state.usas.slice(24,36)
+      let uks = this.state.uks.slice(24,36)
+      let labels = this.state.labels.slice(24,36)
+      this.setState({anzi, cani, usai, uki, anzs, cans, usas, uks, labels})
+    }
+
+    if(this.state.dataTimeValue === "17/18") {
+      let anzi = this.state.anzi.slice(36,48)
+      let cani = this.state.cani.slice(36,48)
+      let usai = this.state.usai.slice(36,48)
+      let uki = this.state.uki.slice(36,48)
+      let anzs = this.state.anzs.slice(36,48)
+      let cans = this.state.cans.slice(36,48)
+      let usas = this.state.usas.slice(36,48)
+      let uks = this.state.uks.slice(36,48)
+      let labels = this.state.labels.slice(36,48)
+      this.setState({anzi, cani, usai, uki, anzs, cans, usas, uks, labels})
+    }
+
+    if(this.state.dataTimeValue === "18/19") {
+      let anzi = this.state.anzi.slice(48,60)
+      let cani = this.state.cani.slice(48,60)
+      let usai = this.state.usai.slice(48,60)
+      let uki = this.state.uki.slice(48,60)
+      let anzs = this.state.anzs.slice(48,60)
+      let cans = this.state.cans.slice(48,60)
+      let usas = this.state.usas.slice(48,60)
+      let uks = this.state.uks.slice(48,60)
+      let labels = this.state.labels.slice(48,60)
+      this.setState({anzi, cani, usai, uki, anzs, cans, usas, uks, labels})
+    }
+
+    if(this.state.dataTimeValue === "19/20") {
+      let anzi = this.state.anzi.slice(60,72)
+      let cani = this.state.cani.slice(60,72)
+      let usai = this.state.usai.slice(60,72)
+      let uki = this.state.uki.slice(60,72)
+      let anzs = this.state.anzs.slice(60,72)
+      let cans = this.state.cans.slice(60,72)
+      let usas = this.state.usas.slice(60,72)
+      let uks = this.state.uks.slice(60,72)
+      let labels = this.state.labels.slice(60,72)
+      this.setState({anzi, cani, usai, uki, anzs, cans, usas, uks, labels})
+    }
+
+  }
+
+  setGraphMax = () => {
+    console.log('set max')
+  }
+
   handleTimeframeChange = (e, { value }) => this.setState({ value }, this.checkDataChange)
 
   handleDataChange = (e, { value }) => this.setState({ dataTypeValue: value}, this.checkDataChange)
+
+  handleTimeChange = (e, { value }) => this.setState({ dataTimeValue: value}, this.checkDataChange)
+
+ 
 
   checkDataChange = () => {
     if(this.state.dataTypeValue === "comparison") {
@@ -465,6 +560,7 @@ class Cashflow extends Component {
         <div style={{ paddingTop: 24, paddingBotton: 24 }}>
           <DashboardHeading title={"Cashflow Reporting"} currentColor={this.state.currentColor} />
             <Segment style={{ width: 1079 }}>
+       
             <Grid columns={2}>
                 <GridColumn>
                   <Segment color={this.state.currentColor}>
@@ -544,8 +640,101 @@ class Cashflow extends Component {
                     </Grid>
                   </Segment>
                 </GridColumn>
+              </Grid>
+
+              <Grid>
+              {this.state.value === "monthly" ?
+                <GridColumn>
+                  <Segment color={this.state.currentColor}>
+                    Select Financial Year to Display:
+                    <br />
+                    <br />
+                    <Grid columns={7}>
+                    <GridColumn>
+                      <Radio
+                          label="All"
+                          name="all"
+                          value="all"
+                          checked={this.state.dataTimeValue === "all"}
+                          onChange={this.handleTimeChange}
+                          enabled="true"
+                        />
+                      </GridColumn>
+                      <GridColumn>
+                      <Radio
+                          label="14/15"
+                          name="14/15"
+                          value="14/15"
+                          checked={this.state.dataTimeValue === "14/15"}
+                          onChange={this.handleTimeChange}
+                          enabled="true"
+                        />
+                      </GridColumn>
+                      <GridColumn>
+                      <Radio
+                          label="15/16"
+                          name="15/16"
+                          value="15/16"
+                          checked={this.state.dataTimeValue === "15/16"}
+                          onChange={this.handleTimeChange}
+                          enabled="true"
+                        />
+                      </GridColumn>
+                      <GridColumn>
+                      <Radio
+                          label="16/17"
+                          name="16/17"
+                          value="16/17"
+                          checked={this.state.dataTimeValue === "16/17"}
+                          onChange={this.handleTimeChange}
+                          enabled="true"
+                        />
+                      </GridColumn>
+                      <GridColumn>
+                      <Radio
+                          label="17/18"
+                          name="17/18"
+                          value="17/18"
+                          checked={this.state.dataTimeValue === "17/18"}
+                          onChange={this.handleTimeChange}
+                          enabled="true"
+                        />
+                      </GridColumn>
+                      <GridColumn>
+                      <Radio
+                          label="18/19"
+                          name="18/19"
+                          value="18/19"
+                          checked={this.state.dataTimeValue === "18/19"}
+                          onChange={this.handleTimeChange}
+                          enabled="true"
+                        />
+                      </GridColumn>
+                      <GridColumn>
+                      <Radio
+                          label="19/20"
+                          name="19/20"
+                          value="19/20"
+                          checked={this.state.dataTimeValue === "19/20"}
+                          onChange={this.handleTimeChange}
+                          enabled="true"
+                        />
+                      </GridColumn>
+                    </Grid>
+
+          
+
+                  </Segment>
+                </GridColumn>
+                :
+                <div></div>
+      }
 
               </Grid>
+    
+    
+       
+          
           </Segment>
 
             <CashflowChart
@@ -561,6 +750,8 @@ class Cashflow extends Component {
               labels={this.state.labels}
               timeFrameValue={this.state.value}
               dataTypeValue={this.state.dataTypeValue}
+              dataTimeValue={this.state.dataTimeValue}
+              graphMax={this.state.graphMax}
             />         
         </div>
       )
