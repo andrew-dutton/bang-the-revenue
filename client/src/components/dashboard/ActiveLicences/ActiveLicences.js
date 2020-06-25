@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Grid, Segment, GridColumn, Checkbox, Radio } from 'semantic-ui-react'
+import { Grid, Segment, GridColumn, Radio } from 'semantic-ui-react'
 import DisplayMonth from '../DisplayMonth'
 import DisplayDetails from './DisplayDetails'
 import LicenceToggles from '../LicenceToggles'
@@ -464,8 +464,6 @@ class ActiveLicences extends Component {
 }
 
   render(props) {
-
-    const { toggleActive } = this.state
 
     if (this.props.toRender === "QR") {
       return null
