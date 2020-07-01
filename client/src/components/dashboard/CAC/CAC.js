@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import { Grid, Segment, GridColumn, Radio, Dropdown, Button } from 'semantic-ui-react'
+import { Grid, Segment, Dropdown, Button } from 'semantic-ui-react'
 import DashboardHeading from '../DashboardHeading'
-import DataIn from '../DataIn'
-import * as CH from './CACHelpers'
 import CACMainBox from './CACMainBox'
+import DataIn from '../DataIn'
 
 class CAC extends Component {
 	constructor(props) {
@@ -19,20 +18,7 @@ class CAC extends Component {
 	}
 
 	render() {
-		const menu = [
-			{ key: "July 2019", text: "July 2019", value: "July 2019"},
-			{ key: "August 2019", text: "August 2019", value: "August 2019"},
-			{ key: "September 2019", text: "September 2019", value: "September 2019"},
-			{ key: "October 2019", text: "October 2019", value: "October 2019"},
-			{ key: "November 2019", text: "November 2019", value: "November 2019"},
-			{ key: "December 2019", text: "December 2019", value: "December 2019"},
-			{ key: "Janaury 2020", text: "Janaury 2020", value: "Janaury 2020"},
-			{ key: "February 2020", text: "February 2020", value: "February 2020"},
-			{ key: "March 2020", text: "March 2020", value: "March 2020"},
-			{ key: "April 2020", text: "April 2020", value: "April 2020"},
-			{ key: "May 2020", text: "May 2020", value: "May 2020"},
-			{ key: "June 2020", text: "June 2020", value: "June 2020"},
-		]
+		const menu = DataIn.CACMenuMonths
 
 		const reportinDatesText = ["Reporting", <br/>, "Dates"]
 

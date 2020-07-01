@@ -171,7 +171,7 @@ const EIQChart = props => {
                 stacked: true ,
                 ticks: {
                   beginAtZero: true,
-                  max: 120000,
+                  max: 250000,
                   callback: function(value, index, values) {
                     if(parseInt(value) >= 1000){
                        return '$' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");

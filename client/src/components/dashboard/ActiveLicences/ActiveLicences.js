@@ -464,7 +464,7 @@ class ActiveLicences extends Component {
 }
 
   render(props) {
-
+  
     if (this.props.toRender === "QR") {
       return null
     } else {

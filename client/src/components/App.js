@@ -15,7 +15,26 @@ import Dashboard from './Dashboard'
 class App extends Component {
   componentDidMount() {
     this.props.fetchUser()
+    this.con()
   }
+
+  con = () => {
+    console.log('BBBBBB    TTTTTTTTTTTTT    TTTTTTTTTTTT')
+    console.log('BB   BB         TT              TT')
+    console.log('BB    BB        TT              TT')
+    console.log('BB    BB        TT              TT')
+    console.log('BB   BB         TT              TT')
+    console.log('BB  BB          TT              TT')
+    console.log('BBBB            TT              TT')
+    console.log('BB  BB          TT              TT')
+    console.log('BB   BB         TT              TT')
+    console.log('BB    BB        TT              TT')
+    console.log('BB   BB         TT              TT')
+    console.log('BB  BB          TT              TT')
+    console.log('BBBB            TT              TT')
+  }
+
+
 
   render() {
     return (

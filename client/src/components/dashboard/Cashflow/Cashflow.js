@@ -18,7 +18,6 @@ class Cashflow extends Component {
   componentDidMount() {
       this.loadAusData()
       this.loadSpendAusData()
-      this.setGraphMax()
   }
 
   loadSpendAusData = () => {
