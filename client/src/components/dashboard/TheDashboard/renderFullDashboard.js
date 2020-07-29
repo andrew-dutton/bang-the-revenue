@@ -107,7 +107,7 @@ const renderFullDashboard = props => {
                 </div>
               </Grid.Column>
               <Grid.Column>
-                <div id="CAC" onMouseEnter={() => props.onMouseEnterCAC()} onMouseLeave={() => props.onMouseLeaveCAC()}>
+                <div id="CAC" onMouseEnter={() => props.onMouseEnterCAC()} onMouseLeave={() => props.onMouseLeaveCAC()} >
                   <Segment inverted={props.selected === "CAC"} raised={props.raised === "CAC"}>
                     <h1 style={{ fontFamily: 'Titillium Web' }}>Cost of Acquiring Clients</h1>
                     <CACBox selected={props.selected} rawData={props.rawData} />

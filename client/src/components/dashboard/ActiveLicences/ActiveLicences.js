@@ -20,6 +20,7 @@ class ActiveLicences extends Component {
       usaData: [],
       ukData: [],
       nzData: [],
+      globalData: [],
       annualOn: true,
       projectOn: true,
       staticOn: true,
@@ -151,30 +152,8 @@ class ActiveLicences extends Component {
   }
 
 
-  getNumberOfMonthsSinceJuly2015 = () => {
-
-    // let today = new Date()
-
-    // if (!this.state.dataIn) {
-    //   today.setMonth(today.getMonth() - 1)
-    // }
-
-    // let thisMonth = today.getMonth()
-    // let thisYear = today.getFullYear()
-    // let monthsOfYears = (thisYear - (2015 + 1)) * 12
-
-    // console.log(DataIn.MonthNumber)
-    return DataIn.MonthNumber
-
-    // return monthsOfYears + thisMonth + 7
-
-    // let thisMonthNumber = DataIn.MonthNumber
-
-
-  }
-
   createMonthsArray = () => {
-    const numberOfMonths = this.getNumberOfMonthsSinceJuly2015()
+    const numberOfMonths = DataIn.MonthNumber
 
     let year = 2015
     let yearStep = 12
@@ -210,6 +189,7 @@ class ActiveLicences extends Component {
     const usaTotal = []
     const ukTotal = []
     const nzTotal = []
+    const globalTotal = []
 
     let detailsLogged = []
 
@@ -362,12 +342,15 @@ class ActiveLicences extends Component {
       usaTotal.push(uniqUsaClients.length)
       ukTotal.push(uniqUkClients.length)
       nzTotal.push(uniqNzClients.length)
+      globalTotal.push(uniqAusClients.length + uniqCanClients.length + uniqUsaClients.length + uniqUkClients.length + uniqNzClients.length)
 
       detailsLogged.push(allDet)
 
     })
 
     this.setState(prevState => ({
+      globalData: globalTotal,
+      currentGlobal: globalTotal[globalTotal.length - 2],
       ausData: ausTotal,
       currentAus: ausTotal[ausTotal.length - 2],
       canData: [...canTotal],
@@ -405,11 +388,20 @@ class ActiveLicences extends Component {
     let usaData = []
     let ukData = []
     let nzData = []
+    let globalData = []
+    
     let ausHolder = []
     let canHolder = []
     let usaHolder = []
     let ukHolder = []
     let nzHolder = []
+    let ausClientNumber = []
+    let canClientNumber = []
+    let usaClientNumber = []
+    let ukClientNumber = []
+    let nzClientNumber = []
+
+  
 
     for(let i = 0; i < this.state.ausData.length; i++) {
 
@@ -419,6 +411,11 @@ class ActiveLicences extends Component {
       usaHolder = []
       ukHolder = []
       nzHolder = []
+      ausClientNumber = []
+      canClientNumber = []
+      usaClientNumber = []
+      ukClientNumber = []
+      nzClientNumber = []
 
       data.forEach(line => {
         if(line[1] === "AUS") {
@@ -440,31 +437,86 @@ class ActiveLicences extends Component {
         if(line[1] === "NZ") {
           nzHolder.push(line[7])
         }
+
+        if(line[1] === "AUS") {
+          ausClientNumber.push(line[0])
+        }
+
+
+        if(line[1] === "CAN") {
+          canClientNumber.push(line[0])
+        }
+
+        if(line[1] === "USA") {
+          usaClientNumber.push(line[0])
+        }
+
+        if(line[1] === "UK") {
+          ukClientNumber.push(line[0])
+        }
+
+        if(line[1] === "NZ") {
+          nzClientNumber.push(line[0])
+        }
       }
     )
 
+    const onlyUnique = (value, index, self) => {
+      return self.indexOf(value) === index;
+    }
+
+    let uniqAusClients = ausClientNumber.filter(onlyUnique)
+    let uniqCanClients = canClientNumber.filter(onlyUnique)
+    let uniqUsaClients = usaClientNumber.filter(onlyUnique)
+    let uniqUkClients = ukClientNumber.filter(onlyUnique)
+    let uniqNzClients = nzClientNumber.filter(onlyUnique)
+
+
     if(this.state.value === "averages") {
-      ausData.push(Math.floor((ausHolder.reduce((a,b)=>a+b,0)/ausHolder.length)*12))
-      canData.push(Math.floor((canHolder.reduce((a,b)=>a+b,0)/canHolder.length)*12/.95))
-      usaData.push(Math.floor((usaHolder.reduce((a,b)=>a+b,0)/usaHolder.length)*12/.72))
-      ukData.push(Math.floor((ukHolder.reduce((a,b)=>a+b,0)/ukHolder.length)*12/.55))
-      nzData.push(Math.floor((nzHolder.reduce((a,b)=>a+b,0)/nzHolder.length)*12/1.07))
+      ausData.push(Math.floor((ausHolder.reduce((a,b)=>a+b,0)/uniqAusClients.length)*12))
+      canData.push(Math.floor((canHolder.reduce((a,b)=>a+b,0)/uniqCanClients.length)*12/.95))
+      usaData.push(Math.floor((usaHolder.reduce((a,b)=>a+b,0)/uniqUsaClients.length)*12/.72))
+      ukData.push(Math.floor((ukHolder.reduce((a,b)=>a+b,0)/uniqUkClients.length)*12/.55))
+      nzData.push(Math.floor((nzHolder.reduce((a,b)=>a+b,0)/uniqNzClients.length)*12/1.07))
+
+      globalData.push(
+        (Math.floor(
+          (
+            (ausHolder.reduce((a,b)=>a+b,0) / 1.00) + 
+            (canHolder.reduce((a,b)=>a+b,0) / 0.95) + 
+            (usaHolder.reduce((a,b)=>a+b,0) / 0.72) + 
+            ( ukHolder.reduce((a,b)=>a+b,0) / 0.55) + 
+            ( nzHolder.reduce((a,b)=>a+b,0) / 1.07) 
+          )
+          / 
+          (
+            uniqAusClients.length + 
+            uniqCanClients.length + 
+            usaClientNumber.length + 
+            uniqUsaClients.length + 
+            uniqNzClients.length
+          )
+          * 12
+            )
+        )
+      )
+
     } else {
-      ausData.push(Math.floor((ausHolder.reduce((a,b)=>a+b,0)/ausHolder.length)*12))
-      canData.push(Math.floor((canHolder.reduce((a,b)=>a+b,0)/canHolder.length)*12))
-      usaData.push(Math.floor((usaHolder.reduce((a,b)=>a+b,0)/usaHolder.length)*12))
-      ukData.push(Math.floor((ukHolder.reduce((a,b)=>a+b,0)/ukHolder.length)*12))
-      nzData.push(Math.floor((nzHolder.reduce((a,b)=>a+b,0)/nzHolder.length)*12))
+      ausData.push(Math.floor((ausHolder.reduce((a,b)=>a+b,0)/uniqAusClients.length)*12))
+      canData.push(Math.floor((canHolder.reduce((a,b)=>a+b,0)/uniqCanClients.length)*12))
+      usaData.push(Math.floor((usaHolder.reduce((a,b)=>a+b,0)/uniqUsaClients.length)*12))
+      ukData.push(Math.floor((ukHolder.reduce((a,b)=>a+b,0)/uniqUkClients.length)*12))
+      nzData.push(Math.floor((nzHolder.reduce((a,b)=>a+b,0)/uniqNzClients.length)*12))
     }
   }
 
   this.setState(prevState => ({
-    ausData, canData, usaData, nzData, ukData
+    ausData, canData, usaData, nzData, ukData, globalData
   }))
 }
 
   render(props) {
-  
+
     if (this.props.toRender === "QR") {
       return null
     } else {
@@ -490,7 +542,7 @@ class ActiveLicences extends Component {
                       </GridColumn>
                       <GridColumn>
                         <Radio
-                          label="Average Licence Value in Local Currency"
+                          label="Average Licence Value Per Client in Local Currency"
                           name="averagesInLocal"
                           value="averagesInLocal"
                           checked={this.state.value === "averagesInLocal"}
@@ -500,7 +552,7 @@ class ActiveLicences extends Component {
                       </GridColumn>
                       <GridColumn>
                         <Radio
-                          label="Average Licence Value in AUD"
+                          label="Average Licence Value Per Client in AUD"
                           name="averages"
                           value="averages"
                           checked={this.state.value === "averages"}
@@ -556,6 +608,7 @@ class ActiveLicences extends Component {
                 usaData={this.state.usaData}
                 ukData={this.state.ukData}
                 nzData={this.state.nzData}
+                globalData={this.state.globalData}
                 updateCurrentMonth={this.updateCurrentMonth}
               />
             </Grid.Column>
