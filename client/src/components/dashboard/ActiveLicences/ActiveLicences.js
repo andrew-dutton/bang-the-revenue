@@ -492,8 +492,8 @@ class ActiveLicences extends Component {
           (
             uniqAusClients.length + 
             uniqCanClients.length + 
-            usaClientNumber.length + 
             uniqUsaClients.length + 
+            uniqUkClients.length + 
             uniqNzClients.length
           )
           * 12
