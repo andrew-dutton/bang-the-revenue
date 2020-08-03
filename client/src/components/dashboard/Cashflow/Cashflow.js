@@ -522,6 +522,19 @@ class Cashflow extends Component {
       this.setState({anzi, cani, usai, uki, anzs, cans, usas, uks, labels})
     }
 
+    if(this.state.dataTimeValue === "20/21") {
+      let anzi = this.state.anzi.slice(72,84)
+      let cani = this.state.cani.slice(72,84)
+      let usai = this.state.usai.slice(72,84)
+      let uki = this.state.uki.slice(72,84)
+      let anzs = this.state.anzs.slice(72,84)
+      let cans = this.state.cans.slice(72,84)
+      let usas = this.state.usas.slice(72,84)
+      let uks = this.state.uks.slice(72,84)
+      let labels = this.state.labels.slice(72,84)
+      this.setState({anzi, cani, usai, uki, anzs, cans, usas, uks, labels})
+    }
+
   }
 
   setGraphMax = () => {
@@ -648,7 +661,7 @@ class Cashflow extends Component {
                     Select Financial Year to Display:
                     <br />
                     <br />
-                    <Grid columns={7}>
+                    <Grid columns={8}>
                     <GridColumn>
                       <Radio
                           label="All"
@@ -715,6 +728,16 @@ class Cashflow extends Component {
                           name="19/20"
                           value="19/20"
                           checked={this.state.dataTimeValue === "19/20"}
+                          onChange={this.handleTimeChange}
+                          enabled="true"
+                        />
+                      </GridColumn>
+                      <GridColumn>
+                      <Radio
+                          label="20/21"
+                          name="20/21"
+                          value="20/21"
+                          checked={this.state.dataTimeValue === "20/21"}
                           onChange={this.handleTimeChange}
                           enabled="true"
                         />
