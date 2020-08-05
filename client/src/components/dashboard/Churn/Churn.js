@@ -246,7 +246,6 @@ class Churn extends Component {
 
 
 	render() {
-		{console.log(this.state)}
 		return (
 			<div style={{ paddingTop: 24, fontFamily: 'Titillium Web' }}>
 				<DashboardHeading 
