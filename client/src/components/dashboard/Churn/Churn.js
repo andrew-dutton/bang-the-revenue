@@ -25,17 +25,17 @@ class Churn extends Component {
 			churnDollars: false,
 			annual: "Annual",
 			project: "Project",
-			statics: "Static",
-			budget: "Budget Allocator",
+			statics: "",
+			budget: "",
 			support: "Support",
 			annualOn: true,
 			projectOn: true,
-			staticOn: true,
-			budgetOn: true,
+			staticOn: false,
+			budgetOn: false,
 			annualActive: true,
 			projectActive: true,
-			budgetActive: true,
-			staticActive: true,
+			budgetActive: false,
+			staticActive: false,
 			dimmer: false,
 			table: {
 				colHeadersLost: ["Client", "Status", "MRR", "Location", "Currency", "Invoice", "Date", "Licence", "Start", "End", "Total"],
@@ -246,6 +246,7 @@ class Churn extends Component {
 
 
 	render() {
+		{console.log(this.state)}
 		return (
 			<div style={{ paddingTop: 24, fontFamily: 'Titillium Web' }}>
 				<DashboardHeading 

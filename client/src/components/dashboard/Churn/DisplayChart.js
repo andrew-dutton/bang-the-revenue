@@ -35,7 +35,7 @@ const displayChart = props => {
 								Static
 								<br />
 								<br />
-								<Checkbox toggle defaultChecked active={staticActive.toString()} onClick={props.handleClickStatic} />
+								<Checkbox toggle active={staticActive.toString()} onClick={props.handleClickStatic} />
 							</div>
 							<br />
 
@@ -43,7 +43,7 @@ const displayChart = props => {
 								Budget
 								<br />
 								<br />
-								<Checkbox toggle defaultChecked active={budgetActive.toString()} onClick={props.handleClickBudget} />
+								<Checkbox toggle active={budgetActive.toString()} onClick={props.handleClickBudget} />
 							</div>
 							<br />
 							<br />

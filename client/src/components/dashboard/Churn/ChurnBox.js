@@ -99,9 +99,9 @@ class ChurnBox extends Component {
    
         if (start <= month && end >= month && (
           invoice["product"] === "Annual" ||
-          invoice["product"] === "Project" ||
-          invoice["product"] === "Static" ||
-          invoice["product"] === "Budget Allocator"
+          invoice["product"] === "Project"
+          // invoice["product"] === "Static" ||
+          // invoice["product"] === "Budget Allocator"
         )) {
           counter.push(invoice["client"])
         }
