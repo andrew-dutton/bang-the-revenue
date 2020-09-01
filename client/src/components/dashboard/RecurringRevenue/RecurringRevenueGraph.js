@@ -11,6 +11,7 @@ class RecurringRevenueGraph extends Component {
 
     this.state = {
       toggleActive: false,
+      firstPassCount: 0,
       value: "local",
       totalToggleActive: false,
       currentColor: "orange",
@@ -43,6 +44,13 @@ class RecurringRevenueGraph extends Component {
       tableData: [],
       tableDataNON: [],
       tableDataGlobal: [],
+      symbolToDisplay: {
+        "aus": "A",
+        "usa": "A",
+        "can": "C",
+        "uk": "P",
+        "nz": "N"
+      },
       table: {
         colHeaders: ["Client", "MRR Value", "EHQ/EIQ", "Location", "Invoice", "Date", "Product", "Start", "End", "Value"],
         colHeadersNON: ["Client", "EHQ/EIQ", "Location", "Invoice", "Date", "Product", "Value"],
@@ -90,7 +98,7 @@ class RecurringRevenueGraph extends Component {
       monthsText.push(new Date(year, month, 0).toLocaleDateString("en-GB").split(',')[0])
     }
 
-    this.setState({ months, monthsText }, this.revenueTotals)
+      this.setState({ months, monthsText }, this.revenueTotals)
   }
 
   setStartingMonth = () => {
@@ -110,7 +118,55 @@ class RecurringRevenueGraph extends Component {
     let theDate = month + " " + year
     let thePrevDate = prevMonth + " " + prevYear
 
-    this.setState((prevState) => ({ currentMonth: theDate, currentPrevMonth: thePrevDate, selectedMonth: startingMonthNumber }), this.calculateTotalAUD)
+    if(this.state.firstPassCount === 0) {
+      this.setState((prevState) => ({ currentMonth: theDate, currentPrevMonth: thePrevDate, selectedMonth: startingMonthNumber, firstPassCount: 1}), this.checkCurrency)
+    } else {
+      this.setState((prevState) => ({ currentMonth: theDate, currentPrevMonth: thePrevDate }), this.checkCurrency)
+    }
+  }
+
+
+  checkCurrency = () => {
+    if(this.state.value === "local") {
+      this.setState({symbolToDisplay:{
+        "aus": "A",
+        "usa": "A",
+        "can": "C",
+        "uk": "£",
+        "nz": "N"
+      }})
+      this.checkToggle()
+    }
+    
+    if(this.state.value === "aud")  {
+      this.setState({symbolToDisplay:{
+        "aus": "A",
+        "usa": "A",
+        "can": "A",
+        "uk": "A",
+        "nz": "A"
+      }})
+      this.convertAllToAUD()
+    }
+
+    if(this.state.value === "usd") {
+      this.setState({symbolToDisplay:{
+        "aus": "U",
+        "usa": "U",
+        "can": "U",
+        "uk": "U",
+        "nz": "U"
+      }})
+      this.convertAllToUSD()
+    }
+  }
+
+  checkToggle = () => {
+    if(this.state.toggleActive === false) {
+      this.calculateTotalAUD()
+    } else {
+      this.revenueTotalsNON()
+    }
   }
 
   setChangedMonth = () => {
@@ -138,28 +194,79 @@ class RecurringRevenueGraph extends Component {
     let total = 2
     let totalsArray = []
 
-    if ((typeof this.state.monthsText[this.state.selectedMonth] === "undefined")) {
-      return null
+
+    if(this.state.value === "local") {
+      
+      if ((typeof this.state.monthsText[this.state.selectedMonth] === "undefined")) {
+        return null
+      } else {
+        let forexMonth = this.state.monthsText[this.state.selectedMonth].substring(3)
+        let forex = this.state.forexData
+  
+        let audcad = forex[forexMonth]["AUD/CAD"]
+        let audusd = forex[forexMonth]["AUD/USD"]
+        let audgbp = forex[forexMonth]["AUD/GBP"]
+        let audnzd = forex[forexMonth]["AUD/NZD"]
+  
+  
+  
+        if(this.state.value === "local") {
+          totalsArray.push(Math.round(this.state.ausData[this.state.selectedMonth]))
+          totalsArray.push(Math.round(this.state.canData[this.state.selectedMonth] * audcad))
+          totalsArray.push(Math.round(this.state.usaData[this.state.selectedMonth] * audusd))
+          totalsArray.push(Math.round(this.state.ukData[this.state.selectedMonth] * audgbp))
+          totalsArray.push(Math.round(this.state.nzData[this.state.selectedMonth] * audnzd) ) 
+        } else {
+          totalsArray.push(this.state.ausData[this.state.selectedMonth])
+          totalsArray.push(this.state.canData[this.state.selectedMonth])
+          totalsArray.push(this.state.usaData[this.state.selectedMonth])
+          totalsArray.push(this.state.ukData[this.state.selectedMonth])
+          totalsArray.push(this.state.nzData[this.state.selectedMonth])
+        }
+  
+        total = totalsArray.reduce((a, b) => a + b, 0).toFixed(0)
+      }
+
+
+
     } else {
-      let forexMonth = this.state.monthsText[this.state.selectedMonth].substring(3)
-      let forex = this.state.forexData
 
-      let audcad = forex[forexMonth]["AUD/CAD"]
-      let audusd = forex[forexMonth]["AUD/USD"]
-      let audgbp = forex[forexMonth]["AUD/GBP"]
-      let audnzd = forex[forexMonth]["AUD/NZD"]
 
-      totalsArray.push(this.state.ausData[this.state.selectedMonth])
-      totalsArray.push(this.state.canData[this.state.selectedMonth] * audcad)
-      totalsArray.push(this.state.usaData[this.state.selectedMonth] * audusd)
-      totalsArray.push(this.state.ukData[this.state.selectedMonth] * audgbp)
-      totalsArray.push(this.state.nzData[this.state.selectedMonth] * audnzd)
+      if ((typeof this.state.monthsText[this.state.selectedMonth] === "undefined")) {
+        return null
+      } else {
+        let forexMonth = this.state.monthsText[this.state.selectedMonth].substring(3)
+        let forex = this.state.forexData
+  
+        let audcad = forex[forexMonth]["AUD/CAD"]
+        let audusd = forex[forexMonth]["AUD/USD"]
+        let audgbp = forex[forexMonth]["AUD/GBP"]
+        let audnzd = forex[forexMonth]["AUD/NZD"]
+  
 
-      total = totalsArray.reduce((a, b) => a + b, 0).toFixed(0)
+        totalsArray.push(this.state.ausData[this.state.selectedMonth])
+        totalsArray.push(this.state.canData[this.state.selectedMonth])
+        totalsArray.push(this.state.usaData[this.state.selectedMonth])
+        totalsArray.push(this.state.ukData[this.state.selectedMonth])
+        totalsArray.push(this.state.nzData[this.state.selectedMonth])
+
+  
+        total = totalsArray.reduce((a, b) => a + b, 0).toFixed(0)
+      }
+
+
     }
 
-    this.setState((prevState) => ({ totalAUD: total }), this.getData)
+    
+
+    this.setState((prevState) => ({ totalAUD: total }))
+    
+
+
+
+
   }
+
 
   handleToggle = () => {
     if (this.state.toggleActive === false) {
@@ -175,18 +282,20 @@ class RecurringRevenueGraph extends Component {
 
   handleCurrencyChange = (e, { value }) => this.setState({ value }, this.convertToOtherCurrency)
 
+
+
   convertToOtherCurrency = () => {
     if(this.state.value === "local") {
+
       this.createMonthsArray()
     }
 
     if(this.state.value === "aud") {
-      this.convertAllToAUD()
+      this.createMonthsArray()
     }
 
     if(this.state.value === "usd") {
       this.createMonthsArray()
-      console.log("USD")
     }
   }
 
@@ -238,7 +347,65 @@ class RecurringRevenueGraph extends Component {
       usaData: [...usaAusRR],
       ukData: [...ukAusRR],
       nzData: [...nzAusRR]
-    }))
+    }), this.checkToggle)
+  }
+
+  convertAllToUSD = () => {
+    console.log("USD not coded yet")
+
+    let canRates = []
+    let usaRates = []
+    let ukRates = []
+    let nzRates = []
+
+    Object.keys(this.state.forexData).forEach(key => {
+      canRates.push(this.state.forexData[key]["AUD/CAD"])
+    })
+
+    Object.keys(this.state.forexData).forEach(key => {
+      usaRates.push(this.state.forexData[key]["AUD/USD"])
+    })
+
+    Object.keys(this.state.forexData).forEach(key => {
+      ukRates.push(this.state.forexData[key]["AUD/GBP"])
+    })
+
+    Object.keys(this.state.forexData).forEach(key => {
+      nzRates.push(this.state.forexData[key]["AUD/NZD"])
+    })
+
+    let canAusRR = []
+    let usaAusRR = []
+    let ukAusRR = []
+    let nzAusRR = []
+
+    canRates.forEach((rate, index) => {
+      canAusRR.push(Math.round(rate * this.state.canDataRR[index])) 
+    })
+
+    usaRates.forEach((rate, index) => {
+      usaAusRR.push(Math.round(rate * this.state.usaDataRR[index])) 
+    })
+
+    ukRates.forEach((rate, index) => {
+      ukAusRR.push(Math.round(rate * this.state.ukDataRR[index])) 
+    })
+
+    nzRates.forEach((rate, index) => {
+      nzAusRR.push(Math.round(rate * this.state.nzDataRR[index])) 
+    })
+
+    this.setState(prevState => ({
+      canData: [...canAusRR],
+      usaData: [...usaAusRR],
+      ukData: [...ukAusRR],
+      nzData: [...nzAusRR]
+    }), this.checkToggle)
+
+
+
+
+
   }
 
 
@@ -263,6 +430,7 @@ class RecurringRevenueGraph extends Component {
       let nzCounter = []
 
       let allDet = []
+      
 
       this.props.rawData.forEach((invoice) => {
         if (invoice["start"] !== "") {
@@ -720,6 +888,7 @@ class RecurringRevenueGraph extends Component {
   }
 
   revenueTotalsNON() {
+
     const ausTotalNON = []
     const canTotalNON = []
     const usaTotalNON = []
@@ -728,7 +897,28 @@ class RecurringRevenueGraph extends Component {
 
     const detailLogged = []
 
-    this.state.months.forEach((month) => {
+    let canRates = []
+    let usaRates = []
+    let ukRates = []
+    let nzRates = []
+
+    Object.keys(this.state.forexData).forEach(key => {
+      canRates.push(this.state.forexData[key]["AUD/CAD"])
+    })
+
+    Object.keys(this.state.forexData).forEach(key => {
+      usaRates.push(this.state.forexData[key]["AUD/USD"])
+    })
+
+    Object.keys(this.state.forexData).forEach(key => {
+      ukRates.push(this.state.forexData[key]["AUD/GBP"])
+    })
+
+    Object.keys(this.state.forexData).forEach(key => {
+      nzRates.push(this.state.forexData[key]["AUD/NZD"])
+    })
+
+    this.state.months.forEach((month, index) => {
       let ausCounter = []
       let canCounter = []
       let usaCounter = []
@@ -809,12 +999,28 @@ class RecurringRevenueGraph extends Component {
         }
       })
 
-      ausTotalNON.push(Math.round(ausCounter.reduce((a, b) => a + b, 0)))
-      canTotalNON.push(Math.round(canCounter.reduce((a, b) => a + b, 0)))
-      usaTotalNON.push(Math.round(usaCounter.reduce((a, b) => a + b, 0)))
-      ukTotalNON.push(Math.round(ukCounter.reduce((a, b) => a + b, 0)))
-      nzTotalNON.push(Math.round(nzCounter.reduce((a, b) => a + b, 0)))
 
+      if(this.state.value === "local") {
+        ausTotalNON.push(Math.round(ausCounter.reduce((a, b) => a + b, 0)))
+        canTotalNON.push(Math.round(canCounter.reduce((a, b) => a + b, 0)))
+        usaTotalNON.push(Math.round(usaCounter.reduce((a, b) => a + b, 0)))
+        ukTotalNON.push(Math.round(ukCounter.reduce((a, b) => a + b, 0)))
+        nzTotalNON.push(Math.round(nzCounter.reduce((a, b) => a + b, 0)))
+      } else {
+
+        // need convert each to aud before push
+
+       
+     
+
+
+        ausTotalNON.push(Math.round(ausCounter.reduce((a, b) => a + b, 0)))
+        canTotalNON.push(Math.round(canCounter.reduce((a, b) => a + b, 0) * canRates[index]))
+        usaTotalNON.push(Math.round(usaCounter.reduce((a, b) => a + b, 0) * usaRates[index]))
+        ukTotalNON.push(Math.round(ukCounter.reduce((a, b) => a + b, 0) * ukRates[index]))
+        nzTotalNON.push(Math.round(nzCounter.reduce((a, b) => a + b, 0) * nzRates[index]))
+      }
+ 
       detailLogged.push(allDet)
     })
 
@@ -874,28 +1080,11 @@ class RecurringRevenueGraph extends Component {
     }))
 
     const totalDataRR = []
-    let canRates = []
-    let usaRates = []
-    let ukRates = []
-    let nzRates = []
+    
 
-    Object.keys(this.state.forexData).forEach(key => {
-      canRates.push(this.state.forexData[key]["AUD/CAD"])
-    })
 
-    Object.keys(this.state.forexData).forEach(key => {
-      usaRates.push(this.state.forexData[key]["AUD/USD"])
-    })
-
-    Object.keys(this.state.forexData).forEach(key => {
-      ukRates.push(this.state.forexData[key]["AUD/GBP"])
-    })
-
-    Object.keys(this.state.forexData).forEach(key => {
-      nzRates.push(this.state.forexData[key]["AUD/NZD"])
-    })
-
-    for (let i = 0; i < newAusArray.length; i++) {
+    if(this.state.value === "local") {
+       for (let i = 0; i < newAusArray.length; i++) {
       totalDataRR.push(Math.round(
         newAusArray[i] +
         (newCanArray[i] * canRates[i]) +
@@ -903,7 +1092,20 @@ class RecurringRevenueGraph extends Component {
         (newUkArray[i] * ukRates[i]) +
         (newNzArray[i] * nzRates[i])
       ))
+      }
+    } else {
+      for (let i = 0; i < newAusArray.length; i++) {
+        totalDataRR.push(Math.round(
+          newAusArray[i] +
+          newCanArray[i] +
+          newUsaArray[i]) +
+          newUkArray[i] +
+        (newNzArray[i]
+        ))
+        }
     }
+
+   
 
     this.setState(prevState => ({ totalGlobalRR: totalDataRR }), this.calculateTotalAUD)
 
@@ -1023,7 +1225,7 @@ class RecurringRevenueGraph extends Component {
                 <div>
                   <Segment color="orange">
                     <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Australia<br />{this.state.currentMonth}</h3>
-                    <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>A ${this.numberWithCommas(this.state.ausData[this.state.selectedMonth])}</h2>
+                    <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.symbolToDisplay.aus} ${this.numberWithCommas(this.state.ausData[this.state.selectedMonth])}</h2>
                   </Segment>
                 </div>
               </Grid.Column>
@@ -1031,7 +1233,10 @@ class RecurringRevenueGraph extends Component {
                 <div>
                   <Segment color="orange">
                     <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Canada<br />{this.state.currentMonth}</h3>
-                    <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>C ${this.numberWithCommas(this.state.canData[this.state.selectedMonth])}</h2>
+       
+                        <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.symbolToDisplay.can} ${this.numberWithCommas(this.state.canData[this.state.selectedMonth])}</h2>
+           
+                    
                   </Segment>
                 </div>
               </Grid.Column>
@@ -1039,7 +1244,9 @@ class RecurringRevenueGraph extends Component {
                 <div>
                   <Segment color="orange">
                     <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>United States<br />{this.state.currentMonth}</h3>
-                    <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>U ${this.numberWithCommas(this.state.usaData[this.state.selectedMonth])}</h2>
+               
+                        <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.symbolToDisplay.usa} ${this.numberWithCommas(this.state.usaData[this.state.selectedMonth])}</h2>
+                     
                   </Segment>
                 </div>
               </Grid.Column>
@@ -1047,7 +1254,11 @@ class RecurringRevenueGraph extends Component {
                 <div>
                   <Segment color="orange">
                     <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>U.K.<br />{this.state.currentMonth} </h3>
-                    <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>£{this.numberWithCommas(this.state.ukData[this.state.selectedMonth])}</h2>
+                      {(this.state.value === "local") ? 
+                        <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>£ {this.numberWithCommas(this.state.ukData[this.state.selectedMonth])}</h2>
+                        :
+                       <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.symbolToDisplay.uk} ${this.numberWithCommas(this.state.ukData[this.state.selectedMonth])}</h2>
+                      }                  
                   </Segment>
                 </div>
               </Grid.Column>
@@ -1055,7 +1266,9 @@ class RecurringRevenueGraph extends Component {
                 <div>
                   <Segment color="orange">
                     <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>New Zealand<br />{this.state.currentMonth} </h3>
-                    <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>N ${this.numberWithCommas(this.state.nzData[this.state.selectedMonth])}</h2>
+         
+                    <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.symbolToDisplay.nz} ${this.numberWithCommas(this.state.nzData[this.state.selectedMonth])}</h2>
+             
                   </Segment>
                 </div>
               </Grid.Column>
@@ -1100,8 +1313,19 @@ class RecurringRevenueGraph extends Component {
             <Grid.Column width={12}>
               <div>
                 <Segment color="orange">
-                  <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Global Recurring Revenue in AUD in {this.state.currentMonth}</h3>
-                  <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>A ${this.numberWithCommas(this.state.totalAUD)}</h2>
+
+                  {(this.state.symbolToDisplay.aus === "A") ?
+                    <div>
+                      <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Global Recurring Revenue in AUD in {this.state.currentMonth}</h3>
+                      <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.symbolToDisplay.aus} ${this.numberWithCommas(this.state.totalAUD)}</h2>
+                    </div>
+                  :
+                    <div>
+                      <h3 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>Global Recurring Revenue in USD in {this.state.currentMonth}</h3>
+                      <h2 style={{ textAlign: "center", fontFamily: 'Titillium Web' }}>{this.state.symbolToDisplay.aus} ${this.numberWithCommas(this.state.totalAUD)}</h2>
+                    </div>
+                  }
+
                 </Segment>
               </div>
             </Grid.Column>
@@ -1116,11 +1340,11 @@ class RecurringRevenueGraph extends Component {
     )
   }
 
-  getData = () => {
-    if (this.props.toRender === "QR") {
-      this.props.getDataFromRR(this.state)
-    }
-  }
+  // getData = () => {
+  //   if (this.props.toRender === "QR") {
+  //     this.props.getDataFromRR(this.state)
+  //   }
+  // }
 
   handleClickAnnual = () => {
     if (this.state.annual === "Annual") {
@@ -1163,6 +1387,8 @@ class RecurringRevenueGraph extends Component {
 	}
 
   render(props) {
+
+
     if (this.props.toRender === "QR") {
       return null
     } else {
@@ -1300,8 +1526,10 @@ class RecurringRevenueGraph extends Component {
           }
         ]
       }
-      
+    
+
       return (
+        
         <div style={{ paddingTop: 24, paddingBotton: 24, width: 1079 }}>
           <div >
             <Segment color={"orange"}>
@@ -1315,16 +1543,26 @@ class RecurringRevenueGraph extends Component {
               <GridColumn>
                 <div>
                   <Segment color="orange">
-                    Display Total Recurring Accrued Monthly Revenue
+                    Add each month's non-recurring revenue to MRR
                     <br />
                     <br />
                     <Checkbox toggle active={toggleActive.toString()} onClick={this.handleToggle} />
                   </Segment>
                 </div>
               </GridColumn>
+              {/* <GridColumn>
+                <div>
+                  <Segment color="orange">
+                    Display Annual Recurring Revenue (TTM)
+                    <br />
+                    <br />
+                    <Checkbox toggle active={toggleActive.toString()} onClick={this.handleToggle} />
+                  </Segment>
+                </div>
+              </GridColumn> */}
               <GridColumn>
                 <Segment color="orange">
-                  Chart data displayed in: (Not yet active)
+                  Chart data displayed in: 
                   <br />
                   <br />
                   <Grid columns={3}>
@@ -1345,19 +1583,19 @@ class RecurringRevenueGraph extends Component {
                         value="aud"
                         checked={this.state.value === "aud"}
                         onChange={this.handleCurrencyChange}
-                        disabled
+                        
                       />
                     </GridColumn>
-                    <GridColumn>
+                    {/* <GridColumn>
                       <Radio
                         label="USD"
                         name="usd"
                         value="usd"
                         checked={this.state.value === "usd"}
                         onChange={this.handleCurrencyChange}
-                        disabled
+                        
                       />
-                    </GridColumn>
+                    </GridColumn> */}
                   </Grid>
                 </Segment>
               </GridColumn>
