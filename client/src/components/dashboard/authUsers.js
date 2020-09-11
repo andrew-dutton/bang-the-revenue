@@ -4,6 +4,7 @@ export default {
     'Davidjbluth@gmail.com',
     'davidjbluth@gmail.com',
     'pierce.f.nelson@gmail.com',
-    'Riveron.BTT@gmail.com'
+    'Riveron.BTT@gmail.com',
+    'Riveron.bangthetable@gmail.com'
   ]
 }
