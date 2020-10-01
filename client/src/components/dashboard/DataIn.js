@@ -15,9 +15,9 @@ export default {
       diff: "$29,995",
   },
   CashflowReporting: {
-    thisFY: "$3,676,513",
+    thisFY: "$3,695,713",
     lastFY: "",
-    diff: "$1,037,934"
+    diff: "$1,057,134"
   },
   DataIn: true,
   Updated: "1 October 2020",
