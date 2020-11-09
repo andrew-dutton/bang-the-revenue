@@ -56,8 +56,12 @@ const renderFullDashboard = props => {
               <Grid.Column width={8}>
                 <h1 style={{ fontSize: 40, textAlign: "center", fontFamily: 'Titillium Web' }}>Dashboard</h1>
               </Grid.Column>
-              <Grid.Column width={4}>
+              <Grid.Column width={2}>
+             
               </Grid.Column>
+              {/* <Grid.Column width={2}>
+                <Button id="Upgrades" onClick={e => props.handleSelection(e.currentTarget.id)} color="pink">Upgrades</Button>
+              </Grid.Column> */}
             </Grid>
           </Segment>
         </div>

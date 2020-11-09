@@ -9,7 +9,7 @@ class EIQBox extends Component {
     this.state = {
       thisMonth: "$146,707",
       lastMonth: "Coming soon...",
-      diff: "$95,763",
+      diff: "33,854",
       monthName: "",
       months: []
     }
@@ -71,7 +71,7 @@ class EIQBox extends Component {
       <div style={{ height: 150 }}>
         <h1 style={{ position: 'absolute', left: '50%', top: '75%', transform: 'translate(-50%, -50%)', fontFamily: 'Titillium Web' }}>A {this.state.thisMonth}</h1>
         <h3 style={{ fontFamily: 'Titillium Web' }}>{this.state.monthName}</h3>
-        <h4 style={{ fontFamily: 'Titillium Web' }}><Icon name={"triangle up"} color={"green"} />{this.state.diff}</h4>
+        <h4 style={{ fontFamily: 'Titillium Web' }}><Icon name={"triangle down"} color={"red"} />{this.state.diff}</h4>
       </div>
     )
   }

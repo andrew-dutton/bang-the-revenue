@@ -10,6 +10,7 @@ import Forecasts from '../../dashboard/Forecasts/Forecasts'
 import EIQ from '../../dashboard/EIQ/EIQ'
 import NonRecurringRevenue from '../../dashboard/NonRecurringRevenue/NonRecurringRevenue'
 import CAC from '../../dashboard/CAC/CAC'
+import Upgrades from '../../dashboard/Upgrades/Upgrades'
 
 
 const renderSelectedDashboard = props => {
@@ -53,6 +54,10 @@ const renderSelectedDashboard = props => {
 
   if (props.selected === "Search") {
     toDisplay = <Search rawData={props.rawData} />
+  }
+
+  if (props.selected === "Upgrades") {
+    toDisplay = <Upgrades rawData={props.rawData} />
   }
 
   if (props.selected === "Forecasts") {
