@@ -20,7 +20,7 @@ export default {
     diff: "$1,824,322"
   },
   DataIn: true,
-  Updated: "01 December 2020",
+  Updated: "03 December 2020",
   MonthNumber: 66,
   rates:
   {
