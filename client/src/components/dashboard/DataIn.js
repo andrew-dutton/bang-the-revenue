@@ -20,7 +20,7 @@ export default {
     diff: "$2,362,673"
   },
   DataIn: true,
-  Updated: "30 December 2020",
+  Updated: "04 January 2021",
   MonthNumber: 67,
   rates:
   {
@@ -415,10 +415,10 @@ export default {
       "AUD/NZD": 0.943462
     },
     "12/2020": {
-      "AUD/CAD": 1.036553,
-      "AUD/USD": 1.328472,
-      "AUD/GBP": 1.782077,
-      "AUD/NZD": 0.941697
+      "AUD/CAD": 1.035421,
+      "AUD/USD": 1.326635,
+      "AUD/GBP": 1.781371,
+      "AUD/NZD": 0.941319
     }
   },
   Labels: [
@@ -982,10 +982,10 @@ export default {
         "AUD/NZD": 0.943462
       },
       "12/2020": {
-        "AUD/CAD": 1.036553,
-        "AUD/USD": 1.328472,
-        "AUD/GBP": 1.782077,
-        "AUD/NZD": 0.941697
+        "AUD/CAD": 1.035421,
+        "AUD/USD": 1.326635,
+        "AUD/GBP": 1.781371,
+        "AUD/NZD": 0.941319
       }
     }
 }
