@@ -145,7 +145,7 @@ export const setStartingMonth = (months) => {
     let churnArray = [['Date', churnTer]]
 
     for (let k = 0; k < churn.length - 1; k++) {
-      churnArray.push([new Date(2015, k + 8, 0), ((churn[k][0] / (churn[k][1] + churn[k][2])) * 100)])
+      churnArray.push([new Date(2015, k + 8, 0), ((churn[k][0] / (churn[k][2])) * 100)])
     }
 
    return churnArray
@@ -801,7 +801,7 @@ export const createGlobalChurndDollarArray = (newValuesArray, lostValuesArray, m
   
   let globalChurnDollarArray = [["Date", "Global"]]
   for(let i = 0; i < newValuesArray.length; i++) {
-    globalChurnDollarArray.push( [ months[i+1], ( lostValuesArray[i] / (newValuesArray[i] + totalDataRR[i]) ) * 100  ] )
+    globalChurnDollarArray.push( [ months[i+1], ( lostValuesArray[i] / (totalDataRR[i]) ) * 100  ] )
   }
 
   return globalChurnDollarArray
@@ -850,8 +850,8 @@ export const getRollingAnnualChurnArray = (selectedMonth, lost, newClients, tota
   newForFormula.reverse()
 
   for (let k=0; k < lostForForumula.length; k++) {
-    rollingAnnualChurnArray.push(parseFloat(((lostForForumula[k] / (newForFormula[k] + clientsArray[k]))*100).toFixed(2)))
-    rollingAnnualDollarsChurnArray.push(parseFloat(((lostValuesForFormula[k] / (newValuesForFormula[k] + mrrValueForFormula[k]))*100).toFixed(2)))
+    rollingAnnualChurnArray.push(parseFloat(((lostForForumula[k] / (clientsArray[k]))*100).toFixed(2)))
+    rollingAnnualDollarsChurnArray.push(parseFloat(((lostValuesForFormula[k] / (mrrValueForFormula[k]))*100).toFixed(2)))
   }
 
 
