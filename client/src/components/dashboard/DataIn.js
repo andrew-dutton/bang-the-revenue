@@ -15,13 +15,13 @@ export default {
       diff: "$29,995",
   },
   CashflowReporting: {
-    thisFY: "$10,989,531",
+    thisFY: "$12,880,192",
     lastFY: "",
-    diff: "$3,172,245"
+    diff: "$3,675,945"
   },
   DataIn: true,
   Updated: "26 March 2021",
-  MonthNumber: 69,
+  MonthNumber: 70,
   rates:
   {
     "07/2015": {
@@ -431,6 +431,12 @@ export default {
       "AUD/USD": 1.296146,
       "AUD/GBP": 1.768007,
       "AUD/NZD": 0.927396
+    },
+    "03/2021": {
+      "AUD/CAD": 1.032149,
+      "AUD/USD": 1.297295,
+      "AUD/GBP": 1.797998,
+      "AUD/NZD": 0.925297
     }
   },
   Labels: [
@@ -439,7 +445,7 @@ export default {
     'Jul-17', 'Aug-17', 'Sep-17', 'Oct-17', 'Nov-17', 'Dec-17', 'Jan-18', 'Feb-18', 'Mar-18', 'Apr-18', 'May-18', 'Jun-18',
     'Jul-18', 'Aug-18', 'Sep-18', 'Oct-18', 'Nov-18', 'Dec-18', 'Jan-19', 'Feb-19', 'Mar-19', 'Apr-19', 'May-19', 'Jun-19',
     'Jul-19', 'Aug-19', 'Sep-19', 'Oct-19', 'Nov-19', 'Dec-19', 'Jan-20', 'Feb-20', 'Mar-20', 'Apr-20', 'May-20', 'June-20',
-    'Jul-20', 'Aug-20', 'Sep-20', 'Oct-20', 'Nov-20', 'Dec-20', 'Jan-21', 'Feb-21'
+    'Jul-20', 'Aug-20', 'Sep-20', 'Oct-20', 'Nov-20', 'Dec-20', 'Jan-21', 'Feb-21', 'Mar-21'
   ],
   CashflowLabels: [
     'Jul-14', 'Aug-14', 'Sep-14', 'Oct-14', 'Nov-14', 'Dec-14', 'Jan-15', 'Feb-15', 'Mar-15', 'Apr-15', 'May-15', 'Jun-15',
@@ -448,7 +454,7 @@ export default {
     'Jul-17', 'Aug-17', 'Sep-17', 'Oct-17', 'Nov-17', 'Dec-17', 'Jan-18', 'Feb-18', 'Mar-18', 'Apr-18', 'May-18', 'Jun-18',
     'Jul-18', 'Aug-18', 'Sep-18', 'Oct-18', 'Nov-18', 'Dec-18', 'Jan-19', 'Feb-19', 'Mar-19', 'Apr-19', 'May-19', 'Jun-19',
     'Jul-19', 'Aug-19', 'Sep-19', 'Oct-19', 'Nov-19', 'Dec-19', 'Jan-20', 'Feb-20', 'Mar-20', 'Apr-20', 'May-20', 'Jun-20',
-    'Jul-20', 'Aug-20', 'Sep-20', 'Oct-20', 'Nov-20', 'Dec-20', 'Jan-21', 'Feb-21'
+    'Jul-20', 'Aug-20', 'Sep-20', 'Oct-20', 'Nov-20', 'Dec-20', 'Jan-21', 'Feb-21', 'Mar-21'
   ],
   CashflowQuarters: [
     'Q1 2014/2015', 'Q2 2014/2015', 'Q3 2014/2015', 'Q4 2014/2015',
@@ -1010,6 +1016,12 @@ export default {
         "AUD/USD": 1.296146,
         "AUD/GBP": 1.768007,
         "AUD/NZD": 0.927396
+      },
+      "03/2021": {
+        "AUD/CAD": 1.032149,
+        "AUD/USD": 1.297295,
+        "AUD/GBP": 1.797998,
+        "AUD/NZD": 0.925297
       }
     }
 }
