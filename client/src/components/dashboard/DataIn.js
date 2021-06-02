@@ -15,13 +15,13 @@ export default {
       diff: "$29,995",
   },
   CashflowReporting: {
-    thisFY: "$14,088,959",
+    thisFY: "$15,298,738",
     lastFY: "",
-    diff: "$3,929,435"
+    diff: "$3,796,278"
   },
   DataIn: true,
-  Updated: "04 May 2021",
-  MonthNumber: 71,
+  Updated: "02 June 2021",
+  MonthNumber: 72,
   rates:
   {
     "07/2015": {
@@ -443,6 +443,12 @@ export default {
       "AUD/USD": 1.299136,
       "AUD/GBP": 1.796412,
       "AUD/NZD": 0.92532
+    },
+    "05/2021": {
+      "AUD/CAD": 1.061974,
+      "AUD/USD": 1.288829,
+      "AUD/GBP": 1.812249,
+      "AUD/NZD": 0.931387
     }
   },
   Labels: [
@@ -451,7 +457,7 @@ export default {
     'Jul-17', 'Aug-17', 'Sep-17', 'Oct-17', 'Nov-17', 'Dec-17', 'Jan-18', 'Feb-18', 'Mar-18', 'Apr-18', 'May-18', 'Jun-18',
     'Jul-18', 'Aug-18', 'Sep-18', 'Oct-18', 'Nov-18', 'Dec-18', 'Jan-19', 'Feb-19', 'Mar-19', 'Apr-19', 'May-19', 'Jun-19',
     'Jul-19', 'Aug-19', 'Sep-19', 'Oct-19', 'Nov-19', 'Dec-19', 'Jan-20', 'Feb-20', 'Mar-20', 'Apr-20', 'May-20', 'June-20',
-    'Jul-20', 'Aug-20', 'Sep-20', 'Oct-20', 'Nov-20', 'Dec-20', 'Jan-21', 'Feb-21', 'Mar-21', 'Apr-21'
+    'Jul-20', 'Aug-20', 'Sep-20', 'Oct-20', 'Nov-20', 'Dec-20', 'Jan-21', 'Feb-21', 'Mar-21', 'Apr-21', 'May-21'
   ],
   CashflowLabels: [
     'Jul-14', 'Aug-14', 'Sep-14', 'Oct-14', 'Nov-14', 'Dec-14', 'Jan-15', 'Feb-15', 'Mar-15', 'Apr-15', 'May-15', 'Jun-15',
@@ -460,7 +466,7 @@ export default {
     'Jul-17', 'Aug-17', 'Sep-17', 'Oct-17', 'Nov-17', 'Dec-17', 'Jan-18', 'Feb-18', 'Mar-18', 'Apr-18', 'May-18', 'Jun-18',
     'Jul-18', 'Aug-18', 'Sep-18', 'Oct-18', 'Nov-18', 'Dec-18', 'Jan-19', 'Feb-19', 'Mar-19', 'Apr-19', 'May-19', 'Jun-19',
     'Jul-19', 'Aug-19', 'Sep-19', 'Oct-19', 'Nov-19', 'Dec-19', 'Jan-20', 'Feb-20', 'Mar-20', 'Apr-20', 'May-20', 'Jun-20',
-    'Jul-20', 'Aug-20', 'Sep-20', 'Oct-20', 'Nov-20', 'Dec-20', 'Jan-21', 'Feb-21', 'Mar-21', 'Apr-21'
+    'Jul-20', 'Aug-20', 'Sep-20', 'Oct-20', 'Nov-20', 'Dec-20', 'Jan-21', 'Feb-21', 'Mar-21', 'Apr-21', 'May-21'
   ],
   CashflowQuarters: [
     'Q1 2014/2015', 'Q2 2014/2015', 'Q3 2014/2015', 'Q4 2014/2015',
@@ -1034,6 +1040,12 @@ export default {
         "AUD/USD": 1.299136,
         "AUD/GBP": 1.796412,
         "AUD/NZD": 0.92532
+      },
+      "05/2021": {
+        "AUD/CAD": 1.061974,
+        "AUD/USD": 1.288829,
+        "AUD/GBP": 1.812249,
+        "AUD/NZD": 0.931387
       }
     }
 }
