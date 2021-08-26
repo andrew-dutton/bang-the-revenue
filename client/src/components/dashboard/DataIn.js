@@ -20,8 +20,8 @@ export default {
     diff: "$4,602,624"
   },
   DataIn: true,
-  Updated: "17 July 2021",
-  MonthNumber: 73,
+  Updated: "26 August 2021",
+  MonthNumber: 74,
   rates:
   {
     "07/2015": {
@@ -455,6 +455,12 @@ export default {
       "AUD/USD": 1.309415,
       "AUD/GBP": 1.834947,
       "AUD/NZD": 0.929484
+    },
+    "07/2021": {
+      "AUD/CAD": 1.076565,
+      "AUD/USD": 1.347076,
+      "AUD/GBP": 1.860533,
+      "AUD/NZD": 0.941046
     }
   },
   Labels: [
@@ -463,7 +469,8 @@ export default {
     'Jul-17', 'Aug-17', 'Sep-17', 'Oct-17', 'Nov-17', 'Dec-17', 'Jan-18', 'Feb-18', 'Mar-18', 'Apr-18', 'May-18', 'Jun-18',
     'Jul-18', 'Aug-18', 'Sep-18', 'Oct-18', 'Nov-18', 'Dec-18', 'Jan-19', 'Feb-19', 'Mar-19', 'Apr-19', 'May-19', 'Jun-19',
     'Jul-19', 'Aug-19', 'Sep-19', 'Oct-19', 'Nov-19', 'Dec-19', 'Jan-20', 'Feb-20', 'Mar-20', 'Apr-20', 'May-20', 'June-20',
-    'Jul-20', 'Aug-20', 'Sep-20', 'Oct-20', 'Nov-20', 'Dec-20', 'Jan-21', 'Feb-21', 'Mar-21', 'Apr-21', 'May-21', 'June-21'
+    'Jul-20', 'Aug-20', 'Sep-20', 'Oct-20', 'Nov-20', 'Dec-20', 'Jan-21', 'Feb-21', 'Mar-21', 'Apr-21', 'May-21', 'June-21',
+    'Jul-21'
   ],
   CashflowLabels: [
     'Jul-14', 'Aug-14', 'Sep-14', 'Oct-14', 'Nov-14', 'Dec-14', 'Jan-15', 'Feb-15', 'Mar-15', 'Apr-15', 'May-15', 'Jun-15',
@@ -472,7 +479,8 @@ export default {
     'Jul-17', 'Aug-17', 'Sep-17', 'Oct-17', 'Nov-17', 'Dec-17', 'Jan-18', 'Feb-18', 'Mar-18', 'Apr-18', 'May-18', 'Jun-18',
     'Jul-18', 'Aug-18', 'Sep-18', 'Oct-18', 'Nov-18', 'Dec-18', 'Jan-19', 'Feb-19', 'Mar-19', 'Apr-19', 'May-19', 'Jun-19',
     'Jul-19', 'Aug-19', 'Sep-19', 'Oct-19', 'Nov-19', 'Dec-19', 'Jan-20', 'Feb-20', 'Mar-20', 'Apr-20', 'May-20', 'Jun-20',
-    'Jul-20', 'Aug-20', 'Sep-20', 'Oct-20', 'Nov-20', 'Dec-20', 'Jan-21', 'Feb-21', 'Mar-21', 'Apr-21', 'May-21', 'June-21'
+    'Jul-20', 'Aug-20', 'Sep-20', 'Oct-20', 'Nov-20', 'Dec-20', 'Jan-21', 'Feb-21', 'Mar-21', 'Apr-21', 'May-21', 'June-21',
+    'Jul-21'
   ],
   CashflowQuarters: [
     'Q1 2014/2015', 'Q2 2014/2015', 'Q3 2014/2015', 'Q4 2014/2015',
@@ -481,7 +489,8 @@ export default {
     'Q1 2017/2018', 'Q2 2017/2018', 'Q3 2017/2018', 'Q4 2017/2018',
     'Q1 2018/2019', 'Q2 2018/2019', 'Q3 2018/2019', 'Q4 2018/2019',
     'Q1 2019/2020', 'Q2 2019/2020', 'Q3 2019/2020', 'Q4 2019/2020',
-    'Q1 2020/2021', 'Q2 2020/2021', 'Q3 2020/2021', 'Q4 2020/2021'
+    'Q1 2020/2021', 'Q2 2020/2021', 'Q3 2020/2021', 'Q4 2020/2021',
+    'Q1 2021/2022'
   ],
   CACMenuMonths: [
       { key: "July 2015", text: "July 2015", value: "July 2015"},
@@ -551,7 +560,8 @@ export default {
     "2017/2018",
     "2018/2019",
     "2019/2020",
-    "2020/2021"
+    "2020/2021",
+    "2021/2022"
   ],
   cfrates: 
     {
@@ -1058,6 +1068,12 @@ export default {
         "AUD/USD": 1.309415,
         "AUD/GBP": 1.834947,
         "AUD/NZD": 0.929484
+      },
+      "07/2021": {
+        "AUD/CAD": 1.076565,
+        "AUD/USD": 1.347076,
+        "AUD/GBP": 1.860533,
+        "AUD/NZD": 0.941046
       }
     }
 }
