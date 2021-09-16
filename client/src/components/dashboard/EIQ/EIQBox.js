@@ -7,9 +7,9 @@ class EIQBox extends Component {
     super(props)
 
     this.state = {
-      thisMonth: "$235,103",
+      thisMonth: "$124,717",
       lastMonth: "Coming soon...",
-      diff: "$137,877",
+      diff: "$25,572",
       monthName: "",
       months: []
     }

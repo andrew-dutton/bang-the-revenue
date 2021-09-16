@@ -536,15 +536,15 @@ class Cashflow extends Component {
     }
 
     if(this.state.dataTimeValue === "21/22") {
-      let anzi = this.state.anzi.slice(85,96)
-      let cani = this.state.cani.slice(85,96)
-      let usai = this.state.usai.slice(85,96)
-      let uki = this.state.uki.slice(785,96)
-      let anzs = this.state.anzs.slice(85,96)
-      let cans = this.state.cans.slice(85,96)
-      let usas = this.state.usas.slice(85,96)
-      let uks = this.state.uks.slice(85,96)
-      let labels = this.state.labels.slice(85,96)
+      let anzi = this.state.anzi.slice(84,96)
+      let cani = this.state.cani.slice(84,96)
+      let usai = this.state.usai.slice(84,96)
+      let uki = this.state.uki.slice(84,96)
+      let anzs = this.state.anzs.slice(84,96)
+      let cans = this.state.cans.slice(84,96)
+      let usas = this.state.usas.slice(84,96)
+      let uks = this.state.uks.slice(84,96)
+      let labels = this.state.labels.slice(84,96)
       this.setState({anzi, cani, usai, uki, anzs, cans, usas, uks, labels})
     }
 
